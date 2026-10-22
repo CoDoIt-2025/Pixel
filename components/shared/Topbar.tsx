@@ -153,7 +153,7 @@ export function Topbar({ onMobileMenuOpen }: TopbarProps) {
               >
                 <Bell className="h-4 w-4 text-slate-600" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-indigo-600 text-[10px] font-bold text-white shadow-xs">
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-black text-[10px] font-bold text-white shadow-xs">
                     {unreadCount}
                   </span>
                 )}

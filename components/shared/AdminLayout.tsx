@@ -20,7 +20,7 @@ function AdminLayoutInner({ children }: AdminLayoutProps) {
   }, [syncWithBackend]);
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 flex flex-col">
+    <div className="min-h-screen bg-white text-zinc-950 flex flex-col font-sans">
       {/* Sidebar (Desktop + Mobile) */}
       <Sidebar
         mobileOpen={mobileMenuOpen}
@@ -48,7 +48,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     <Suspense
       fallback={
         <div className="min-h-screen bg-white flex items-center justify-center">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-indigo-600 border-t-transparent" />
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-black border-t-transparent" />
         </div>
       }
     >

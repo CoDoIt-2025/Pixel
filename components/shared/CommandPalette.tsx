@@ -81,7 +81,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                 onSelect={() => runCommand(() => router.push("/dashboard"))}
                 className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg cursor-pointer hover:bg-slate-100 text-slate-700 transition-colors"
               >
-                <LayoutDashboard className="h-4 w-4 text-indigo-600" />
+                <LayoutDashboard className="h-4 w-4 text-black" />
                 <span>Dashboard Overview</span>
               </Command.Item>
               <Command.Item

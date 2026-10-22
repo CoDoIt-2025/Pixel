@@ -3,24 +3,24 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer",
   {
     variants: {
       variant: {
         default:
-          "bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 active:bg-indigo-800",
+          "bg-black text-white shadow-sm hover:bg-zinc-800 active:bg-zinc-900 border border-black",
         destructive:
           "bg-rose-600 text-white shadow-sm hover:bg-rose-700 active:bg-rose-800",
         outline:
-          "border border-slate-200 bg-white text-slate-800 hover:bg-slate-50 hover:text-slate-900 shadow-xs",
+          "border border-zinc-200 bg-white text-zinc-900 hover:bg-zinc-50 hover:border-black shadow-xs",
         secondary:
-          "bg-slate-100 text-slate-900 hover:bg-slate-200/80 active:bg-slate-200",
+          "bg-zinc-100 text-zinc-900 hover:bg-zinc-200 active:bg-zinc-300",
         ghost:
-          "text-slate-700 hover:bg-slate-100 hover:text-slate-900",
+          "text-zinc-700 hover:bg-zinc-100 hover:text-black",
         link:
-          "text-indigo-600 underline-offset-4 hover:underline p-0 h-auto",
+          "text-black underline-offset-4 hover:underline p-0 h-auto",
         soft:
-          "bg-indigo-50 text-indigo-700 hover:bg-indigo-100 active:bg-indigo-200",
+          "bg-zinc-100 text-zinc-900 hover:bg-zinc-200 active:bg-zinc-300",
       },
       size: {
         default: "h-9 px-4 py-2",
