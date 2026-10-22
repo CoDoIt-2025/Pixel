@@ -20,6 +20,7 @@ import { initialInquiries } from "@/data/mockInquiries";
 import { initialTestimonials } from "@/data/mockTestimonials";
 import { initialActivities } from "@/data/mockActivities";
 import { initialSettings } from "@/data/mockSettings";
+import { api } from "@/lib/api";
 
 interface AdminState {
   projects: Project[];
@@ -32,10 +33,12 @@ interface AdminState {
   activities: ActivityItem[];
   settings: UserSettings;
   sidebarCollapsed: boolean;
+  backendConnected: boolean;
 
   // Actions
   toggleSidebar: () => void;
   setSidebarCollapsed: (collapsed: boolean) => void;
+  syncWithBackend: () => Promise<void>;
 
   // Project Actions
   addProject: (project: Omit<Project, "id">) => void;
@@ -82,7 +85,7 @@ interface AdminState {
 
 export const useAdminStore = create<AdminState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       projects: initialProjects,
       clients: initialClients,
       team: initialTeam,
@@ -93,231 +96,365 @@ export const useAdminStore = create<AdminState>()(
       activities: initialActivities,
       settings: initialSettings,
       sidebarCollapsed: false,
+      backendConnected: false,
 
       toggleSidebar: () =>
         set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
       setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
 
-      // Project Actions
-      addProject: (project) =>
-        set((state) => {
-          const newProject: Project = {
-            ...project,
-            id: `proj-${Date.now()}`,
-          };
-          const newActivity: ActivityItem = {
-            id: `act-${Date.now()}`,
-            user: "Admin",
-            avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
-            action: "created new project",
-            target: newProject.name,
-            time: "Just now",
-            type: "project",
-          };
-          return {
-            projects: [newProject, ...state.projects],
-            activities: [newActivity, ...state.activities],
-          };
-        }),
+      // Sync store with SQLite backend
+      syncWithBackend: async () => {
+        try {
+          const [
+            projects,
+            clients,
+            team,
+            services,
+            blogPosts,
+            inquiries,
+            testimonials,
+            activities,
+            settings,
+          ] = await Promise.all([
+            api.projects.list().catch(() => null),
+            api.clients.list().catch(() => null),
+            api.team.list().catch(() => null),
+            api.services.list().catch(() => null),
+            api.blog.list().catch(() => null),
+            api.inquiries.list().catch(() => null),
+            api.testimonials.list().catch(() => null),
+            api.dashboard.getActivities().catch(() => null),
+            api.settings.get().catch(() => null),
+          ]);
 
-      updateProject: (id, updates) =>
+          set((state) => ({
+            backendConnected: true,
+            projects: projects && projects.length > 0 ? projects : state.projects,
+            clients: clients && clients.length > 0 ? clients : state.clients,
+            team: team && team.length > 0 ? team : state.team,
+            services: services && services.length > 0 ? services : state.services,
+            blogPosts: blogPosts && blogPosts.length > 0 ? blogPosts : state.blogPosts,
+            inquiries: inquiries && inquiries.length > 0 ? inquiries : state.inquiries,
+            testimonials: testimonials && testimonials.length > 0 ? testimonials : state.testimonials,
+            activities: activities && activities.length > 0 ? activities : state.activities,
+            settings: settings ? settings : state.settings,
+          }));
+        } catch {
+          set({ backendConnected: false });
+        }
+      },
+
+      // Project Actions
+      addProject: (project) => {
+        const tempId = `PRJ-${Date.now()}`;
+        const newProject: Project = { ...project, id: tempId };
+        const newActivity: ActivityItem = {
+          id: `act-${Date.now()}`,
+          user: "Admin",
+          avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
+          action: "created new project",
+          target: newProject.name,
+          time: "Just now",
+          type: "project",
+        };
+
+        set((state) => ({
+          projects: [newProject, ...state.projects],
+          activities: [newActivity, ...state.activities],
+        }));
+
+        // Sync with SQLite backend
+        api.projects
+          .create(project)
+          .then((saved) => {
+            set((state) => ({
+              projects: state.projects.map((p) => (p.id === tempId ? saved : p)),
+            }));
+          })
+          .catch(() => {});
+      },
+
+      updateProject: (id, updates) => {
         set((state) => ({
           projects: state.projects.map((p) =>
             p.id === id ? { ...p, ...updates } : p
           ),
-        })),
+        }));
 
-      deleteProject: (id) =>
+        api.projects.update(id, updates).catch(() => {});
+      },
+
+      deleteProject: (id) => {
         set((state) => ({
           projects: state.projects.filter((p) => p.id !== id),
-        })),
+        }));
+
+        api.projects.delete(id).catch(() => {});
+      },
 
       // Client Actions
-      addClient: (client) =>
-        set((state) => {
-          const newClient: Client = {
-            ...client,
-            id: `cli-${Date.now()}`,
-            createdAt: new Date().toISOString().split("T")[0],
-          };
-          const newActivity: ActivityItem = {
-            id: `act-${Date.now()}`,
-            user: "Admin",
-            avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
-            action: "onboarded new client",
-            target: newClient.company,
-            time: "Just now",
-            type: "client",
-          };
-          return {
-            clients: [newClient, ...state.clients],
-            activities: [newActivity, ...state.activities],
-          };
-        }),
+      addClient: (client) => {
+        const tempId = `CLI-${Date.now()}`;
+        const newClient: Client = {
+          ...client,
+          id: tempId,
+          createdAt: new Date().toISOString().split("T")[0],
+        };
 
-      updateClient: (id, updates) =>
+        set((state) => ({
+          clients: [newClient, ...state.clients],
+        }));
+
+        api.clients
+          .create(client)
+          .then((saved) => {
+            set((state) => ({
+              clients: state.clients.map((c) => (c.id === tempId ? saved : c)),
+            }));
+          })
+          .catch(() => {});
+      },
+
+      updateClient: (id, updates) => {
         set((state) => ({
           clients: state.clients.map((c) =>
             c.id === id ? { ...c, ...updates } : c
           ),
-        })),
+        }));
 
-      deleteClient: (id) =>
+        api.clients.update(id, updates).catch(() => {});
+      },
+
+      deleteClient: (id) => {
         set((state) => ({
           clients: state.clients.filter((c) => c.id !== id),
-        })),
+        }));
+
+        api.clients.delete(id).catch(() => {});
+      },
 
       // Team Actions
-      addTeamMember: (member) =>
-        set((state) => {
-          const newMember: TeamMember = {
-            ...member,
-            id: `tm-${Date.now()}`,
-          };
-          return { team: [newMember, ...state.team] };
-        }),
+      addTeamMember: (member) => {
+        const tempId = `TM-${Date.now()}`;
+        const newMember: TeamMember = {
+          ...member,
+          id: tempId,
+        };
 
-      updateTeamMember: (id, updates) =>
+        set((state) => ({
+          team: [newMember, ...state.team],
+        }));
+
+        api.team
+          .create(member)
+          .then((saved) => {
+            set((state) => ({
+              team: state.team.map((m) => (m.id === tempId ? saved : m)),
+            }));
+          })
+          .catch(() => {});
+      },
+
+      updateTeamMember: (id, updates) => {
         set((state) => ({
           team: state.team.map((m) =>
             m.id === id ? { ...m, ...updates } : m
           ),
-        })),
+        }));
 
-      deleteTeamMember: (id) =>
+        api.team.update(id, updates).catch(() => {});
+      },
+
+      deleteTeamMember: (id) => {
         set((state) => ({
           team: state.team.filter((m) => m.id !== id),
-        })),
+        }));
+
+        api.team.delete(id).catch(() => {});
+      },
 
       // Service Actions
-      addService: (service) =>
-        set((state) => {
-          const newService: Service = {
-            ...service,
-            id: `srv-${Date.now()}`,
-          };
-          return { services: [...state.services, newService] };
-        }),
+      addService: (service) => {
+        const tempId = `SRV-${Date.now()}`;
+        const newService: Service = { ...service, id: tempId };
 
-      updateService: (id, updates) =>
+        set((state) => ({
+          services: [...state.services, newService],
+        }));
+
+        api.services
+          .create(service)
+          .then((saved) => {
+            set((state) => ({
+              services: state.services.map((s) => (s.id === tempId ? saved : s)),
+            }));
+          })
+          .catch(() => {});
+      },
+
+      updateService: (id, updates) => {
         set((state) => ({
           services: state.services.map((s) =>
             s.id === id ? { ...s, ...updates } : s
           ),
-        })),
+        }));
 
-      deleteService: (id) =>
+        api.services.update(id, updates).catch(() => {});
+      },
+
+      deleteService: (id) => {
         set((state) => ({
           services: state.services.filter((s) => s.id !== id),
-        })),
+        }));
 
-      toggleServiceVisibility: (id) =>
+        api.services.delete(id).catch(() => {});
+      },
+
+      toggleServiceVisibility: (id) => {
         set((state) => ({
           services: state.services.map((s) =>
             s.id === id ? { ...s, isVisible: !s.isVisible } : s
           ),
-        })),
+        }));
+
+        api.services.toggleVisibility(id).catch(() => {});
+      },
 
       // Blog Actions
-      addBlogPost: (post) =>
-        set((state) => {
-          const newPost: BlogPost = {
-            ...post,
-            id: `post-${Date.now()}`,
-          };
-          const newActivity: ActivityItem = {
-            id: `act-${Date.now()}`,
-            user: "Admin",
-            avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
-            action: "created article",
-            target: newPost.title,
-            time: "Just now",
-            type: "blog",
-          };
-          return {
-            blogPosts: [newPost, ...state.blogPosts],
-            activities: [newActivity, ...state.activities],
-          };
-        }),
+      addBlogPost: (post) => {
+        const tempId = `BLG-${Date.now()}`;
+        const newPost: BlogPost = { ...post, id: tempId };
 
-      updateBlogPost: (id, updates) =>
         set((state) => ({
-          blogPosts: state.blogPosts.map((p) =>
-            p.id === id ? { ...p, ...updates } : p
+          blogPosts: [newPost, ...state.blogPosts],
+        }));
+
+        api.blog
+          .create(post)
+          .then((saved) => {
+            set((state) => ({
+              blogPosts: state.blogPosts.map((b) => (b.id === tempId ? saved : b)),
+            }));
+          })
+          .catch(() => {});
+      },
+
+      updateBlogPost: (id, updates) => {
+        set((state) => ({
+          blogPosts: state.blogPosts.map((b) =>
+            b.id === id ? { ...b, ...updates } : b
           ),
-        })),
+        }));
 
-      deleteBlogPost: (id) =>
+        api.blog.update(id, updates).catch(() => {});
+      },
+
+      deleteBlogPost: (id) => {
         set((state) => ({
-          blogPosts: state.blogPosts.filter((p) => p.id !== id),
-        })),
+          blogPosts: state.blogPosts.filter((b) => b.id !== id),
+        }));
+
+        api.blog.delete(id).catch(() => {});
+      },
 
       // Inquiry Actions
-      updateInquiryStatus: (id, status) =>
+      updateInquiryStatus: (id, status) => {
         set((state) => ({
           inquiries: state.inquiries.map((inq) =>
             inq.id === id ? { ...inq, status } : inq
           ),
-        })),
+        }));
 
-      replyToInquiry: (id, replyMessage, senderName = "Alex Vance (Admin)") =>
-        set((state) => {
-          const newReply = {
-            id: `rep-${Date.now()}`,
-            sender: senderName,
-            message: replyMessage,
-            timestamp: new Date().toISOString(),
-          };
-          return {
-            inquiries: state.inquiries.map((inq) =>
-              inq.id === id
-                ? {
-                    ...inq,
-                    status: "Resolved",
-                    replies: [...inq.replies, newReply],
-                  }
-                : inq
-            ),
-          };
-        }),
+        api.inquiries.updateStatus(id, status).catch(() => {});
+      },
 
-      deleteInquiry: (id) =>
+      replyToInquiry: (id, replyMessage, senderName = "Sarah Connor") => {
+        const newReply = {
+          id: `rep-${Date.now()}`,
+          sender: senderName,
+          message: replyMessage,
+          timestamp: new Date().toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+        };
+
+        set((state) => ({
+          inquiries: state.inquiries.map((inq) =>
+            inq.id === id
+              ? {
+                  ...inq,
+                  status: inq.status === "New" ? "In Progress" : inq.status,
+                  replies: [...inq.replies, newReply],
+                }
+              : inq
+          ),
+        }));
+
+        api.inquiries.reply(id, replyMessage, senderName).catch(() => {});
+      },
+
+      deleteInquiry: (id) => {
         set((state) => ({
           inquiries: state.inquiries.filter((inq) => inq.id !== id),
-        })),
+        }));
+
+        api.inquiries.delete(id).catch(() => {});
+      },
 
       // Testimonial Actions
-      addTestimonial: (testimonial) =>
-        set((state) => {
-          const newTestimonial: Testimonial = {
-            ...testimonial,
-            id: `test-${Date.now()}`,
-            date: new Date().toISOString().split("T")[0],
-          };
-          return {
-            testimonials: [newTestimonial, ...state.testimonials],
-          };
-        }),
+      addTestimonial: (testimonial) => {
+        const tempId = `TST-${Date.now()}`;
+        const newTestimonial: Testimonial = {
+          ...testimonial,
+          id: tempId,
+          date: new Date().toISOString().split("T")[0],
+        };
 
-      updateTestimonialStatus: (id, status) =>
+        set((state) => ({
+          testimonials: [newTestimonial, ...state.testimonials],
+        }));
+
+        api.testimonials
+          .create(testimonial)
+          .then((saved) => {
+            set((state) => ({
+              testimonials: state.testimonials.map((t) => (t.id === tempId ? saved : t)),
+            }));
+          })
+          .catch(() => {});
+      },
+
+      updateTestimonialStatus: (id, status) => {
         set((state) => ({
           testimonials: state.testimonials.map((t) =>
             t.id === id ? { ...t, status } : t
           ),
-        })),
+        }));
 
-      deleteTestimonial: (id) =>
+        api.testimonials.updateStatus(id, status).catch(() => {});
+      },
+
+      deleteTestimonial: (id) => {
         set((state) => ({
           testimonials: state.testimonials.filter((t) => t.id !== id),
-        })),
+        }));
+
+        api.testimonials.delete(id).catch(() => {});
+      },
 
       // Settings Actions
-      updateSettings: (updates) =>
+      updateSettings: (updates) => {
         set((state) => ({
           settings: { ...state.settings, ...updates },
-        })),
+        }));
 
-      resetToDefaults: () =>
+        api.settings.update(updates).catch(() => {});
+      },
+
+      resetToDefaults: () => {
         set({
           projects: initialProjects,
           clients: initialClients,
@@ -328,7 +465,8 @@ export const useAdminStore = create<AdminState>()(
           testimonials: initialTestimonials,
           activities: initialActivities,
           settings: initialSettings,
-        }),
+        });
+      },
     }),
     {
       name: "pixel_admin_storage_v1",

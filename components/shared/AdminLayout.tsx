@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, Suspense } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import { useAdminStore } from "@/lib/store";
@@ -13,6 +13,11 @@ interface AdminLayoutProps {
 function AdminLayoutInner({ children }: AdminLayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const sidebarCollapsed = useAdminStore((state) => state.sidebarCollapsed);
+  const syncWithBackend = useAdminStore((state) => state.syncWithBackend);
+
+  useEffect(() => {
+    syncWithBackend();
+  }, [syncWithBackend]);
 
   return (
     <div className="min-h-screen bg-white text-slate-900 flex flex-col">
