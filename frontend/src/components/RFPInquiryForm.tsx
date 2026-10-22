@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import confetti from "canvas-confetti";
-import { CheckCircle2, Send, ShieldAlert } from "lucide-react";
+import { CheckCircle2, Send, ShieldAlert, Phone, MapPin } from "lucide-react";
 import { api } from "../lib/api";
-import { sound } from "../lib/sound";
+import { useSettings } from "../context/SettingsContext";
 
 interface InquiryFormProps {
   prefillData?: {
@@ -13,6 +13,7 @@ interface InquiryFormProps {
 }
 
 export const RFPInquiryForm: React.FC<InquiryFormProps> = ({ prefillData }) => {
+  const { company } = useSettings();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -26,7 +27,6 @@ export const RFPInquiryForm: React.FC<InquiryFormProps> = ({ prefillData }) => {
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  // Sync prefill from Scope Calculator
   useEffect(() => {
     if (prefillData) {
       setFormData((prev) => ({
@@ -42,19 +42,16 @@ export const RFPInquiryForm: React.FC<InquiryFormProps> = ({ prefillData }) => {
     e.preventDefault();
     setErrorMsg("");
     setLoading(true);
-    sound.tactile();
 
     try {
       await api.submitInquiry(formData);
       setSuccess(true);
-      sound.click();
 
-      // Confetti burst
       confetti({
-        particleCount: 80,
-        spread: 70,
+        particleCount: 50,
+        spread: 60,
         origin: { y: 0.6 },
-        colors: ["#FFFFFF", "#CCCCCC", "#666666", "#222222"],
+        colors: ["#0F172A", "#64748B", "#94A3B8"],
       });
     } catch (err: any) {
       setErrorMsg(err.message || "Failed to submit proposal. Please verify the backend is running.");
@@ -64,61 +61,69 @@ export const RFPInquiryForm: React.FC<InquiryFormProps> = ({ prefillData }) => {
   };
 
   return (
-    <section id="inquire" className="py-28 border-b border-white/10 bg-zinc-950 relative">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8">
+    <section id="contact" className="py-24 sm:py-32 bg-white border-t border-slate-100">
+      <div className="max-w-6xl mx-auto px-6 sm:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          {/* Left Column: Context */}
+          {/* Left Column */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="font-mono text-xs text-zinc-500 uppercase tracking-widest flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-white inline-block" />
-              <span>INDEX // 05</span>
-            </div>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+              Contact
+            </span>
 
-            <h2 className="font-display font-extrabold text-4xl sm:text-6xl uppercase tracking-tight text-white leading-none">
-              INITIATE <br />COMMISSION
+            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-950">
+              Let&apos;s build something exceptional.
             </h2>
 
-            <p className="font-body text-zinc-400 text-sm leading-relaxed">
-              We review submissions within 24 hours. For urgent enterprise RFPs, direct technical briefs can be transmitted directly to our partners at{" "}
-              <a href="mailto:partnerships@pixel.dev" className="text-white underline underline-offset-4">
-                partnerships@pixel.dev
-              </a>.
+            <p className="text-slate-600 text-sm leading-relaxed">
+              We review every inquiry within 24 business hours. If you prefer direct correspondence, reach our principals at{" "}
+              <a href={`mailto:${company.email}`} className="text-slate-950 font-medium underline underline-offset-4">
+                {company.email}
+              </a>
+              {company.phone && (
+                <> or call <span className="text-slate-950 font-medium">{company.phone}</span></>
+              )}.
             </p>
 
-            <div className="pt-6 border-t border-white/10 space-y-4 font-mono text-xs text-zinc-400">
-              <div className="flex items-center gap-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                <span>NDA &amp; IP Assignment on Day 1</span>
+            {company.address && (
+              <div className="flex items-center gap-2 text-xs text-slate-500">
+                <MapPin size={14} className="text-slate-400 shrink-0" />
+                <span>{company.address}</span>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                <span>Fixed-Fee Milestone Guarantees</span>
+            )}
+
+            <div className="pt-6 border-t border-slate-100 space-y-3 text-xs text-slate-600">
+              <div className="flex items-center gap-2.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span>NDA &amp; full IP assignment on Day 1</span>
               </div>
-              <div className="flex items-center gap-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                <span>Zero Outsourced Engineering</span>
+              <div className="flex items-center gap-2.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span>Fixed-scope milestone guarantees</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span>Zero outsourced development</span>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Interactive RFP Form */}
-          <div className="lg:col-span-7 border border-white/15 bg-black p-8 sm:p-10">
+          {/* Right Column: Form */}
+          <div className="lg:col-span-7 p-8 sm:p-10 rounded-2xl border border-slate-200/80 bg-slate-50/50 shadow-2xs">
             {success ? (
               <div className="py-12 text-center space-y-4">
-                <div className="w-16 h-16 border border-white bg-white/5 rounded-full flex items-center justify-center mx-auto text-white">
-                  <CheckCircle2 size={32} />
+                <div className="w-12 h-12 bg-slate-950 text-white rounded-full flex items-center justify-center mx-auto">
+                  <CheckCircle2 size={24} />
                 </div>
-                <h3 className="font-display font-bold text-2xl uppercase tracking-wide text-white">
-                  TRANSMISSION RECEIVED
+                <h3 className="text-xl font-semibold text-slate-950">
+                  Message received
                 </h3>
-                <p className="font-mono text-xs text-zinc-400 max-w-md mx-auto leading-relaxed">
-                  Your inquiry has been committed to our SQLite ledger and routed to the lead architecture committee. We will contact you shortly.
+                <p className="text-xs text-slate-600 max-w-sm mx-auto leading-relaxed">
+                  Thank you for reaching out. A partner will review your project brief and follow up shortly.
                 </p>
-                <div className="pt-4">
+                <div className="pt-3">
                   <button
                     type="button"
                     onClick={() => {
-                      sound.click();
                       setSuccess(false);
                       setFormData({
                         name: "",
@@ -129,39 +134,39 @@ export const RFPInquiryForm: React.FC<InquiryFormProps> = ({ prefillData }) => {
                         message: "",
                       });
                     }}
-                    className="px-6 py-2.5 border border-white/20 text-white font-mono text-xs uppercase hover:bg-white/5"
+                    className="px-4 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-900 text-xs font-medium"
                   >
-                    SEND ANOTHER TRANSMISSION
+                    Send another message
                   </button>
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 {errorMsg && (
-                  <div className="p-4 border border-rose-500/30 bg-rose-500/10 text-rose-300 font-mono text-xs flex items-center gap-2">
+                  <div className="p-3.5 rounded-xl border border-rose-200 bg-rose-50 text-rose-700 text-xs flex items-center gap-2">
                     <ShieldAlert size={15} />
                     <span>{errorMsg}</span>
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="font-mono text-[11px] text-zinc-400 uppercase tracking-wider block mb-2">
-                      LEAD CONTACT NAME *
+                    <label className="text-xs font-medium text-slate-700 block mb-1.5">
+                      Your Name *
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Patrick Collison"
+                      placeholder="Patrick Collison"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full bg-zinc-950 border border-white/10 px-4 py-3 text-white font-mono text-xs placeholder:text-zinc-600 focus:outline-none focus:border-white transition-colors"
+                      className="w-full bg-white border border-slate-200 rounded-lg px-3.5 py-2.5 text-slate-900 text-xs placeholder:text-slate-400 focus:outline-none focus:border-slate-950 focus:ring-1 focus:ring-slate-950 transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="font-mono text-[11px] text-zinc-400 uppercase tracking-wider block mb-2">
-                      CORPORATE EMAIL *
+                    <label className="text-xs font-medium text-slate-700 block mb-1.5">
+                      Email Address *
                     </label>
                     <input
                       type="email"
@@ -169,78 +174,78 @@ export const RFPInquiryForm: React.FC<InquiryFormProps> = ({ prefillData }) => {
                       placeholder="patrick@stripe.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full bg-zinc-950 border border-white/10 px-4 py-3 text-white font-mono text-xs placeholder:text-zinc-600 focus:outline-none focus:border-white transition-colors"
+                      className="w-full bg-white border border-slate-200 rounded-lg px-3.5 py-2.5 text-slate-900 text-xs placeholder:text-slate-400 focus:outline-none focus:border-slate-950 focus:ring-1 focus:ring-slate-950 transition-colors"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="font-mono text-[11px] text-zinc-400 uppercase tracking-wider block mb-2">
-                      ENTERPRISE / ENTITY
+                    <label className="text-xs font-medium text-slate-700 block mb-1.5">
+                      Company
                     </label>
                     <input
                       type="text"
-                      placeholder="Stripe, Razorpay, Linear, etc."
+                      placeholder="Stripe, Linear, etc."
                       value={formData.company}
                       onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                      className="w-full bg-zinc-950 border border-white/10 px-4 py-3 text-white font-mono text-xs placeholder:text-zinc-600 focus:outline-none focus:border-white transition-colors"
+                      className="w-full bg-white border border-slate-200 rounded-lg px-3.5 py-2.5 text-slate-900 text-xs placeholder:text-slate-400 focus:outline-none focus:border-slate-950 focus:ring-1 focus:ring-slate-950 transition-colors"
                     />
                   </div>
 
                   <div>
-                    <label className="font-mono text-[11px] text-zinc-400 uppercase tracking-wider block mb-2">
-                      PRIMARY ARCHITECTURE
+                    <label className="text-xs font-medium text-slate-700 block mb-1.5">
+                      Service
                     </label>
                     <select
                       value={formData.service}
                       onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                      className="w-full bg-zinc-950 border border-white/10 px-4 py-3 text-white font-mono text-xs focus:outline-none focus:border-white transition-colors"
+                      className="w-full bg-white border border-slate-200 rounded-lg px-3.5 py-2.5 text-slate-900 text-xs focus:outline-none focus:border-slate-950 focus:ring-1 focus:ring-slate-950 transition-colors"
                     >
-                      <option value="Enterprise AI & LLM Systems">Enterprise AI &amp; LLM Systems</option>
-                      <option value="Enterprise Web Applications">Enterprise Web Applications</option>
-                      <option value="Cloud & Distributed Infrastructure">Cloud &amp; Distributed Infrastructure</option>
-                      <option value="Design Systems & UX Architecture">Design Systems &amp; UX Architecture</option>
+                      <option value="Enterprise AI & LLM Systems">AI &amp; LLM Systems</option>
+                      <option value="Enterprise Web Applications">Web Applications</option>
+                      <option value="Cloud & Distributed Infrastructure">Cloud Infrastructure</option>
+                      <option value="Design Systems & UX Architecture">Design Systems</option>
                     </select>
                   </div>
                 </div>
 
                 <div>
-                  <label className="font-mono text-[11px] text-zinc-400 uppercase tracking-wider block mb-2">
-                    ALLOCATED INVESTMENT RANGE
+                  <label className="text-xs font-medium text-slate-700 block mb-1.5">
+                    Estimated Budget Range
                   </label>
                   <input
                     type="text"
                     value={formData.budget}
                     onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                    className="w-full bg-zinc-950 border border-white/10 px-4 py-3 text-white font-mono text-xs focus:outline-none focus:border-white transition-colors"
+                    className="w-full bg-white border border-slate-200 rounded-lg px-3.5 py-2.5 text-slate-900 text-xs focus:outline-none focus:border-slate-950 focus:ring-1 focus:ring-slate-950 transition-colors"
                   />
                 </div>
 
                 <div>
-                  <label className="font-mono text-[11px] text-zinc-400 uppercase tracking-wider block mb-2">
-                    PROJECT SPECIFICATIONS / GOALS *
+                  <label className="text-xs font-medium text-slate-700 block mb-1.5">
+                    Project Goals / Scope *
                   </label>
                   <textarea
                     required
                     rows={4}
-                    placeholder="Describe your technical objectives, target deadlines, and infrastructure constraints..."
+                    placeholder="Briefly describe what you're building, target timeline, and any technical constraints..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full bg-zinc-950 border border-white/10 px-4 py-3 text-white font-mono text-xs placeholder:text-zinc-600 focus:outline-none focus:border-white transition-colors resize-none"
+                    className="w-full bg-white border border-slate-200 rounded-lg px-3.5 py-2.5 text-slate-900 text-xs placeholder:text-slate-400 focus:outline-none focus:border-slate-950 focus:ring-1 focus:ring-slate-950 transition-colors resize-none"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-4 bg-white text-black font-tech font-bold text-xs uppercase tracking-widest hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full py-3 rounded-lg bg-slate-950 hover:bg-slate-800 text-white text-xs font-semibold tracking-tight transition-colors flex items-center justify-center gap-2 disabled:opacity-50 shadow-xs"
                 >
                   {loading ? (
-                    <span className="animate-pulse">TRANSMITTING...</span>
+                    <span>Submitting...</span>
                   ) : (
                     <>
-                      <span>TRANSMIT COMMISSION BRIEF</span>
+                      <span>Send inquiry</span>
                       <Send size={13} />
                     </>
                   )}

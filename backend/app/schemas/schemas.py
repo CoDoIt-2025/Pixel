@@ -360,3 +360,31 @@ class UserSettingsResponse(BaseModel):
     seo: dict
     notifications: dict
     appearance: dict
+
+# FAQ Schemas
+class FAQCreate(BaseModel):
+    question: str
+    answer: str
+    category: str = "General"
+    order: int = 0
+    isActive: bool = True
+
+class FAQUpdate(BaseModel):
+    question: Optional[str] = None
+    answer: Optional[str] = None
+    category: Optional[str] = None
+    order: Optional[int] = None
+    isActive: Optional[bool] = None
+
+class FAQResponse(BaseModel):
+    id: str
+    question: str
+    answer: str
+    category: str
+    order: int
+    isActive: bool
+    createdAt: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+

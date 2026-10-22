@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Check, Code, Cpu, Globe, Palette, Cloud } from "lucide-react";
+import { Check, Code, Cpu, Globe, Palette, Cloud, ArrowRight } from "lucide-react";
 import type { Service } from "../types";
 import { api } from "../lib/api";
-import { sound } from "../lib/sound";
 
 const DEFAULT_SERVICES: Service[] = [
   {
@@ -36,7 +35,7 @@ const DEFAULT_SERVICES: Service[] = [
     description: "World-class user interface engineering, tokenized component libraries, and interactive design prototypes.",
     iconName: "Palette",
     startingPrice: 30000,
-    features: ["Figma Design Tokens", "Radix / Tailwind v4 Primitives", "Micro-interaction Physics", "WCAG 2.2 AAA Accessible", "Storybook Living Documentation"],
+    features: ["Figma Design Tokens", "Radix Primitives", "Micro-interaction Physics", "WCAG 2.2 AAA Accessible", "Storybook Living Documentation"],
     isVisible: true,
     deliveryTime: "4-6 weeks",
     activeProjectsCount: 3,
@@ -48,7 +47,7 @@ const DEFAULT_SERVICES: Service[] = [
     description: "Terraform-managed multi-region clouds on AWS & GCP with Kubernetes orchestration and 99.999% SLA.",
     iconName: "Cloud",
     startingPrice: 50000,
-    features: ["Zero-downtime Blue/Green Deployments", "Global Multi-region Anycast", "SOC2 Type II Preparation", "DDoS Mitigation Layer", "24/7 Telemetry Dashboards"],
+    features: ["Zero-downtime Deployments", "Global Multi-region Anycast", "SOC2 Type II Preparation", "DDoS Mitigation Layer", "24/7 Telemetry Dashboards"],
     isVisible: true,
     deliveryTime: "6-8 weeks",
     activeProjectsCount: 3,
@@ -58,103 +57,94 @@ const DEFAULT_SERVICES: Service[] = [
 export const ServicesMatrix: React.FC = () => {
   const [services, setServices] = useState<Service[]>(DEFAULT_SERVICES);
 
+  const loadServices = async () => {
+    const data = await api.getServices();
+    if (data && data.length > 0) {
+      setServices(data.filter((s) => s.isVisible));
+    }
+  };
+
   useEffect(() => {
-    api.getServices().then((data) => {
-      if (data && data.length > 0) {
-        setServices(data.filter((s) => s.isVisible));
-      }
-    });
+    loadServices();
+    window.addEventListener("focus", loadServices);
+    const interval = setInterval(loadServices, 5000);
+    return () => {
+      window.removeEventListener("focus", loadServices);
+      clearInterval(interval);
+    };
   }, []);
 
   const getIcon = (name: string) => {
     switch (name) {
-      case "Cpu": return <Cpu size={22} className="text-white" />;
-      case "Globe": return <Globe size={22} className="text-white" />;
-      case "Palette": return <Palette size={22} className="text-white" />;
-      case "Cloud": return <Cloud size={22} className="text-white" />;
-      default: return <Code size={22} className="text-white" />;
+      case "Cpu": return <Cpu size={20} className="text-slate-900" />;
+      case "Globe": return <Globe size={20} className="text-slate-900" />;
+      case "Palette": return <Palette size={20} className="text-slate-900" />;
+      case "Cloud": return <Cloud size={20} className="text-slate-900" />;
+      default: return <Code size={20} className="text-slate-900" />;
     }
   };
 
   return (
-    <section id="capabilities" className="py-28 border-b border-white/10 bg-zinc-950/80 relative">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-white/10">
-          <div>
-            <div className="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-2 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-white inline-block" />
-              <span>INDEX // 02</span>
-            </div>
-            <h2 className="font-display font-extrabold text-4xl sm:text-6xl uppercase tracking-tight text-white">
-              CORE CAPABILITIES
-            </h2>
-          </div>
-
-          <p className="font-body text-zinc-400 text-sm max-w-md">
-            We operate as an integrated technical partner, taking end-to-end responsibility from computational theory to high-availability deployment.
+    <section id="services" className="py-24 sm:py-32 bg-slate-50/50 border-t border-slate-100">
+      <div className="max-w-6xl mx-auto px-6 sm:px-8">
+        {/* Header */}
+        <div className="max-w-2xl mb-16">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-2">
+            Capabilities
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-950">
+            What we engineer
+          </h2>
+          <p className="mt-4 text-slate-600 text-base leading-relaxed">
+            From technical discovery and architectural prototyping to high-concurrency production deployments.
           </p>
         </div>
 
-        {/* Matrix Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-12">
-          {services.map((srv, idx) => (
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {services.map((srv) => (
             <div
-              key={srv.id || idx}
-              className="border border-white/10 hover:border-white/40 p-8 sm:p-10 bg-black/60 flex flex-col justify-between transition-all duration-300 group relative"
+              key={srv.id}
+              className="p-8 rounded-2xl border border-slate-200/80 bg-white flex flex-col justify-between hover:border-slate-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all"
             >
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 border border-white/15 bg-white/5 flex items-center justify-center">
-                    {getIcon(srv.iconName)}
-                  </div>
-                  <span className="font-mono text-zinc-600 text-sm font-semibold">
-                    0{idx + 1} // CAPABILITY
-                  </span>
+              <div>
+                <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center mb-6">
+                  {getIcon(srv.iconName)}
                 </div>
 
-                <div>
-                  <h3 className="font-display font-bold text-2xl sm:text-3xl uppercase tracking-tight text-white mb-3">
-                    {srv.title}
-                  </h3>
-                  <p className="font-body text-zinc-400 text-sm leading-relaxed">
-                    {srv.description}
-                  </p>
-                </div>
+                <h3 className="text-xl font-semibold tracking-tight text-slate-950 mb-2.5">
+                  {srv.title}
+                </h3>
+                <p className="text-slate-600 text-sm leading-relaxed mb-6">
+                  {srv.description}
+                </p>
 
-                {/* Features Checklist */}
-                <div className="pt-4 border-t border-white/10 space-y-2.5">
+                {/* Features */}
+                <div className="space-y-2 border-t border-slate-100 pt-5 mb-6">
                   {srv.features.map((feat, fIdx) => (
-                    <div key={fIdx} className="flex items-center gap-3 font-mono text-xs text-zinc-300">
-                      <Check size={14} className="text-zinc-500 flex-shrink-0" />
+                    <div key={fIdx} className="flex items-center gap-2.5 text-xs text-slate-600">
+                      <Check size={14} className="text-slate-400 flex-shrink-0" />
                       <span>{feat}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Pricing & Timeline Footer */}
-              <div className="pt-8 mt-8 border-t border-white/10 flex items-center justify-between font-mono">
+              {/* Card Footer */}
+              <div className="flex items-center justify-between pt-6 border-t border-slate-100 text-xs">
                 <div>
-                  <span className="text-zinc-500 text-[10px] block uppercase">COMMENCING FROM</span>
-                  <span className="text-white font-tech font-bold text-lg">
+                  <span className="text-slate-400 block text-[11px]">Commencing from</span>
+                  <span className="text-slate-900 font-semibold text-base">
                     ${srv.startingPrice.toLocaleString()}
                   </span>
                 </div>
 
-                <div className="text-right">
-                  <span className="text-zinc-500 text-[10px] block uppercase">CYCLE DURATION</span>
-                  <span className="text-zinc-300 font-tech text-sm font-medium">
-                    {srv.deliveryTime}
-                  </span>
-                </div>
-
                 <a
-                  href="#estimator"
-                  onClick={() => sound.click()}
-                  className="px-4 py-2 border border-white/20 hover:border-white text-white text-xs uppercase tracking-wider hover:bg-white hover:text-black transition-all"
+                  href="#calculator"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border border-slate-200 hover:border-slate-400 text-slate-900 font-medium hover:bg-slate-50 transition-colors"
                 >
-                  ESTIMATE &rarr;
+                  <span>Estimate</span>
+                  <ArrowRight size={13} />
                 </a>
               </div>
             </div>

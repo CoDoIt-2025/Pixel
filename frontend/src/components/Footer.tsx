@@ -1,95 +1,153 @@
 import React from "react";
-import { ArrowUpRight, Terminal } from "lucide-react";
-import { sound } from "../lib/sound";
+import { ArrowUpRight, Mail, Phone, MapPin, Globe } from "lucide-react";
+import { useSettings } from "../context/SettingsContext";
 
 export const Footer: React.FC = () => {
+  const { company } = useSettings();
+  const brandInitial = company.name ? company.name.trim().charAt(0).toUpperCase() : "P";
+
   return (
-    <footer className="bg-black border-t border-white/10 py-16 text-zinc-400 font-mono text-xs">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 pb-14 border-b border-white/10">
-          {/* Brand Col */}
-          <div className="md:col-span-5 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-7 h-7 bg-white text-black font-mono font-bold flex items-center justify-center text-xs">
-                PX
+    <footer className="bg-slate-50 border-t border-slate-200/80 pt-16 pb-8 text-slate-600 text-xs overflow-hidden">
+      <div className="max-w-6xl mx-auto px-6 sm:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-14 border-b border-slate-200">
+          {/* Brand & Mission */}
+          <div className="md:col-span-5 space-y-3.5">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 bg-slate-950 rounded-[6px] flex items-center justify-center text-white text-xs font-bold shadow-2xs">
+                {brandInitial}
               </div>
-              <span className="font-display font-extrabold text-xl text-white uppercase tracking-wider">
-                PIXEL
+              <span className="font-semibold text-slate-950 text-base tracking-tight">
+                {company.name}
               </span>
             </div>
-            <p className="font-body text-zinc-400 text-xs max-w-sm leading-relaxed">
-              Atelier for autonomous AI pipelines, resilient cloud backends, and tactile monochrome user interfaces.
+            <p className="text-slate-500 text-xs max-w-sm leading-relaxed">
+              {company.description ||
+                "Software & AI engineering studio crafting modern web platforms, autonomous inference pipelines, and design systems for enterprise leaders."}
             </p>
-            <div className="flex items-center gap-2 pt-2 text-[11px] text-zinc-500">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" />
-              <span>SERVER: FASTAPI (PY 3.14) &bull; SQLITE LOCAL DB</span>
+
+            {/* Direct Contact Links */}
+            <div className="pt-2 space-y-1.5 text-[11px] text-slate-500">
+              {company.email && (
+                <div className="flex items-center gap-2">
+                  <Mail size={12} className="text-slate-400" />
+                  <a
+                    href={`mailto:${company.email}`}
+                    className="hover:text-slate-900 transition-colors"
+                  >
+                    {company.email}
+                  </a>
+                </div>
+              )}
+              {company.phone && (
+                <div className="flex items-center gap-2">
+                  <Phone size={12} className="text-slate-400" />
+                  <span>{company.phone}</span>
+                </div>
+              )}
+              {company.address && (
+                <div className="flex items-center gap-2">
+                  <MapPin size={12} className="text-slate-400" />
+                  <span>{company.address}</span>
+                </div>
+              )}
+              {company.website && (
+                <div className="flex items-center gap-2">
+                  <Globe size={12} className="text-slate-400" />
+                  <a
+                    href={company.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-slate-900 transition-colors"
+                  >
+                    {company.website.replace(/^https?:\/\//, "")}
+                  </a>
+                </div>
+              )}
+            </div>
+
+            <div className="pt-2 text-[11px] text-slate-400 font-mono">
+              STATUS: ALL SYSTEMS OPERATIONAL
             </div>
           </div>
 
-          {/* Quick Jumps */}
-          <div className="md:col-span-3 space-y-3 font-tech text-xs uppercase tracking-wider">
-            <span className="text-white font-mono text-[11px] block text-zinc-500 mb-2">INDEX</span>
-            <a href="#work" onClick={() => sound.click()} className="block hover:text-white transition-colors">
-              01 // Selected Work
+          {/* Navigation */}
+          <div className="md:col-span-3 space-y-2 text-xs">
+            <span className="text-slate-900 font-semibold block mb-2.5">Navigation</span>
+            <a href="#work" className="block text-slate-500 hover:text-slate-950 transition-colors">
+              Selected Work
             </a>
-            <a href="#capabilities" onClick={() => sound.click()} className="block hover:text-white transition-colors">
-              02 // Capabilities
+            <a href="#services" className="block text-slate-500 hover:text-slate-950 transition-colors">
+              Services &amp; Capabilities
             </a>
-            <a href="#estimator" onClick={() => sound.click()} className="block hover:text-white transition-colors">
-              03 // Scope Estimator
+            <a href="#calculator" className="block text-slate-500 hover:text-slate-950 transition-colors">
+              Cost Estimator
             </a>
-            <a href="#atelier" onClick={() => sound.click()} className="block hover:text-white transition-colors">
-              04 // Engineering Atelier
+            <a href="#about" className="block text-slate-500 hover:text-slate-950 transition-colors">
+              Principals &amp; Team
             </a>
-            <a href="#inquire" onClick={() => sound.click()} className="block hover:text-white transition-colors">
-              05 // Inquire
+            <a href="#blog" className="block text-slate-500 hover:text-slate-950 transition-colors">
+              Articles &amp; Research
+            </a>
+            <a href="#faq" className="block text-slate-500 hover:text-slate-950 transition-colors">
+              FAQ
+            </a>
+            <a href="#contact" className="block text-slate-500 hover:text-slate-950 transition-colors">
+              Start a Project
             </a>
           </div>
 
-          {/* System & Dev Links */}
-          <div className="md:col-span-4 space-y-3 font-mono text-xs">
-            <span className="text-white text-[11px] block text-zinc-500 mb-2">TELEMETRY &amp; PORTALS</span>
+          {/* Quick Portals */}
+          <div className="md:col-span-4 space-y-2 text-xs">
+            <span className="text-slate-900 font-semibold block mb-2.5">Internal Portals</span>
             <a
               href="http://localhost:3000/dashboard"
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => sound.click()}
-              className="flex items-center justify-between p-3 border border-white/10 hover:border-white/30 text-zinc-300 hover:text-white transition-all bg-zinc-950"
+              className="flex items-center justify-between p-3 rounded-xl border border-slate-200/90 bg-white hover:border-slate-300 text-slate-700 hover:text-slate-950 transition-all shadow-2xs"
             >
               <div className="flex items-center gap-2">
-                <Terminal size={14} className="text-white" />
-                <span>Next.js Admin Console</span>
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span className="font-medium">Next.js Admin Console</span>
               </div>
-              <ArrowUpRight size={13} />
+              <ArrowUpRight size={13} className="text-slate-400" />
             </a>
-
             <a
               href="http://127.0.0.1:8000/docs"
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => sound.click()}
-              className="flex items-center justify-between p-3 border border-white/10 hover:border-white/30 text-zinc-300 hover:text-white transition-all bg-zinc-950"
+              className="flex items-center justify-between p-3 rounded-xl border border-slate-200/90 bg-white hover:border-slate-300 text-slate-700 hover:text-slate-950 transition-all shadow-2xs"
             >
               <div className="flex items-center gap-2">
-                <span className="text-emerald-400 font-bold">API</span>
-                <span>FastAPI Swagger Docs</span>
+                <span className="w-2 h-2 rounded-full bg-indigo-500" />
+                <span className="font-medium">FastAPI Swagger Docs</span>
               </div>
-              <ArrowUpRight size={13} />
+              <ArrowUpRight size={13} className="text-slate-400" />
             </a>
           </div>
         </div>
 
-        {/* Bottom Credits & Copyright */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-[11px] text-zinc-600">
+        {/* Bottom Metadata & Credits */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-400 text-xs">
           <div>
-            &copy; {new Date().getFullYear()} PIXEL TECHNOLOGIES INC. ALL RIGHTS RESERVED.
+            &copy; {new Date().getFullYear()} {company.name}. All rights reserved.
           </div>
-          <div className="flex items-center gap-4">
-            <span>SF &bull; LON &bull; BLR &bull; TYO</span>
-            <span>//</span>
-            <span>END_OF_PAGE</span>
+          <div className="flex items-center gap-2">
+            <span>{company.address || "Muscat, Sultanate of Oman"}</span>
+            {company.taxId && (
+              <>
+                <span>&bull;</span>
+                <span className="font-mono">{company.taxId}</span>
+              </>
+            )}
           </div>
         </div>
+      </div>
+
+      {/* Massive Antigravity-Style Editorial Watermark */}
+      <div className="w-full pt-10 sm:pt-14 pb-0 overflow-hidden select-none pointer-events-none flex justify-center">
+        <h2 className="text-[20vw] font-black tracking-[-0.07em] leading-[0.72] text-slate-950/90 text-center uppercase whitespace-nowrap">
+          {company.name || "PIXEL"}
+        </h2>
       </div>
     </footer>
   );

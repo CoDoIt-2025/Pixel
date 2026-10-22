@@ -157,7 +157,17 @@ export interface ActivityItem {
   action: string;
   target: string;
   time: string;
-  type: "project" | "client" | "blog" | "inquiry" | "testimonial" | "team";
+  type: "project" | "client" | "blog" | "inquiry" | "testimonial" | "team" | "faq";
+}
+
+export interface FAQ {
+  id: string;
+  question: string;
+  answer: string;
+  category: string;
+  order: number;
+  isActive: boolean;
+  createdAt?: string;
 }
 
 export interface UserSettings {
@@ -177,6 +187,7 @@ export interface UserSettings {
     taxId: string;
     currency: string;
     website: string;
+    description?: string;
   };
   seo: {
     metaTitle: string;

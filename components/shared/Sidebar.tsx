@@ -14,6 +14,7 @@ import {
   Star,
   BarChart3,
   Settings,
+  HelpCircle,
   ChevronLeft,
   ChevronRight,
   X,
@@ -50,6 +51,7 @@ const navGroups: NavGroup[] = [
     items: [
       { label: "Services", href: "/services", icon: Layers },
       { label: "Blog / Posts", href: "/blog", icon: FileText },
+      { label: "FAQs", href: "/faqs", icon: HelpCircle },
       { label: "Inquiries", href: "/inquiries", icon: Mail, badgeKey: "inquiries" },
       { label: "Testimonials", href: "/testimonials", icon: Star, badgeKey: "testimonials" },
     ],

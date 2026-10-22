@@ -57,3 +57,66 @@ export interface Testimonial {
   status: string;
   date: string;
 }
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  coverImage: string;
+  author: {
+    name: string;
+    avatar: string;
+    role: string;
+  };
+  category: string;
+  tags: string[];
+  status: "Draft" | "Published" | "Scheduled";
+  views: number;
+  publishedAt: string;
+  readingTime: string;
+}
+
+export interface FAQItem {
+  id?: string;
+  question: string;
+  answer: string;
+  category?: string;
+  order?: number;
+  isActive?: boolean;
+}
+
+export interface CompanySettings {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  taxId: string;
+  currency: string;
+  website: string;
+  description?: string;
+}
+
+export interface SEOSettings {
+  metaTitle: string;
+  metaDescription: string;
+  keywords: string;
+  ogImage: string;
+  googleAnalyticsId: string;
+}
+
+export interface SystemSettings {
+  profile: {
+    name: string;
+    email: string;
+    avatar: string;
+    role: string;
+    bio: string;
+    timezone: string;
+  };
+  company: CompanySettings;
+  seo: SEOSettings;
+}
+
+

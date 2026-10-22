@@ -14,6 +14,7 @@ import {
   Star,
   BarChart3,
   Settings,
+  HelpCircle,
   PlusCircle,
   Search,
   LogOut,
@@ -132,6 +133,13 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
               >
                 <Star className="h-4 w-4 text-indigo-600" />
                 <span>Testimonials & Reviews</span>
+              </Command.Item>
+              <Command.Item
+                onSelect={() => runCommand(() => router.push("/faqs"))}
+                className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg cursor-pointer hover:bg-slate-100 text-slate-700 transition-colors"
+              >
+                <HelpCircle className="h-4 w-4 text-indigo-600" />
+                <span>Frequently Asked Questions</span>
               </Command.Item>
               <Command.Item
                 onSelect={() => runCommand(() => router.push("/analytics"))}

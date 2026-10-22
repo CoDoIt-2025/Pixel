@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SettingsProvider } from "./context/SettingsContext";
 import { Navbar } from "./components/Navbar";
 import { Hero } from "./components/Hero";
 import { ClientTicker } from "./components/ClientTicker";
@@ -6,6 +7,8 @@ import { WorkShowcase } from "./components/WorkShowcase";
 import { ServicesMatrix } from "./components/ServicesMatrix";
 import { InteractiveScopeCalculator } from "./components/InteractiveScopeCalculator";
 import { TeamRoster } from "./components/TeamRoster";
+import { BlogSection } from "./components/BlogSection";
+import { FAQSection } from "./components/FAQSection";
 import { RFPInquiryForm } from "./components/RFPInquiryForm";
 import { Footer } from "./components/Footer";
 
@@ -17,14 +20,12 @@ export function App() {
   } | null>(null);
 
   return (
-    <div className="min-h-screen bg-black text-white relative selection:bg-white selection:text-black">
-      {/* Subtle Grain Overlay for High-End Editorial Feel */}
-      <div className="grain-overlay" />
+    <SettingsProvider>
+      <div className="min-h-screen bg-white text-slate-900 relative selection:bg-slate-900 selection:text-white">
+        {/* Navigation */}
+        <Navbar />
 
-      {/* Main Navigation */}
-      <Navbar />
-
-      {/* Main Content Sections */}
+      {/* Main Sections */}
       <main>
         <Hero />
         <ClientTicker />
@@ -32,12 +33,15 @@ export function App() {
         <ServicesMatrix />
         <InteractiveScopeCalculator onApplyEstimate={(data) => setCalculatorPrefill(data)} />
         <TeamRoster />
+        <BlogSection />
+        <FAQSection />
         <RFPInquiryForm prefillData={calculatorPrefill} />
       </main>
 
-      {/* Architectural Studio Footer */}
-      <Footer />
-    </div>
+        {/* Footer */}
+        <Footer />
+      </div>
+    </SettingsProvider>
   );
 }
 

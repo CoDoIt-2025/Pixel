@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { ArrowUpRight, CheckCircle2, Layers, X } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, X } from "lucide-react";
 import type { Project } from "../types";
 import { api } from "../lib/api";
-import { sound } from "../lib/sound";
 
 const DEFAULT_PROJECTS: Project[] = [
   {
@@ -96,12 +95,21 @@ export const WorkShowcase: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>("ALL");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
+  const loadProjects = async () => {
+    const data = await api.getProjects();
+    if (data && data.length > 0) {
+      setProjects(data);
+    }
+  };
+
   useEffect(() => {
-    api.getProjects().then((data) => {
-      if (data && data.length > 0) {
-        setProjects(data);
-      }
-    });
+    loadProjects();
+    window.addEventListener("focus", loadProjects);
+    const interval = setInterval(loadProjects, 5000);
+    return () => {
+      window.removeEventListener("focus", loadProjects);
+      clearInterval(interval);
+    };
   }, []);
 
   const categories = ["ALL", "AI Solutions", "Cloud Architecture", "UI/UX Design", "Web Development"];
@@ -111,91 +119,80 @@ export const WorkShowcase: React.FC = () => {
     : projects.filter((p) => p.category.toLowerCase() === activeCategory.toLowerCase());
 
   return (
-    <section id="work" className="py-28 border-b border-white/10 bg-black relative">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-white/10">
+    <section id="work" className="py-24 sm:py-32 bg-white">
+      <div className="max-w-6xl mx-auto px-6 sm:px-8">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-slate-100">
           <div>
-            <div className="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-2 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-white inline-block" />
-              <span>INDEX // 01</span>
-            </div>
-            <h2 className="font-display font-extrabold text-4xl sm:text-6xl uppercase tracking-tight text-white">
-              SELECTED WORKS
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-2">
+              Portfolio
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-950">
+              Selected works
             </h2>
           </div>
 
-          {/* Category Filter Pills */}
-          <div className="flex flex-wrap gap-2 font-mono text-xs">
+          {/* Filter Pills */}
+          <div className="flex flex-wrap gap-2 text-xs">
             {categories.map((cat) => (
               <button
                 key={cat}
-                onClick={() => {
-                  sound.click();
-                  setActiveCategory(cat);
-                }}
-                className={`px-3 py-1.5 transition-all uppercase tracking-wider ${
+                onClick={() => setActiveCategory(cat)}
+                className={`px-3 py-1.5 rounded-lg transition-all font-medium ${
                   activeCategory === cat
-                    ? "bg-white text-black font-semibold"
-                    : "border border-white/10 text-zinc-400 hover:text-white hover:border-white/30"
+                    ? "bg-slate-950 text-white shadow-xs"
+                    : "bg-slate-100 text-slate-600 hover:text-slate-950 hover:bg-slate-200/70"
                 }`}
               >
-                {cat}
+                {cat === "ALL" ? "All Works" : cat}
               </button>
             ))}
           </div>
         </div>
 
         {/* Project Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-10">
           {filtered.map((item, index) => (
             <div
               key={item.id || index}
-              onClick={() => {
-                sound.tactile();
-                setSelectedProject(item);
-              }}
-              className="group border border-white/10 hover:border-white/40 bg-zinc-950/60 p-8 flex flex-col justify-between transition-all duration-300 cursor-pointer hover:shadow-2xl hover:shadow-white/5 relative overflow-hidden"
+              onClick={() => setSelectedProject(item)}
+              className="group p-8 rounded-2xl border border-slate-200/80 bg-white hover:border-slate-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all cursor-pointer flex flex-col justify-between"
             >
-              {/* Corner Watermark */}
-              <div className="absolute top-4 right-4 font-mono text-[10px] text-zinc-600 border border-white/10 px-2 py-0.5 group-hover:text-white group-hover:border-white/30 transition-colors">
-                {item.code}
-              </div>
-
               <div>
-                <div className="flex items-center gap-3 font-mono text-xs text-zinc-400 mb-4">
-                  <span className="text-zinc-200 uppercase font-semibold">{item.client}</span>
-                  <span className="text-zinc-600">&bull;</span>
-                  <span className="text-zinc-500">{item.category}</span>
+                <div className="flex items-center justify-between text-xs text-slate-500 mb-4">
+                  <span className="font-semibold text-slate-900">{item.client}</span>
+                  <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[11px] font-medium">
+                    {item.category}
+                  </span>
                 </div>
 
-                <h3 className="font-display font-bold text-2xl sm:text-3xl uppercase tracking-tight text-white group-hover:text-zinc-200 transition-colors mb-4">
+                <h3 className="text-xl font-semibold tracking-tight text-slate-950 group-hover:text-slate-700 transition-colors mb-2.5">
                   {item.name}
                 </h3>
 
-                <p className="font-body text-zinc-400 text-sm leading-relaxed line-clamp-2">
+                <p className="text-slate-600 text-sm leading-relaxed line-clamp-2">
                   {item.description}
                 </p>
               </div>
 
-              <div className="pt-8 mt-8 border-t border-white/5 flex items-center justify-between font-mono text-xs">
+              <div className="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between text-xs">
                 <div className="flex items-center gap-4">
                   <div>
-                    <span className="text-zinc-500 block text-[10px] uppercase">BUDGET</span>
-                    <span className="text-white font-tech font-bold text-sm">
+                    <span className="text-slate-400 block text-[11px]">Budget</span>
+                    <span className="text-slate-900 font-semibold text-sm">
                       ${item.budget.toLocaleString()}
                     </span>
                   </div>
-                  <div className="h-6 w-px bg-white/10" />
+                  <div className="h-6 w-px bg-slate-100" />
                   <div>
-                    <span className="text-zinc-500 block text-[10px] uppercase">STATUS</span>
-                    <span className="text-emerald-400 font-tech font-medium">
-                      {item.status} ({item.progress}%)
+                    <span className="text-slate-400 block text-[11px]">Progress</span>
+                    <span className="text-emerald-600 font-medium">
+                      {item.progress}% &bull; {item.status}
                     </span>
                   </div>
                 </div>
 
-                <div className="w-8 h-8 rounded-full border border-white/15 flex items-center justify-center text-white group-hover:bg-white group-hover:text-black transition-all">
+                <div className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 group-hover:bg-slate-950 group-hover:text-white group-hover:border-slate-950 transition-all">
                   <ArrowUpRight size={14} />
                 </div>
               </div>
@@ -206,86 +203,71 @@ export const WorkShowcase: React.FC = () => {
 
       {/* Project Detail Modal */}
       {selectedProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4 sm:p-6 animate-fadeIn">
-          <div className="bg-zinc-950 border border-white/20 max-w-2xl w-full p-6 sm:p-8 relative max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 backdrop-blur-xs p-4 sm:p-6 animate-fadeIn">
+          <div className="bg-white border border-slate-200 rounded-2xl max-w-xl w-full p-6 sm:p-8 relative max-h-[85vh] overflow-y-auto shadow-2xl">
             <button
-              onClick={() => {
-                sound.click();
-                setSelectedProject(null);
-              }}
-              className="absolute top-6 right-6 p-2 border border-white/10 text-zinc-400 hover:text-white hover:border-white"
+              onClick={() => setSelectedProject(null)}
+              className="absolute top-6 right-6 p-1.5 rounded-lg border border-slate-200 text-slate-500 hover:text-slate-950 hover:bg-slate-50"
             >
-              <X size={18} />
+              <X size={16} />
             </button>
 
-            <div className="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-2">
-              [{selectedProject.code}] // {selectedProject.client}
-            </div>
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-2">
+              {selectedProject.client}
+            </span>
 
-            <h3 className="font-display font-extrabold text-3xl uppercase tracking-tight text-white mb-4">
+            <h3 className="text-2xl font-semibold tracking-tight text-slate-950 mb-3">
               {selectedProject.name}
             </h3>
 
-            <p className="font-body text-zinc-300 text-sm leading-relaxed mb-6">
+            <p className="text-slate-600 text-sm leading-relaxed mb-6">
               {selectedProject.description}
             </p>
 
-            <div className="grid grid-cols-3 gap-4 p-4 border border-white/10 bg-white/[0.02] font-mono text-xs mb-6">
+            <div className="grid grid-cols-3 gap-3 p-3.5 rounded-xl border border-slate-100 bg-slate-50 text-xs mb-6">
               <div>
-                <span className="text-zinc-500 block text-[10px]">CATEGORY</span>
-                <span className="text-white font-medium">{selectedProject.category}</span>
+                <span className="text-slate-400 block text-[10px]">Category</span>
+                <span className="text-slate-900 font-medium">{selectedProject.category}</span>
               </div>
               <div>
-                <span className="text-zinc-500 block text-[10px]">TOTAL BUDGET</span>
-                <span className="text-white font-bold font-tech text-sm">${selectedProject.budget.toLocaleString()}</span>
+                <span className="text-slate-400 block text-[10px]">Budget</span>
+                <span className="text-slate-900 font-semibold">${selectedProject.budget.toLocaleString()}</span>
               </div>
               <div>
-                <span className="text-zinc-500 block text-[10px]">PROGRESS</span>
-                <span className="text-emerald-400 font-bold font-tech text-sm">{selectedProject.progress}%</span>
+                <span className="text-slate-400 block text-[10px]">Progress</span>
+                <span className="text-emerald-600 font-semibold">{selectedProject.progress}%</span>
               </div>
             </div>
 
             {/* Milestones Checklist */}
-            <div className="space-y-3">
-              <h4 className="font-mono text-xs uppercase tracking-wider text-zinc-400 flex items-center gap-2">
-                <Layers size={13} />
-                <span>ARCHITECTURAL MILESTONES</span>
+            <div className="space-y-2.5">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                Key Milestones
               </h4>
-              <div className="space-y-2">
+
+              <div className="space-y-1.5">
                 {selectedProject.milestones && selectedProject.milestones.length > 0 ? (
                   selectedProject.milestones.map((m) => (
                     <div
                       key={m.id}
-                      className="p-3 border border-white/10 flex items-center justify-between font-mono text-xs bg-black/40"
+                      className="p-3 rounded-lg border border-slate-100 bg-slate-50/50 flex items-center justify-between text-xs"
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2.5">
                         <CheckCircle2
                           size={15}
-                          className={m.completed ? "text-white" : "text-zinc-600"}
+                          className={m.completed ? "text-emerald-500" : "text-slate-300"}
                         />
-                        <span className={m.completed ? "text-zinc-200" : "text-zinc-500"}>
+                        <span className={m.completed ? "text-slate-900 font-medium" : "text-slate-500"}>
                           {m.title}
                         </span>
                       </div>
-                      <span className="text-[10px] text-zinc-600">{m.dueDate}</span>
+                      <span className="text-slate-400 text-[11px]">{m.dueDate}</span>
                     </div>
                   ))
                 ) : (
-                  <p className="text-zinc-500 text-xs font-mono">No milestones registered.</p>
+                  <p className="text-xs text-slate-400 italic">No milestones defined.</p>
                 )}
               </div>
-            </div>
-
-            <div className="mt-8 pt-6 border-t border-white/10 flex justify-end">
-              <button
-                onClick={() => {
-                  sound.click();
-                  setSelectedProject(null);
-                }}
-                className="px-6 py-2.5 bg-white text-black font-tech font-bold text-xs uppercase tracking-wider hover:bg-zinc-200"
-              >
-                CLOSE ARTIFACT
-              </button>
             </div>
           </div>
         </div>

@@ -1,56 +1,79 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { api } from "../lib/api";
+import type { Testimonial } from "../types";
 
-const ENDORSEMENTS = [
+const FALLBACK_ENDORSEMENTS = [
   {
-    quote: "Pixel delivers the caliber of software engineering and aesthetic finesse rarely found in external partners. Their work on our treasury AI set a new benchmark.",
+    quote: "Pixel delivers the caliber of software engineering and aesthetic finesse rarely found in external partners. Exceptional work.",
     author: "Patrick Collison",
-    title: "CEO & Co-founder",
-    company: "Stripe",
+    title: "Stripe",
   },
   {
-    quote: "The engineering velocity and attention to detail from the Pixel atelier was phenomenal. Zero-downtime migration with immaculate design polish.",
+    quote: "The engineering velocity and attention to detail from the Pixel team was phenomenal. Zero-downtime migration.",
     author: "Harshil Mathur",
-    title: "Founder & CEO",
-    company: "Razorpay",
+    title: "Razorpay",
   },
   {
-    quote: "Pixel understands tactile micro-interactions and rigorous typography like few teams on earth. Exceptional craft.",
+    quote: "Pixel understands tactile micro-interactions and rigorous typography like few teams on earth.",
     author: "Karri Saarinen",
-    title: "Co-founder & Head of Product",
-    company: "Linear",
+    title: "Linear",
   },
   {
     quote: "Sub-millisecond edge routing and ruthless performance optimization. Pixel is in a league of their own.",
     author: "Guillermo Rauch",
-    title: "CEO & Founder",
-    company: "Vercel",
+    title: "Vercel",
   },
 ];
 
 export const ClientTicker: React.FC = () => {
+  const [items, setItems] = useState<Array<{ quote: string; author: string; title: string }>>(FALLBACK_ENDORSEMENTS);
+
+  const loadTestimonials = async () => {
+    const data: Testimonial[] = await api.getTestimonials();
+    if (data && data.length > 0) {
+      setItems(
+        data.map((t) => ({
+          quote: t.quote,
+          author: t.clientName,
+          title: t.company || t.clientRole,
+        }))
+      );
+    }
+  };
+
+  useEffect(() => {
+    loadTestimonials();
+    window.addEventListener("focus", loadTestimonials);
+    const interval = setInterval(loadTestimonials, 8000);
+    return () => {
+      window.removeEventListener("focus", loadTestimonials);
+      clearInterval(interval);
+    };
+  }, []);
+
   return (
-    <div className="py-14 border-b border-white/10 bg-zinc-950/90 overflow-hidden relative select-none">
-      <div className="animate-marquee flex items-center gap-12">
-        {[...ENDORSEMENTS, ...ENDORSEMENTS].map((item, index) => (
+    <section className="py-16 border-y border-slate-100 bg-slate-50/50 overflow-hidden select-none">
+      <div className="max-w-6xl mx-auto px-6 sm:px-8 mb-6">
+        <p className="text-xs font-medium text-slate-400 uppercase tracking-wider text-center">
+          Trusted by technical leaders at high-growth companies
+        </p>
+      </div>
+      <div className="animate-marquee flex items-center gap-6">
+        {[...items, ...items].map((item, index) => (
           <div
             key={index}
-            className="flex-shrink-0 max-w-lg p-6 border border-white/10 bg-black/60 flex flex-col justify-between"
+            className="flex-shrink-0 w-80 p-5 rounded-xl border border-slate-200/70 bg-white flex flex-col justify-between shadow-2xs hover:border-slate-300 transition-colors"
           >
-            <p className="font-body text-zinc-300 text-sm italic leading-relaxed mb-4">
+            <p className="text-slate-700 text-[13px] leading-relaxed mb-4">
               &ldquo;{item.quote}&rdquo;
             </p>
-            <div className="flex items-center justify-between font-mono text-xs border-t border-white/5 pt-3">
-              <div>
-                <span className="text-white font-semibold block">{item.author}</span>
-                <span className="text-zinc-500 text-[10px]">{item.title}</span>
-              </div>
-              <span className="font-tech font-bold text-zinc-400 uppercase tracking-widest text-sm">
-                {item.company}
-              </span>
+            <div className="flex items-center justify-between text-xs border-t border-slate-100 pt-3">
+              <span className="text-slate-900 font-semibold">{item.author}</span>
+              <span className="text-slate-500 font-medium">{item.title}</span>
             </div>
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 };

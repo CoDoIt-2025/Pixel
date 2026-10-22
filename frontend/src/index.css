@@ -2,64 +2,41 @@
 
 @layer base {
   :root {
-    --font-display: 'Syne', sans-serif;
-    --font-tech: 'Space Grotesk', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  * {
+    border-color: #E2E8F0;
   }
 
   body {
-    font-family: var(--font-body);
-    background-color: #050505;
-    color: #F4F4F5;
-    letter-spacing: -0.01em;
+    font-family: var(--font-sans);
+    background-color: #FFFFFF;
+    color: #0F172A;
+    letter-spacing: -0.015em;
+    -webkit-font-smoothing: antialiased;
   }
 }
 
-/* Custom Typography Helpers */
-.font-display {
-  font-family: var(--font-display);
+/* Subtle Smooth Transitions */
+.transition-smooth {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.font-tech {
-  font-family: var(--font-tech);
+/* Clean Minimal Card */
+.minimal-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  transition: all 0.2s ease;
 }
 
-.font-mono {
-  font-family: var(--font-mono);
+.minimal-card:hover {
+  border-color: #CBD5E1;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
 }
 
-.font-body {
-  font-family: var(--font-body);
-}
-
-/* Architectural Blueprint Grid Pattern */
-.bg-grid-pattern {
-  background-size: 48px 48px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-}
-
-.bg-dot-pattern {
-  background-size: 24px 24px;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
-}
-
-/* Luxury Grain & Noise Overlay */
-.grain-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 9999;
-  opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-}
-
-/* Infinite Marquee Animation */
+/* Infinite Marquee */
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
@@ -68,35 +45,24 @@
 .animate-marquee {
   display: flex;
   width: 200%;
-  animation: marquee 28s linear infinite;
+  animation: marquee 35s linear infinite;
 }
 
 .animate-marquee:hover {
   animation-play-state: paused;
 }
 
-/* Architectural Card Border Glow */
-.border-stealth {
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.border-stealth:hover {
-  border-color: rgba(255, 255, 255, 0.28);
-  box-shadow: 0 0 30px rgba(255, 255, 255, 0.05);
-}
-
-/* Custom Scrollbar */
+/* Minimal Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #09090b;
+  background: #FFFFFF;
 }
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
-  border-radius: 3px;
+  background: #E2E8F0;
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #52525b;
+  background: #CBD5E1;
 }

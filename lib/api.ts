@@ -8,6 +8,7 @@ import {
   Testimonial,
   ActivityItem,
   UserSettings,
+  FAQ,
 } from "@/types";
 
 const API_BASE_URL =
@@ -246,6 +247,37 @@ export const api = {
       }),
     delete: (id: string) =>
       request<void>(`/testimonials/${id}`, {
+        method: "DELETE",
+      }),
+  },
+
+  // FAQs
+  faqs: {
+    list: (params?: { category?: string; search?: string; active_only?: boolean }) => {
+      const q = new URLSearchParams();
+      if (params?.category && params.category !== "ALL") q.set("category", params.category);
+      if (params?.search) q.set("search", params.search);
+      if (params?.active_only) q.set("active_only", "true");
+      const queryStr = q.toString() ? `?${q.toString()}` : "";
+      return request<FAQ[]>(`/faqs${queryStr}`);
+    },
+    get: (id: string) => request<FAQ>(`/faqs/${id}`),
+    create: (data: Omit<FAQ, "id" | "createdAt">) =>
+      request<FAQ>("/faqs", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
+    update: (id: string, updates: Partial<FAQ>) =>
+      request<FAQ>(`/faqs/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(updates),
+      }),
+    toggle: (id: string) =>
+      request<FAQ>(`/faqs/${id}/toggle`, {
+        method: "PATCH",
+      }),
+    delete: (id: string) =>
+      request<void>(`/faqs/${id}`, {
         method: "DELETE",
       }),
   },

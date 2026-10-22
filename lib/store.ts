@@ -10,6 +10,7 @@ import {
   Testimonial,
   ActivityItem,
   UserSettings,
+  FAQ,
 } from "@/types";
 import { initialProjects } from "@/data/mockProjects";
 import { initialClients } from "@/data/mockClients";
@@ -18,6 +19,7 @@ import { initialServices } from "@/data/mockServices";
 import { initialBlogPosts } from "@/data/mockBlog";
 import { initialInquiries } from "@/data/mockInquiries";
 import { initialTestimonials } from "@/data/mockTestimonials";
+import { initialFAQs } from "@/data/mockFAQs";
 import { initialActivities } from "@/data/mockActivities";
 import { initialSettings } from "@/data/mockSettings";
 import { api } from "@/lib/api";
@@ -30,6 +32,7 @@ interface AdminState {
   blogPosts: BlogPost[];
   inquiries: Inquiry[];
   testimonials: Testimonial[];
+  faqs: FAQ[];
   activities: ActivityItem[];
   settings: UserSettings;
   sidebarCollapsed: boolean;
@@ -76,6 +79,13 @@ interface AdminState {
   updateTestimonialStatus: (id: string, status: Testimonial["status"]) => void;
   deleteTestimonial: (id: string) => void;
 
+  // FAQ Actions
+  addFAQ: (faq: Omit<FAQ, "id" | "createdAt">) => void;
+  updateFAQ: (id: string, updates: Partial<FAQ>) => void;
+  toggleFAQStatus: (id: string) => void;
+  deleteFAQ: (id: string) => void;
+  reorderFAQs: (newOrderedList: FAQ[]) => void;
+
   // Settings Actions
   updateSettings: (updates: Partial<UserSettings>) => void;
 
@@ -93,6 +103,7 @@ export const useAdminStore = create<AdminState>()(
       blogPosts: initialBlogPosts,
       inquiries: initialInquiries,
       testimonials: initialTestimonials,
+      faqs: initialFAQs,
       activities: initialActivities,
       settings: initialSettings,
       sidebarCollapsed: false,
@@ -113,6 +124,7 @@ export const useAdminStore = create<AdminState>()(
             blogPosts,
             inquiries,
             testimonials,
+            faqs,
             activities,
             settings,
           ] = await Promise.all([
@@ -123,6 +135,7 @@ export const useAdminStore = create<AdminState>()(
             api.blog.list().catch(() => null),
             api.inquiries.list().catch(() => null),
             api.testimonials.list().catch(() => null),
+            api.faqs.list().catch(() => null),
             api.dashboard.getActivities().catch(() => null),
             api.settings.get().catch(() => null),
           ]);
@@ -136,6 +149,7 @@ export const useAdminStore = create<AdminState>()(
             blogPosts: blogPosts && blogPosts.length > 0 ? blogPosts : state.blogPosts,
             inquiries: inquiries && inquiries.length > 0 ? inquiries : state.inquiries,
             testimonials: testimonials && testimonials.length > 0 ? testimonials : state.testimonials,
+            faqs: faqs && faqs.length > 0 ? faqs : state.faqs,
             activities: activities && activities.length > 0 ? activities : state.activities,
             settings: settings ? settings : state.settings,
           }));
@@ -445,6 +459,82 @@ export const useAdminStore = create<AdminState>()(
         api.testimonials.delete(id).catch(() => {});
       },
 
+      // FAQ Actions
+      addFAQ: (faq) => {
+        const tempId = `FAQ-${Date.now()}`;
+        const newFAQ: FAQ = { ...faq, id: tempId };
+        const newActivity: ActivityItem = {
+          id: `act-${Date.now()}`,
+          user: "Admin",
+          avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
+          action: "created new FAQ",
+          target: newFAQ.question.slice(0, 40) + "...",
+          time: "Just now",
+          type: "faq",
+        };
+
+        set((state) => ({
+          faqs: [...state.faqs, newFAQ],
+          activities: [newActivity, ...state.activities],
+        }));
+
+        api.faqs
+          .create(faq)
+          .then((saved) => {
+            set((state) => ({
+              faqs: state.faqs.map((f) => (f.id === tempId ? saved : f)),
+            }));
+          })
+          .catch(() => {});
+      },
+
+      updateFAQ: (id, updates) => {
+        set((state) => ({
+          faqs: state.faqs.map((f) => (f.id === id ? { ...f, ...updates } : f)),
+        }));
+
+        api.faqs.update(id, updates).catch(() => {});
+      },
+
+      toggleFAQStatus: (id) => {
+        set((state) => ({
+          faqs: state.faqs.map((f) =>
+            f.id === id ? { ...f, isActive: !f.isActive } : f
+          ),
+        }));
+
+        api.faqs.toggle(id).catch(() => {});
+      },
+
+      deleteFAQ: (id) => {
+        const target = get().faqs?.find((f) => f.id === id);
+        const newActivity: ActivityItem = {
+          id: `act-${Date.now()}`,
+          user: "Admin",
+          avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
+          action: "deleted FAQ",
+          target: target?.question.slice(0, 40) || "FAQ Item",
+          time: "Just now",
+          type: "faq",
+        };
+
+        set((state) => ({
+          faqs: state.faqs.filter((f) => f.id !== id),
+          activities: [newActivity, ...state.activities],
+        }));
+
+        api.faqs.delete(id).catch(() => {});
+      },
+
+      reorderFAQs: (newOrderedList) => {
+        set({ faqs: newOrderedList });
+        newOrderedList.forEach((faq, index) => {
+          if (faq.order !== index + 1) {
+            api.faqs.update(faq.id, { order: index + 1 }).catch(() => {});
+          }
+        });
+      },
+
       // Settings Actions
       updateSettings: (updates) => {
         set((state) => ({
@@ -463,6 +553,7 @@ export const useAdminStore = create<AdminState>()(
           blogPosts: initialBlogPosts,
           inquiries: initialInquiries,
           testimonials: initialTestimonials,
+          faqs: initialFAQs,
           activities: initialActivities,
           settings: initialSettings,
         });

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Calculator, ArrowDown } from "lucide-react";
-import { sound } from "../lib/sound";
+import { ArrowDown } from "lucide-react";
+import { useSettings } from "../context/SettingsContext";
 
 interface ScopeCalculatorProps {
   onApplyEstimate: (scopeData: {
@@ -11,34 +11,42 @@ interface ScopeCalculatorProps {
 }
 
 export const InteractiveScopeCalculator: React.FC<ScopeCalculatorProps> = ({ onApplyEstimate }) => {
+  const { company } = useSettings();
+  const currencySymbol = company.currency?.includes("OMR")
+    ? "OMR "
+    : company.currency?.includes("USD")
+    ? "$"
+    : company.currency
+    ? `${company.currency} `
+    : "$";
+
   const [architecture, setArchitecture] = useState<string>("ai");
   const [scale, setScale] = useState<string>("growth");
   const [aiTier, setAiTier] = useState<string>("finetuned");
   const [speed, setSpeed] = useState<string>("standard");
 
-  // Price Calculation Logic
   const archBasePrices: Record<string, { label: string; price: number }> = {
-    web: { label: "Next.js Web Applications", price: 40000 },
-    ai: { label: "Enterprise AI & LLM Systems", price: 65000 },
-    cloud: { label: "Cloud & Distributed Infrastructure", price: 50000 },
-    design: { label: "Design Systems & UX Architecture", price: 30000 },
+    web: { label: "Web Applications", price: 40000 },
+    ai: { label: "AI & LLM Copilots", price: 65000 },
+    cloud: { label: "Cloud Infrastructure", price: 50000 },
+    design: { label: "Design Systems", price: 30000 },
   };
 
   const scaleMultipliers: Record<string, { label: string; mult: number }> = {
-    startup: { label: "Startup / Seed Stage", mult: 1.0 },
-    growth: { label: "Growth / Series A-C", mult: 1.35 },
-    enterprise: { label: "Global Enterprise", mult: 1.85 },
+    startup: { label: "Early Stage", mult: 1.0 },
+    growth: { label: "Growth", mult: 1.35 },
+    enterprise: { label: "Enterprise", mult: 1.85 },
   };
 
   const aiAddons: Record<string, { label: string; cost: number }> = {
-    none: { label: "No Custom AI Pipeline", cost: 0 },
-    api: { label: "API Ingestion & Guardrails", cost: 15000 },
-    finetuned: { label: "Fine-tuned Local LLM + Vector Search", cost: 35000 },
+    none: { label: "None", cost: 0 },
+    api: { label: "API Ingestion", cost: 15000 },
+    finetuned: { label: "Custom Fine-tuned LLM", cost: 35000 },
   };
 
   const speedMultipliers: Record<string, { label: string; mult: number }> = {
-    standard: { label: "Standard (8-10 Weeks)", mult: 1.0 },
-    rush: { label: "Accelerated Sprint (4-6 Weeks)", mult: 1.25 },
+    standard: { label: "Standard (8-10 wks)", mult: 1.0 },
+    rush: { label: "Sprint (4-6 wks)", mult: 1.25 },
   };
 
   const base = archBasePrices[architecture].price;
@@ -51,121 +59,105 @@ export const InteractiveScopeCalculator: React.FC<ScopeCalculatorProps> = ({ onA
   const highRange = Math.round(totalCalculated * 1.15 / 1000) * 1000;
 
   const handleApply = () => {
-    sound.tactile();
     onApplyEstimate({
       service: archBasePrices[architecture].label,
-      budget: `$${lowRange.toLocaleString()} - $${highRange.toLocaleString()}`,
-      message: `Configured Scope from Interactive Estimator: Scale: ${scaleMultipliers[scale].label}, AI: ${aiAddons[aiTier].label}, Delivery: ${speedMultipliers[speed].label}.`,
+      budget: `${currencySymbol}${lowRange.toLocaleString()} - ${currencySymbol}${highRange.toLocaleString()}`,
+      message: `Configured Scope: Scale: ${scaleMultipliers[scale].label}, AI: ${aiAddons[aiTier].label}, Delivery: ${speedMultipliers[speed].label}.`,
     });
 
-    const formEl = document.getElementById("inquire");
+    const formEl = document.getElementById("contact");
     if (formEl) {
       formEl.scrollIntoView({ behavior: "smooth" });
     }
   };
 
   return (
-    <section id="estimator" className="py-28 border-b border-white/10 bg-black relative">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-white/10">
-          <div>
-            <div className="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-2 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-white inline-block" />
-              <span>INDEX // 03</span>
-            </div>
-            <h2 className="font-display font-extrabold text-4xl sm:text-6xl uppercase tracking-tight text-white">
-              SCOPE &amp; COST ESTIMATOR
-            </h2>
-          </div>
-
-          <p className="font-body text-zinc-400 text-sm max-w-md">
-            Architectural sizing terminal. Configure your deliverable parameters to generate an instant estimate calibrated for enterprise benchmarks.
+    <section id="calculator" className="py-24 sm:py-32 bg-white border-t border-slate-100">
+      <div className="max-w-6xl mx-auto px-6 sm:px-8">
+        <div className="max-w-2xl mb-14">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-2">
+            Estimator
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-950">
+            Interactive scope &amp; cost calculator
+          </h2>
+          <p className="mt-3 text-slate-600 text-base leading-relaxed">
+            Select your architectural requirements to generate an instant project estimate.
           </p>
         </div>
 
-        {/* Interactive Sizing Terminal */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-12 items-start">
-          {/* Controls Column */}
-          <div className="lg:col-span-8 space-y-8">
-            {/* 1. Core Architecture */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Controls */}
+          <div className="lg:col-span-8 space-y-7">
+            {/* 1. Core Service */}
             <div>
-              <label className="font-mono text-xs text-zinc-400 uppercase tracking-wider block mb-3">
-                01 // SELECT CORE ARCHITECTURE
+              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider block mb-3">
+                1. Select Core Service
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {Object.entries(archBasePrices).map(([key, val]) => (
                   <button
                     key={key}
                     type="button"
-                    onClick={() => {
-                      sound.click();
-                      setArchitecture(key);
-                    }}
-                    className={`p-4 border text-left font-mono transition-all flex flex-col justify-between ${
+                    onClick={() => setArchitecture(key)}
+                    className={`p-4 rounded-xl border text-left transition-all ${
                       architecture === key
-                        ? "border-white bg-white text-black"
-                        : "border-white/10 bg-zinc-950/40 text-zinc-300 hover:border-white/30"
+                        ? "border-slate-950 bg-slate-950 text-white shadow-xs"
+                        : "border-slate-200 bg-white text-slate-800 hover:border-slate-300 hover:bg-slate-50/50"
                     }`}
                   >
-                    <span className="text-xs uppercase font-tech font-bold">{val.label}</span>
-                    <span className={`text-[11px] mt-2 block ${architecture === key ? "text-zinc-700" : "text-zinc-500"}`}>
-                      Baseline: ${val.price.toLocaleString()}
+                    <span className="text-sm font-medium block">{val.label}</span>
+                    <span className={`text-xs mt-1 block ${architecture === key ? "text-slate-300" : "text-slate-500"}`}>
+                      From ${val.price.toLocaleString()}
                     </span>
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* 2. Scale Tier */}
+            {/* 2. Scale */}
             <div>
-              <label className="font-mono text-xs text-zinc-400 uppercase tracking-wider block mb-3">
-                02 // ORGANIZATIONAL SCALE
+              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider block mb-3">
+                2. Company Scale
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                 {Object.entries(scaleMultipliers).map(([key, val]) => (
                   <button
                     key={key}
                     type="button"
-                    onClick={() => {
-                      sound.click();
-                      setScale(key);
-                    }}
-                    className={`p-3.5 border text-left font-mono transition-all ${
+                    onClick={() => setScale(key)}
+                    className={`p-3 rounded-xl border text-center transition-all ${
                       scale === key
-                        ? "border-white bg-white text-black"
-                        : "border-white/10 bg-zinc-950/40 text-zinc-300 hover:border-white/30"
+                        ? "border-slate-950 bg-slate-950 text-white shadow-xs"
+                        : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50/50"
                     }`}
                   >
-                    <span className="text-xs uppercase font-medium">{val.label}</span>
+                    <span className="text-xs font-medium">{val.label}</span>
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* 3. AI / LLM Pipeline */}
+            {/* 3. AI / Intelligence */}
             <div>
-              <label className="font-mono text-xs text-zinc-400 uppercase tracking-wider block mb-3">
-                03 // AI INFERENCE &amp; VECTOR RETRIEVAL TIER
+              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider block mb-3">
+                3. AI &amp; Inference Pipeline
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                 {Object.entries(aiAddons).map(([key, val]) => (
                   <button
                     key={key}
                     type="button"
-                    onClick={() => {
-                      sound.click();
-                      setAiTier(key);
-                    }}
-                    className={`p-3.5 border text-left font-mono transition-all ${
+                    onClick={() => setAiTier(key)}
+                    className={`p-3 rounded-xl border text-center transition-all ${
                       aiTier === key
-                        ? "border-white bg-white text-black"
-                        : "border-white/10 bg-zinc-950/40 text-zinc-300 hover:border-white/30"
+                        ? "border-slate-950 bg-slate-950 text-white shadow-xs"
+                        : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50/50"
                     }`}
                   >
-                    <span className="text-xs uppercase font-medium block">{val.label}</span>
-                    <span className={`text-[10px] mt-1 block ${aiTier === key ? "text-zinc-700" : "text-zinc-500"}`}>
-                      +{val.cost > 0 ? `$${val.cost.toLocaleString()}` : "Included"}
+                    <span className="text-xs font-medium block">{val.label}</span>
+                    <span className={`text-[11px] mt-0.5 block ${aiTier === key ? "text-slate-300" : "text-slate-400"}`}>
+                      +{val.cost > 0 ? `${currencySymbol}${val.cost.toLocaleString()}` : "Included"}
                     </span>
                   </button>
                 ))}
@@ -174,71 +166,62 @@ export const InteractiveScopeCalculator: React.FC<ScopeCalculatorProps> = ({ onA
 
             {/* 4. Velocity */}
             <div>
-              <label className="font-mono text-xs text-zinc-400 uppercase tracking-wider block mb-3">
-                04 // PRODUCTION VELOCITY
+              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider block mb-3">
+                4. Project Velocity
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {Object.entries(speedMultipliers).map(([key, val]) => (
                   <button
                     key={key}
                     type="button"
-                    onClick={() => {
-                      sound.click();
-                      setSpeed(key);
-                    }}
-                    className={`p-3.5 border text-left font-mono transition-all ${
+                    onClick={() => setSpeed(key)}
+                    className={`p-3 rounded-xl border text-center transition-all ${
                       speed === key
-                        ? "border-white bg-white text-black"
-                        : "border-white/10 bg-zinc-950/40 text-zinc-300 hover:border-white/30"
+                        ? "border-slate-950 bg-slate-950 text-white shadow-xs"
+                        : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50/50"
                     }`}
                   >
-                    <span className="text-xs uppercase font-medium">{val.label}</span>
+                    <span className="text-xs font-medium">{val.label}</span>
                   </button>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Sizing Readout Column */}
-          <div className="lg:col-span-4 border border-white/20 p-8 bg-zinc-950 sticky top-28">
-            <div className="flex items-center gap-2 font-mono text-xs text-zinc-400 pb-4 border-b border-white/10">
-              <Calculator size={14} className="text-white" />
-              <span>ESTIMATED INVESTMENT TELEMETRY</span>
-            </div>
+          {/* Sizing Readout Sticky Card */}
+          <div className="lg:col-span-4 p-7 rounded-2xl border border-slate-200/80 bg-slate-50/80 sticky top-24 shadow-2xs">
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-3">
+              Estimated Investment
+            </span>
 
-            <div className="py-8 space-y-2">
-              <span className="font-mono text-[11px] text-zinc-500 uppercase tracking-widest block">
-                PROJECTED CONTRACT RANGE
-              </span>
-              <div className="font-display font-extrabold text-3xl sm:text-4xl text-white tracking-tight">
-                ${lowRange.toLocaleString()} &ndash; ${highRange.toLocaleString()}
-              </div>
-              <p className="font-mono text-[11px] text-zinc-400 pt-2">
-                All deliverables include full source code transfer, automated CI/CD, and 60-day post-launch warranty.
-              </p>
+            <div className="text-3xl font-semibold tracking-tight text-slate-950 mb-1">
+              {currencySymbol}{lowRange.toLocaleString()} &ndash; {currencySymbol}{highRange.toLocaleString()}
             </div>
+            <p className="text-xs text-slate-500 leading-relaxed pb-6 border-b border-slate-200">
+              Includes full source ownership, automated CI/CD setup, and 60 days of warranty support.
+            </p>
 
-            {/* Breakdown Checklist */}
-            <div className="border-t border-white/10 pt-4 space-y-2 font-mono text-xs text-zinc-400">
+            {/* Summary lines */}
+            <div className="py-4 space-y-2.5 text-xs text-slate-600">
               <div className="flex justify-between">
                 <span>Architecture</span>
-                <span className="text-zinc-200">{archBasePrices[architecture].label.split(" ")[0]}</span>
+                <span className="text-slate-900 font-medium">{archBasePrices[architecture].label}</span>
               </div>
               <div className="flex justify-between">
-                <span>Scale Tier</span>
-                <span className="text-zinc-200">{scaleMultipliers[scale].label.split(" ")[0]}</span>
+                <span>Company Scale</span>
+                <span className="text-slate-900 font-medium">{scaleMultipliers[scale].label}</span>
               </div>
               <div className="flex justify-between">
-                <span>AI Layer</span>
-                <span className="text-zinc-200">{aiTier === "none" ? "None" : "Integrated"}</span>
+                <span>AI Pipeline</span>
+                <span className="text-slate-900 font-medium">{aiTier === "none" ? "None" : "Included"}</span>
               </div>
             </div>
 
             <button
               onClick={handleApply}
-              className="mt-8 w-full py-4 bg-white text-black font-tech font-bold text-xs uppercase tracking-widest hover:bg-zinc-200 transition-all flex items-center justify-center gap-2"
+              className="mt-4 w-full py-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-white text-xs font-semibold tracking-tight transition-colors flex items-center justify-center gap-1.5 shadow-xs"
             >
-              <span>APPLY ESTIMATE TO INQUIRY</span>
+              <span>Apply estimate to inquiry</span>
               <ArrowDown size={14} />
             </button>
           </div>

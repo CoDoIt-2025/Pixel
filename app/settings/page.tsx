@@ -47,6 +47,7 @@ const companySchema = z.object({
   taxId: z.string().min(2, "Tax ID / EIN required"),
   currency: z.string().min(1, "Currency required"),
   website: z.string().url("Valid URL required"),
+  description: z.string().optional(),
 });
 
 const seoSchema = z.object({
@@ -309,6 +310,11 @@ export default function SettingsPage() {
                   <div className="space-y-1">
                     <label className="font-semibold text-slate-700">Official Office Locations</label>
                     <Textarea rows={2} {...registerCompany("address")} />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="font-semibold text-slate-700">Company Mission / Tagline</label>
+                    <Textarea rows={2} {...registerCompany("description")} placeholder="Bespoke web applications, AI engineering, and cloud platforms..." />
                   </div>
 
                   <div className="pt-2">

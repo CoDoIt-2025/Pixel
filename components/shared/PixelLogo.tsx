@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useAdminStore } from "@/lib/store";
 
 interface PixelLogoProps {
   collapsed?: boolean;
@@ -8,6 +9,8 @@ interface PixelLogoProps {
 }
 
 export function PixelLogo({ collapsed = false, className }: PixelLogoProps) {
+  const companyName = useAdminStore((state) => state.settings?.company?.name) || "Pixel";
+
   return (
     <Link
       href="/dashboard"
@@ -27,7 +30,7 @@ export function PixelLogo({ collapsed = false, className }: PixelLogoProps) {
         <div className="flex flex-col">
           <div className="flex items-center gap-1.5">
             <span className="text-base font-bold tracking-tight text-zinc-950 transition-colors uppercase">
-              Pixel
+              {companyName}
             </span>
             <span className="rounded-md bg-zinc-100 px-1.5 py-0.5 text-[10px] font-semibold text-zinc-900 border border-zinc-200">
               Admin

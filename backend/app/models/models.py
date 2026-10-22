@@ -168,3 +168,14 @@ class SystemSettings(Base):
     seo = Column(JSON, default=dict)
     notifications = Column(JSON, default=dict)
     appearance = Column(JSON, default=dict)
+
+class FAQ(Base):
+    __tablename__ = "faqs"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    question = Column(String(500), nullable=False)
+    answer = Column(Text, nullable=False)
+    category = Column(String(100), default="General")
+    order = Column(Integer, default=0)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)

@@ -13,6 +13,7 @@ from app.api.v1 import (
     blog,
     inquiries,
     testimonials,
+    faqs,
     dashboard,
     settings as settings_router,
 )
@@ -50,6 +51,7 @@ app.include_router(services.router, prefix=settings.API_V1_STR)
 app.include_router(blog.router, prefix=settings.API_V1_STR)
 app.include_router(inquiries.router, prefix=settings.API_V1_STR)
 app.include_router(testimonials.router, prefix=settings.API_V1_STR)
+app.include_router(faqs.router, prefix=settings.API_V1_STR)
 app.include_router(settings_router.router, prefix=settings.API_V1_STR)
 
 @app.get("/")

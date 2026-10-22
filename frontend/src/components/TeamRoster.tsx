@@ -42,7 +42,7 @@ const DEFAULT_TEAM: TeamMember[] = [
     avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150",
     status: "Active",
     joinDate: "2024-01-15",
-    bio: "Obsessed with tactile micro-interactions and minimalist monochrome typography.",
+    bio: "Obsessed with tactile micro-interactions and minimalist typography.",
     location: "Bengaluru, India",
   },
   {
@@ -54,7 +54,7 @@ const DEFAULT_TEAM: TeamMember[] = [
     email: "marcus.vance@pixel.dev",
     phone: "+44 20 7946 0888",
     avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150",
-    status: "Away",
+    status: "Active",
     joinDate: "2023-11-20",
     bio: "Designing 99.999% uptime multi-region cloud infrastructures.",
     location: "London, UK",
@@ -64,79 +64,68 @@ const DEFAULT_TEAM: TeamMember[] = [
 export const TeamRoster: React.FC = () => {
   const [team, setTeam] = useState<TeamMember[]>(DEFAULT_TEAM);
 
+  const loadTeam = async () => {
+    const data = await api.getTeam();
+    if (data && data.length > 0) setTeam(data);
+  };
+
   useEffect(() => {
-    api.getTeam().then((data) => {
-      if (data && data.length > 0) setTeam(data);
-    });
+    loadTeam();
+    window.addEventListener("focus", loadTeam);
+    const interval = setInterval(loadTeam, 5000);
+    return () => {
+      window.removeEventListener("focus", loadTeam);
+      clearInterval(interval);
+    };
   }, []);
 
   return (
-    <section id="atelier" className="py-28 border-b border-white/10 bg-black relative">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-white/10">
-          <div>
-            <div className="font-mono text-xs text-zinc-500 uppercase tracking-widest mb-2 flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-white inline-block" />
-              <span>INDEX // 04</span>
-            </div>
-            <h2 className="font-display font-extrabold text-4xl sm:text-6xl uppercase tracking-tight text-white">
-              ENGINEERING ATELIER
-            </h2>
-          </div>
-
-          <p className="font-body text-zinc-400 text-sm max-w-md">
-            Direct access to senior principals. We do not employ account managers or junior buffers &mdash; you collaborate directly with the engineers shipping your product.
+    <section id="about" className="py-24 sm:py-32 bg-slate-50/50 border-t border-slate-100">
+      <div className="max-w-6xl mx-auto px-6 sm:px-8">
+        <div className="max-w-2xl mb-16">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-2">
+            Team
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-950">
+            Principals &amp; architects
+          </h2>
+          <p className="mt-4 text-slate-600 text-base leading-relaxed">
+            Direct access to seasoned engineers. We never employ account managers or intermediary layers &mdash; you collaborate directly with the makers.
           </p>
         </div>
 
-        {/* Team Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {team.map((member) => (
             <div
               key={member.id}
-              className="border border-white/10 p-6 bg-zinc-950/60 flex flex-col justify-between hover:border-white/40 transition-all duration-300 group"
+              className="p-6 rounded-2xl border border-slate-200/80 bg-white hover:border-slate-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 bg-white/10 border border-white/15 overflow-hidden">
-                    <img
-                      src={member.avatar}
-                      alt={member.name}
-                      className="w-full h-full object-cover grayscale contrast-125 group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                  <div className="flex items-center gap-1.5 font-mono text-[10px]">
-                    <span
-                      className={`w-1.5 h-1.5 rounded-full ${
-                        member.status === "Active" ? "bg-emerald-400 animate-pulse" : "bg-amber-400"
-                      }`}
-                    />
-                    <span className="text-zinc-500 uppercase">{member.status}</span>
-                  </div>
+                <div className="w-14 h-14 rounded-full overflow-hidden bg-slate-100 mb-5 border border-slate-100">
+                  <img
+                    src={member.avatar}
+                    alt={member.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
 
-                <h3 className="font-display font-bold text-xl text-white uppercase tracking-tight group-hover:text-zinc-200 transition-colors">
+                <h3 className="text-base font-semibold text-slate-950">
                   {member.name}
                 </h3>
-                <span className="font-mono text-xs text-zinc-400 block mt-0.5">
+                <span className="text-xs text-slate-500 block mt-0.5">
                   {member.role}
                 </span>
-                <span className="font-mono text-[11px] text-zinc-600 block mt-1">
-                  [{member.location}]
-                </span>
 
-                <p className="font-body text-zinc-400 text-xs mt-4 leading-relaxed line-clamp-3">
+                <p className="text-xs text-slate-600 mt-3 leading-relaxed">
                   {member.bio}
                 </p>
               </div>
 
-              {/* Skills Tags */}
-              <div className="pt-6 mt-6 border-t border-white/5 flex flex-wrap gap-1.5">
-                {member.skills.map((skill, sIdx) => (
+              <div className="pt-5 mt-5 border-t border-slate-100 flex flex-wrap gap-1.5">
+                {member.skills.slice(0, 3).map((skill, sIdx) => (
                   <span
                     key={sIdx}
-                    className="px-2 py-0.5 border border-white/10 bg-white/[0.02] font-mono text-[10px] text-zinc-400"
+                    className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium"
                   >
                     {skill}
                   </span>
