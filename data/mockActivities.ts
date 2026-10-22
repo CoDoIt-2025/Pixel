@@ -1,0 +1,58 @@
+import { ActivityItem } from "@/types";
+
+export const initialActivities: ActivityItem[] = [
+  {
+    id: "act-1",
+    user: "Aarav Sharma",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
+    action: "completed milestone 'PCI-DSS Hardening & Audits' in",
+    target: "Razorpay OmniChannel POS",
+    time: "12 mins ago",
+    type: "project",
+  },
+  {
+    id: "act-2",
+    user: "Sneha Reddy",
+    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150",
+    action: "approved client testimonial from",
+    target: "Patrick Collison (Stripe)",
+    time: "45 mins ago",
+    type: "testimonial",
+  },
+  {
+    id: "act-3",
+    user: "Priya Nair",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150",
+    action: "replied to inquiry from",
+    target: "Dr. Alistair Finch (Cambridge Genomics)",
+    time: "2 hours ago",
+    type: "inquiry",
+  },
+  {
+    id: "act-4",
+    user: "Devansh Patel",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150",
+    action: "updated progress to 92% on",
+    target: "Linear Workflow Automation SDK",
+    time: "4 hours ago",
+    type: "project",
+  },
+  {
+    id: "act-5",
+    user: "Ananya Iyer",
+    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150",
+    action: "published technical article",
+    target: "Demystifying Agentic Tool Calling",
+    time: "Yesterday at 4:30 PM",
+    type: "blog",
+  },
+  {
+    id: "act-6",
+    user: "Vikram Sengupta",
+    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150",
+    action: "added new cloud client",
+    target: "Supabase Inc",
+    time: "2 days ago",
+    type: "client",
+  },
+];
