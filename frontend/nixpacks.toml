@@ -1,8 +1,11 @@
 [phases.setup]
-nixPkgs = ["nodejs_20"]
+nixPkgs = ["nodejs_22"]
 
 [phases.install]
-cmds = ["npm install --include=optional"]
+cmds = [
+  "npm install --include=dev",
+  "npm install --no-save @rolldown/binding-linux-x64-gnu@1.2.15"
+]
 
 [phases.build]
 cmds = ["npm run build"]
