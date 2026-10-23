@@ -52,9 +52,13 @@ export const ClientTicker: React.FC = () => {
   }, []);
 
   return (
-    <section className="py-16 border-y border-slate-100 bg-slate-50/50 overflow-hidden select-none">
+    <section className="relative py-16 border-y border-slate-900 bg-slate-950 text-slate-100 overflow-hidden select-none">
+      {/* Subtle edge fades for smooth infinite marquee */}
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-20 sm:w-32 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent z-10" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-20 sm:w-32 bg-gradient-to-l from-slate-950 via-slate-950/90 to-transparent z-10" />
+
       <div className="max-w-6xl mx-auto px-6 sm:px-8 mb-6">
-        <p className="text-xs font-medium text-slate-400 uppercase tracking-wider text-center">
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest text-center">
           Trusted by technical leaders at high-growth companies
         </p>
       </div>
@@ -62,14 +66,14 @@ export const ClientTicker: React.FC = () => {
         {[...items, ...items].map((item, index) => (
           <div
             key={index}
-            className="flex-shrink-0 w-80 p-5 rounded-xl border border-slate-200/70 bg-white flex flex-col justify-between shadow-2xs hover:border-slate-300 transition-colors"
+            className="flex-shrink-0 w-80 p-5 rounded-xl border border-slate-800/80 bg-slate-900/90 backdrop-blur-sm flex flex-col justify-between shadow-xl hover:border-slate-700 hover:bg-slate-900 transition-colors"
           >
-            <p className="text-slate-700 text-[13px] leading-relaxed mb-4">
+            <p className="text-slate-300 text-[13px] leading-relaxed mb-4">
               &ldquo;{item.quote}&rdquo;
             </p>
-            <div className="flex items-center justify-between text-xs border-t border-slate-100 pt-3">
-              <span className="text-slate-900 font-semibold">{item.author}</span>
-              <span className="text-slate-500 font-medium">{item.title}</span>
+            <div className="flex items-center justify-between text-xs border-t border-slate-800/80 pt-3">
+              <span className="text-white font-semibold">{item.author}</span>
+              <span className="text-slate-400 font-medium">{item.title}</span>
             </div>
           </div>
         ))}
