@@ -2,11 +2,7 @@
 nixPkgs = ["nodejs_22"]
 
 [phases.install]
-cmds = [
-  "rm -f package-lock.json",
-  "NODE_ENV=development npm install --include=dev",
-  "NODE_ENV=development npm install --force --no-save @rolldown/binding-linux-x64-gnu@1.2.15"
-]
+cmds = ["npm install"]
 
 [phases.build]
 cmds = ["npm run build"]
