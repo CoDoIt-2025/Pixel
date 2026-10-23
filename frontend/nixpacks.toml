@@ -2,7 +2,7 @@
 nixPkgs = ["nodejs_22"]
 
 [phases.install]
-cmds = ["npm cache clean --force", "npm install"]
+cmds = ["npm cache clean --force && npm install --force"]
 
 [phases.build]
 cmds = ["npm run build"]
