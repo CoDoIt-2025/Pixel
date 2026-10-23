@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import confetti from "canvas-confetti";
-import { CheckCircle2, Send, ShieldAlert, Phone, MapPin } from "lucide-react";
+import { CheckCircle2, Send, ShieldAlert, MapPin } from "lucide-react";
 import { api } from "../lib/api";
 import { useSettings } from "../context/SettingsContext";
 

@@ -1,6 +1,12 @@
 import type { Project, Service, TeamMember, Testimonial, BlogPost, FAQItem, SystemSettings } from "../types";
 
-const API_BASE = "http://127.0.0.1:8000/api/v1";
+const API_BASE =
+  import.meta.env.VITE_API_URL ||
+  (typeof window !== "undefined" &&
+  (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+    ? "http://127.0.0.1:8000/api/v1"
+    : "https://api.pixelbusiness.si/api/v1");
+
 
 export const api = {
   getProjects: async (): Promise<Project[]> => {

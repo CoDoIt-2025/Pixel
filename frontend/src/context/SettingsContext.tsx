@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import type { CompanySettings, SEOSettings, SystemSettings } from "../types";
+import type { CompanySettings, SEOSettings } from "../types";
 import { api } from "../lib/api";
 
 const DEFAULT_COMPANY: CompanySettings = {
