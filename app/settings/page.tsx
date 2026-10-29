@@ -16,6 +16,8 @@ import {
   ShieldCheck,
   Mail,
   Lock,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { AdminLayout } from "@/components/shared/AdminLayout";
 import { PageHeader } from "@/components/shared/PageHeader";
@@ -103,6 +105,36 @@ export default function SettingsPage() {
   // Appearance States
   const [selectedColor, setSelectedColor] = useState(settings.appearance.primaryColor);
   const [compactMode, setCompactMode] = useState(settings.appearance.compactMode);
+  const [selectedTheme, setSelectedTheme] = useState(settings.appearance.theme || "charcoal");
+
+  React.useEffect(() => {
+    if (settings.appearance?.theme) {
+      setSelectedTheme(settings.appearance.theme);
+    }
+    if (settings.appearance?.primaryColor) {
+      setSelectedColor(settings.appearance.primaryColor);
+    }
+    if (typeof settings.appearance?.compactMode === "boolean") {
+      setCompactMode(settings.appearance.compactMode);
+    }
+  }, [settings.appearance]);
+
+  const handleThemeSelect = (newTheme: string) => {
+    setSelectedTheme(newTheme);
+    updateSettings({
+      appearance: {
+        primaryColor: selectedColor,
+        theme: newTheme,
+        compactMode,
+        highContrast: false,
+      },
+    });
+    toast.success(
+      `Theme changed to ${
+        newTheme === "light" ? "Ivory Light" : "Charcoal Dark"
+      }. Applied to public website.`
+    );
+  };
 
   const onSaveProfile = (data: any) => {
     updateSettings({ profile: data });
@@ -136,11 +168,16 @@ export default function SettingsPage() {
     updateSettings({
       appearance: {
         primaryColor: selectedColor,
+        theme: selectedTheme,
         compactMode,
         highContrast: false,
       },
     });
-    toast.success("Appearance theme preferences updated");
+    toast.success(
+      `Appearance updated: ${
+        selectedTheme === "light" ? "Ivory Light Theme" : "Charcoal Dark Theme"
+      } is now active on the public website`
+    );
   };
 
   const handleResetData = () => {
@@ -476,6 +513,76 @@ export default function SettingsPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6 max-w-xl text-xs">
+                {/* Website Theme Selector */}
+                <div className="space-y-3 pb-5 border-b border-slate-100">
+                  <div>
+                    <label className="font-semibold text-slate-900 text-xs block">
+                      Website Public Theme Mode
+                    </label>
+                    <p className="text-slate-500 text-[11px] mt-0.5">
+                      Switch between the primary Charcoal Dark palette and the clean Ivory Light palette for the live website
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => handleThemeSelect("charcoal")}
+                      className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
+                        selectedTheme === "charcoal" || selectedTheme === "dark"
+                          ? "border-[#F5C542] ring-2 ring-[#F5C542]/40 bg-slate-900 text-white"
+                          : "border-slate-200 bg-slate-900/90 text-slate-300 hover:border-slate-400"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <Moon className="h-4 w-4 text-[#F5C542]" />
+                          <span className="font-bold text-xs">Charcoal Dark</span>
+                        </div>
+                        {(selectedTheme === "charcoal" || selectedTheme === "dark") && (
+                          <span className="w-2 h-2 rounded-full bg-[#F5C542]" />
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-2">
+                        <span className="w-4 h-4 rounded-full bg-[#202124] border border-[#45484E]" title="Charcoal #202124" />
+                        <span className="w-4 h-4 rounded-full bg-[#2B2D31] border border-[#45484E]" title="Card #2B2D31" />
+                        <span className="w-4 h-4 rounded-full bg-[#F5C542]" title="Yellow #F5C542" />
+                      </div>
+                      <p className="text-[10px] text-slate-400 mt-2">
+                        Main #202124 background, #2B2D31 cards, #F5C542 buttons
+                      </p>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleThemeSelect("light")}
+                      className={`p-3.5 rounded-xl border text-left transition-all cursor-pointer ${
+                        selectedTheme === "light"
+                          ? "border-[#F5C542] ring-2 ring-[#F5C542]/40 bg-white text-slate-900 shadow-sm"
+                          : "border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-400"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <Sun className="h-4 w-4 text-[#F5C542]" />
+                          <span className="font-bold text-xs">Ivory Light</span>
+                        </div>
+                        {selectedTheme === "light" && (
+                          <span className="w-2 h-2 rounded-full bg-[#F5C542]" />
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-2">
+                        <span className="w-4 h-4 rounded-full bg-[#F5F4EF] border border-[#E5E4DE]" title="Light #F5F4EF" />
+                        <span className="w-4 h-4 rounded-full bg-[#FFFFFF] border border-[#E5E4DE]" title="Card #FFFFFF" />
+                        <span className="w-4 h-4 rounded-full bg-[#F5C542]" title="Yellow #F5C542" />
+                      </div>
+                      <p className="text-[10px] text-slate-500 mt-2">
+                        Light #F5F4EF background, #FFFFFF cards, #202124 text
+                      </p>
+                    </button>
+                  </div>
+                </div>
+
                 {/* Accent Color Picker */}
                 <div className="space-y-2">
                   <label className="font-semibold text-slate-900">

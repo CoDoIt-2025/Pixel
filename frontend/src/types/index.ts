@@ -106,6 +106,13 @@ export interface SEOSettings {
   googleAnalyticsId: string;
 }
 
+export interface AppearanceSettings {
+  primaryColor: string;
+  theme: "charcoal" | "light";
+  compactMode?: boolean;
+  highContrast?: boolean;
+}
+
 export interface SystemSettings {
   profile: {
     name: string;
@@ -117,6 +124,24 @@ export interface SystemSettings {
   };
   company: CompanySettings;
   seo: SEOSettings;
+  appearance?: AppearanceSettings;
+}
+
+export interface Client {
+  id: string;
+  company: string;
+  contactName: string;
+  email: string;
+  phone?: string;
+  industry?: string;
+  totalSpend?: number;
+  activeProjects?: number;
+  status: string;
+  website?: string;
+  location?: string;
+  logo?: string;
+  notes?: string;
+  createdAt?: string;
 }
 
 

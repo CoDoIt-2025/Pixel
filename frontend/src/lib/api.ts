@@ -1,4 +1,4 @@
-import type { Project, Service, TeamMember, Testimonial, BlogPost, FAQItem, SystemSettings } from "../types";
+import type { Project, Service, TeamMember, Testimonial, BlogPost, FAQItem, SystemSettings, Client } from "../types";
 
 const API_BASE =
   import.meta.env.VITE_API_URL ||
@@ -9,6 +9,17 @@ const API_BASE =
 
 
 export const api = {
+  getClients: async (): Promise<Client[]> => {
+    try {
+      const res = await fetch(`${API_BASE}/clients`);
+      if (!res.ok) throw new Error("Failed to fetch clients");
+      return await res.json();
+    } catch (err) {
+      console.warn("Failed fetching clients from SQLite API:", err);
+      return [];
+    }
+  },
+
   getProjects: async (): Promise<Project[]> => {
     try {
       const res = await fetch(`${API_BASE}/projects`);
@@ -82,6 +93,21 @@ export const api = {
       return await res.json();
     } catch (err) {
       console.warn("Failed fetching system settings from SQLite API:", err);
+      return null;
+    }
+  },
+
+  updateSettings: async (updates: any): Promise<SystemSettings | null> => {
+    try {
+      const res = await fetch(`${API_BASE}/settings`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      });
+      if (!res.ok) throw new Error("Failed to update settings");
+      return await res.json();
+    } catch (err) {
+      console.warn("Failed updating system settings:", err);
       return null;
     }
   },

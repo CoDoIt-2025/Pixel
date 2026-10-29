@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { ArrowUpRight, Menu, X } from "lucide-react";
+import { ArrowUpRight, Menu, X, QrCode, Sparkles, Sun, Moon } from "lucide-react";
 import { useSettings } from "../context/SettingsContext";
 
 export const Navbar: React.FC = () => {
-  const { company } = useSettings();
+  const { company, theme, toggleTheme } = useSettings();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
-  const brandInitial = company.name ? company.name.trim().charAt(0).toUpperCase() : "P";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,92 +17,120 @@ export const Navbar: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-200 ${scrolled
-        ? "bg-white/80 backdrop-blur-md border-b border-slate-200/80 py-3.5 shadow-[0_1px_3px_0_rgba(0,0,0,0.02)]"
-        : "bg-transparent py-5"
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${scrolled
+        ? "bg-[#202124]/90 backdrop-blur-xl border-b border-[#45484E]/80 py-3 shadow-2xl shadow-black/40"
+        : "bg-gradient-to-b from-[#202124] to-transparent py-4 sm:py-5"
         }`}
     >
-      <div className="max-w-6xl mx-auto px-6 sm:px-8 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 flex items-center justify-between">
         {/* Brand */}
-        <a href="#" className="flex items-center gap-2.5 group">
-          <div className="w-6 h-6 bg-slate-950 rounded-[6px] flex items-center justify-center text-white text-xs font-semibold tracking-tight transition-transform group-hover:scale-95">
-            {brandInitial}
+        <a href="#" className="flex items-center gap-3 group">
+          <div className="relative flex items-center justify-center">
+            <img
+              src="/logo.png"
+              alt="Pixel Logo"
+              className="h-8 sm:h-9 w-auto object-contain drop-shadow-[0_2px_8px_rgba(245,197,66,0.3)] transition-all group-hover:scale-105"
+            />
+            <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 border-2 border-[#202124]" />
           </div>
-          <span className="font-semibold text-[15px] tracking-tight text-slate-900">
-            {company.name}
-          </span>
+          <div className="flex flex-col">
+            <span className="font-bold text-[15px] sm:text-base tracking-tight text-[#F7F7F2] group-hover:text-[#F5C542] transition-colors leading-tight">
+              {company.name || "Pixel Business Solutions"}
+            </span>
+            <span className="text-[10px] text-[#C4C7CC] tracking-wider uppercase font-semibold flex items-center gap-1.5 mt-0.5">
+              <span>Oman Focus</span>
+              <span className="text-[#45484E]">&bull;</span>
+              <span className="text-[#F5C542]">Thrissur, Kerala</span>
+            </span>
+          </div>
         </a>
 
         {/* Center Navigation Links */}
-        <nav className="hidden md:flex items-center gap-7 text-[13px] font-medium text-slate-600">
-          <a
-            href="#work"
-            className="hover:text-slate-950 transition-colors"
-          >
-            Work
-          </a>
+        <nav className="hidden lg:flex items-center gap-8 text-[13px] font-semibold text-[#C4C7CC]">
           <a
             href="#services"
-            className="hover:text-slate-950 transition-colors"
+            className="hover:text-[#F5C542] transition-colors py-1 relative group"
           >
-            Services
+            <span>Services</span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#F5C542] transition-all duration-200 group-hover:w-full" />
           </a>
           <a
-            href="#calculator"
-            className="hover:text-slate-950 transition-colors"
+            href="#qr-demo"
+            className="hover:text-[#F5C542] transition-colors py-1 flex items-center gap-1.5 relative group"
           >
-            Estimator
+            <QrCode size={13} className="text-[#F5C542]" />
+            <span>QR Menu Demo</span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#F5C542] transition-all duration-200 group-hover:w-full" />
+          </a>
+          <a
+            href="#assessment"
+            className="hover:text-[#F5C542] transition-colors py-1 flex items-center gap-1.5 relative group"
+          >
+            <Sparkles size={12} className="text-[#F5C542]" />
+            <span>Needs Assessment</span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#F5C542] transition-all duration-200 group-hover:w-full" />
           </a>
           <a
             href="#about"
-            className="hover:text-slate-950 transition-colors"
+            className="hover:text-[#F5C542] transition-colors py-1 relative group"
           >
-            Team
+            <span>About</span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#F5C542] transition-all duration-200 group-hover:w-full" />
           </a>
           <a
-            href="#blog"
-            className="hover:text-slate-950 transition-colors"
+            href="#insights"
+            className="hover:text-[#F5C542] transition-colors py-1 relative group"
           >
-            Blog
+            <span>Insights</span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#F5C542] transition-all duration-200 group-hover:w-full" />
           </a>
           <a
             href="#faq"
-            className="hover:text-slate-950 transition-colors"
+            className="hover:text-[#F5C542] transition-colors py-1 relative group"
           >
-            FAQ
-          </a>
-          <a
-            href="#contact"
-            className="hover:text-slate-950 transition-colors"
-          >
-            Contact
+            <span>FAQ</span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#F5C542] transition-all duration-200 group-hover:w-full" />
           </a>
         </nav>
 
-        {/* Right Actions */}
-        <div className="flex items-center gap-3">
+        {/* Right CTA, Theme Toggle & Admin Quick Link */}
+        <div className="flex items-center gap-2.5 sm:gap-3.5">
+          {/* Quick Theme Switcher Button */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 sm:px-2.5 sm:py-1.5 rounded-lg border border-[#45484E] bg-[#2B2D31]/70 hover:border-[#F5C542] text-[#C4C7CC] hover:text-[#F5C542] transition-all cursor-pointer flex items-center gap-1.5 text-xs font-semibold"
+            title={theme === "light" ? "Switch to Charcoal Dark Mode" : "Switch to Ivory Light Mode"}
+            aria-label="Toggle website theme"
+          >
+            {theme === "light" ? (
+              <>
+                <Moon size={15} className="text-[#F5C542]" />
+                <span className="hidden md:inline text-[11px]">Dark Mode</span>
+              </>
+            ) : (
+              <>
+                <Sun size={15} className="text-[#F5C542]" />
+                <span className="hidden md:inline text-[11px]">Light Mode</span>
+              </>
+            )}
+          </button>
+
           <a
             href="http://localhost:3000/dashboard"
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 text-[13px] font-medium text-slate-600 hover:text-slate-950 transition-colors"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#45484E] bg-[#2B2D31]/70 hover:border-[#F5C542] text-[12px] font-semibold text-[#C4C7CC] hover:text-[#F7F7F2] transition-all"
           >
+            <span className="w-1.5 h-1.5 rounded-full bg-[#F5C542]" />
             <span>Admin</span>
-            <ArrowUpRight size={13} className="text-slate-400" />
-          </a>
-
-          <a
-            href="#contact"
-            className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-slate-950 hover:bg-slate-800 text-white text-[13px] font-medium tracking-tight transition-colors shadow-xs"
-          >
-            Start a project
+            <ArrowUpRight size={12} className="text-[#F5C542]" />
           </a>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 text-slate-700 hover:text-slate-950"
-            aria-label="Toggle menu"
+            className="lg:hidden p-2 rounded-lg bg-[#2B2D31] border border-[#45484E] text-[#C4C7CC] hover:text-[#F7F7F2] transition-colors"
+            aria-label="Toggle navigation menu"
           >
             {mobileOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -113,65 +139,67 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Drawer */}
       {mobileOpen && (
-        <div className="md:hidden bg-white border-b border-slate-200 px-6 py-5 flex flex-col gap-3 text-sm font-medium text-slate-700 shadow-md">
-          <a
-            href="#work"
-            onClick={() => setMobileOpen(false)}
-            className="py-2 hover:text-slate-950"
-          >
-            Work
-          </a>
+        <div className="lg:hidden bg-[#2B2D31]/95 backdrop-blur-2xl border-b border-[#45484E] px-6 py-6 flex flex-col gap-3.5 text-sm font-semibold text-[#F7F7F2] shadow-2xl animate-in slide-in-from-top-4 duration-200">
           <a
             href="#services"
             onClick={() => setMobileOpen(false)}
-            className="py-2 hover:text-slate-950"
+            className="py-2.5 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] transition-colors"
           >
             Services
           </a>
           <a
-            href="#calculator"
+            href="#qr-demo"
             onClick={() => setMobileOpen(false)}
-            className="py-2 hover:text-slate-950"
+            className="py-2.5 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] flex items-center gap-2.5 transition-colors"
           >
-            Estimator
+            <QrCode size={16} className="text-[#F5C542]" />
+            <span>Sample QR Menu Demo</span>
+          </a>
+          <a
+            href="#assessment"
+            onClick={() => setMobileOpen(false)}
+            className="py-2.5 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] flex items-center gap-2.5 transition-colors"
+          >
+            <Sparkles size={16} className="text-[#F5C542]" />
+            <span>Guided Needs Assessment</span>
           </a>
           <a
             href="#about"
             onClick={() => setMobileOpen(false)}
-            className="py-2 hover:text-slate-950"
+            className="py-2.5 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] transition-colors"
           >
-            Team
+            About Pixel
           </a>
           <a
-            href="#blog"
+            href="#insights"
             onClick={() => setMobileOpen(false)}
-            className="py-2 hover:text-slate-950"
+            className="py-2.5 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] transition-colors"
           >
-            Blog
+            Insights &amp; Guides
           </a>
           <a
             href="#faq"
             onClick={() => setMobileOpen(false)}
-            className="py-2 hover:text-slate-950"
+            className="py-2.5 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] transition-colors"
           >
-            FAQ
+            Frequently Asked Questions
           </a>
-          <a
-            href="#contact"
-            onClick={() => setMobileOpen(false)}
-            className="py-2 hover:text-slate-950"
-          >
-            Contact
-          </a>
-          <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
+          <div className="pt-3 border-t border-[#45484E] flex items-center justify-between">
             <a
               href="http://localhost:3000/dashboard"
               target="_blank"
               rel="noopener noreferrer"
-              className="py-2 text-slate-500 hover:text-slate-950 flex items-center justify-between"
+              className="text-xs text-[#C4C7CC] hover:text-[#F5C542] flex items-center gap-1.5 py-1"
             >
-              <span>Admin Console</span>
-              <ArrowUpRight size={14} />
+              <span>Open Admin Panel</span>
+              <ArrowUpRight size={13} className="text-[#F5C542]" />
+            </a>
+            <a
+              href="#contact"
+              onClick={() => setMobileOpen(false)}
+              className="btn-primary py-2 px-3 text-xs"
+            >
+              Contact Us
             </a>
           </div>
         </div>

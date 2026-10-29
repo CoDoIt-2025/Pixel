@@ -1,78 +1,29 @@
 import React, { useState, useEffect } from "react";
-import type { TeamMember } from "../types";
+import { ShieldCheck, Target, MapPin, ArrowRight } from "lucide-react";
 import { api } from "../lib/api";
-
-const DEFAULT_TEAM: TeamMember[] = [
-  {
-    id: "TM-001",
-    name: "Sarah Connor",
-    role: "VP of Engineering",
-    department: "Engineering",
-    skills: ["FastAPI", "Next.js", "System Architecture", "PostgreSQL", "Rust"],
-    email: "sarah.connor@pixel.dev",
-    phone: "+1 555 019 2834",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
-    status: "Active",
-    joinDate: "2023-04-12",
-    bio: "12+ years building distributed backend platforms and reactive frontends.",
-    location: "San Francisco, CA",
-  },
-  {
-    id: "TM-002",
-    name: "Alex Mercer",
-    role: "Staff AI Engineer",
-    department: "AI & Research",
-    skills: ["PyTorch", "Transformers", "LLMs", "LangChain", "Vector DBs"],
-    email: "alex.mercer@pixel.dev",
-    phone: "+1 555 019 5821",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
-    status: "Active",
-    joinDate: "2023-08-01",
-    bio: "Former research fellow focusing on inference optimization and agentic workflows.",
-    location: "Austin, TX",
-  },
-  {
-    id: "TM-003",
-    name: "Maya Patel",
-    role: "Principal UI/UX Designer",
-    department: "Design",
-    skills: ["Figma", "Design Systems", "Prototyping", "WebGL", "Motion"],
-    email: "maya.patel@pixel.dev",
-    phone: "+91 98 7654 3210",
-    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150",
-    status: "Active",
-    joinDate: "2024-01-15",
-    bio: "Obsessed with tactile micro-interactions and minimalist typography.",
-    location: "Bengaluru, India",
-  },
-  {
-    id: "TM-004",
-    name: "Marcus Vance",
-    role: "Lead Cloud Architect",
-    department: "Cloud & DevOps",
-    skills: ["Kubernetes", "AWS", "Terraform", "CI/CD", "Prometheus"],
-    email: "marcus.vance@pixel.dev",
-    phone: "+44 20 7946 0888",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150",
-    status: "Active",
-    joinDate: "2023-11-20",
-    bio: "Designing 99.999% uptime multi-region cloud infrastructures.",
-    location: "London, UK",
-  },
-];
+import type { TeamMember } from "../types";
+import { useSettings } from "../context/SettingsContext";
 
 export const TeamRoster: React.FC = () => {
-  const [team, setTeam] = useState<TeamMember[]>(DEFAULT_TEAM);
+  const { company } = useSettings();
+  const [team, setTeam] = useState<TeamMember[]>([]);
 
   const loadTeam = async () => {
-    const data = await api.getTeam();
-    if (data && data.length > 0) setTeam(data);
+    try {
+      const data = await api.getTeam();
+      if (data && data.length > 0) {
+        setTeam(data.filter((m) => m.status === "Active"));
+      }
+    } catch {
+      // Fallback
+    }
   };
 
   useEffect(() => {
     loadTeam();
     window.addEventListener("focus", loadTeam);
     const interval = setInterval(loadTeam, 5000);
+
     return () => {
       window.removeEventListener("focus", loadTeam);
       clearInterval(interval);
@@ -80,60 +31,145 @@ export const TeamRoster: React.FC = () => {
   }, []);
 
   return (
-    <section id="about" className="py-24 sm:py-32 bg-slate-50/50 border-t border-slate-100">
+    <section id="about" className="py-24 sm:py-32 bg-[#202124] text-[#F7F7F2] border-t border-[#45484E]">
       <div className="max-w-6xl mx-auto px-6 sm:px-8">
-        <div className="max-w-2xl mb-16">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-2">
-            Team
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-950">
-            Principals &amp; architects
-          </h2>
-          <p className="mt-4 text-slate-600 text-base leading-relaxed">
-            Direct access to seasoned engineers. We never employ account managers or intermediary layers &mdash; you collaborate directly with the makers.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {team.map((member) => (
-            <div
-              key={member.id}
-              className="p-6 rounded-2xl border border-slate-200/80 bg-white hover:border-slate-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] transition-all flex flex-col justify-between"
-            >
-              <div>
-                <div className="w-14 h-14 rounded-full overflow-hidden bg-slate-100 mb-5 border border-slate-100">
-                  <img
-                    src={member.avatar}
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-
-                <h3 className="text-base font-semibold text-slate-950">
-                  {member.name}
-                </h3>
-                <span className="text-xs text-slate-500 block mt-0.5">
-                  {member.role}
-                </span>
-
-                <p className="text-xs text-slate-600 mt-3 leading-relaxed">
-                  {member.bio}
-                </p>
-              </div>
-
-              <div className="pt-5 mt-5 border-t border-slate-100 flex flex-wrap gap-1.5">
-                {member.skills.slice(0, 3).map((skill, sIdx) => (
-                  <span
-                    key={sIdx}
-                    className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 text-[11px] font-medium"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
+          
+          {/* Left Text Column */}
+          <div className="lg:col-span-7">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#2B2D31] border border-[#45484E] text-[#F5C542] text-xs font-semibold mb-4">
+              <span>About {company.name || "Pixel Business Solutions LLC"}</span>
             </div>
-          ))}
+            
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#F7F7F2] leading-tight">
+              Digital support built around your business priorities
+            </h2>
+
+            <p className="mt-6 text-[#C4C7CC] text-base leading-relaxed">
+              {company.name || "Pixel Business Solutions LLC"} provides website design, SEO, Google Business Profile management, social media management, AI visibility and digital QR menu services. Our primary focus is Oman, with a secondary focus on Thrissur in Kerala.
+            </p>
+
+            <p className="mt-4 text-[#C4C7CC] text-base leading-relaxed">
+              A useful online presence starts with clear information. Customers should be able to understand what you offer, find the details they need and know how to contact you. We bring these priorities into the discussion before deciding which services fit your business.
+            </p>
+
+            <p className="mt-4 text-[#C4C7CC] text-base leading-relaxed">
+              Our approach is to define the scope clearly, work with accurate business information and review the work against agreed goals. We do not promise guaranteed search rankings or guaranteed placement in AI answers.
+            </p>
+
+            <div className="mt-8 pt-6 border-t border-[#45484E] flex flex-wrap items-center gap-4">
+              <a
+                href="#contact"
+                className="btn-primary"
+              >
+                <span>Discuss your project</span>
+                <ArrowRight size={15} />
+              </a>
+
+              <a
+                href="#faq"
+                className="btn-secondary"
+              >
+                Common questions
+              </a>
+            </div>
+          </div>
+
+          {/* Right Highlights Cards */}
+          <div className="lg:col-span-5 space-y-4">
+            <div className="p-6 rounded-2xl bg-[#2B2D31] border border-[#45484E]">
+              <div className="w-10 h-10 rounded-xl bg-[#202124] border border-[#45484E] flex items-center justify-center text-[#F5C542] mb-4">
+                <Target size={20} />
+              </div>
+              <h3 className="text-base font-bold text-[#F7F7F2] mb-1.5">
+                Clear Scope Before Starting
+              </h3>
+              <p className="text-xs text-[#C4C7CC] leading-relaxed">
+                Agreed inclusions, timeline, and responsibilities. No surprising fees or vague deliverables.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-[#2B2D31] border border-[#45484E]">
+              <div className="w-10 h-10 rounded-xl bg-[#202124] border border-[#45484E] flex items-center justify-center text-[#F5C542] mb-4">
+                <MapPin size={20} />
+              </div>
+              <h3 className="text-base font-bold text-[#F7F7F2] mb-1.5">
+                Oman &amp; Thrissur Regional Focus
+              </h3>
+              <p className="text-xs text-[#C4C7CC] leading-relaxed">
+                Primary delivery in Sultanate of Oman, with welcoming support for businesses serving customers in Thrissur, Kerala.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-2xl bg-[#2B2D31] border border-[#45484E]">
+              <div className="w-10 h-10 rounded-xl bg-[#202124] border border-[#45484E] flex items-center justify-center text-[#F5C542] mb-4">
+                <ShieldCheck size={20} />
+              </div>
+              <h3 className="text-base font-bold text-[#F7F7F2] mb-1.5">
+                Authentic &amp; Truthful Claims
+              </h3>
+              <p className="text-xs text-[#C4C7CC] leading-relaxed">
+                We present realistic timelines and evidence boundaries. No fabricated AI scores or promised search positions.
+              </p>
+            </div>
+          </div>
         </div>
+
+        {/* Dynamic Team Members from Admin Panel (if added in /team) */}
+        {team && team.length > 0 && (
+          <div className="pt-12 border-t border-[#45484E]">
+            <div className="max-w-2xl mb-8">
+              <span className="text-xs font-semibold text-[#F5C542] uppercase tracking-wider block mb-2">
+                Team &amp; Personnel
+              </span>
+              <h3 className="text-2xl font-bold tracking-tight text-[#F7F7F2]">
+                Our Technical &amp; Digital Team
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {team.map((member) => (
+                <div
+                  key={member.id}
+                  className="p-6 rounded-2xl border border-[#45484E] bg-[#2B2D31] hover:border-[#F5C542]/50 transition-all flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="w-14 h-14 rounded-full overflow-hidden bg-[#202124] mb-4 border border-[#45484E]">
+                      <img
+                        src={member.avatar || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"}
+                        alt={member.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <h4 className="text-base font-bold text-[#F7F7F2]">
+                      {member.name}
+                    </h4>
+                    <span className="text-xs text-[#F5C542] block mt-0.5 font-medium">
+                      {member.role}
+                    </span>
+                    <p className="text-xs text-[#C4C7CC] mt-2.5 leading-relaxed line-clamp-3">
+                      {member.bio}
+                    </p>
+                  </div>
+
+                  {member.skills && member.skills.length > 0 && (
+                    <div className="pt-4 mt-4 border-t border-[#45484E]/60 flex flex-wrap gap-1.5">
+                      {member.skills.slice(0, 3).map((skill, sIdx) => (
+                        <span
+                          key={sIdx}
+                          className="px-2 py-0.5 rounded bg-[#202124] text-[#C4C7CC] text-[10px] font-medium border border-[#45484E]"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
       </div>
     </section>
   );

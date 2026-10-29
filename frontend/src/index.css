@@ -1,39 +1,197 @@
 @import "tailwindcss";
 
+@theme {
+  --color-charcoal-bg: #202124;
+  --color-charcoal-card: #2B2D31;
+  --color-charcoal-card-hover: #33363B;
+  --color-charcoal-elevated: #373A40;
+  --color-yellow-accent: #F5C542;
+  --color-yellow-hover: #E5B532;
+  --color-yellow-glow: rgba(245, 197, 66, 0.25);
+  --color-text-main: #F7F7F2;
+  --color-text-secondary: #C4C7CC;
+  --color-text-muted: #8E929A;
+  --color-border-subtle: #45484E;
+  --color-border-bright: #5A5E66;
+  --color-light-bg: #F5F4EF;
+  --color-light-surface: #FFFFFF;
+  --color-light-text: #202124;
+  --color-light-subtext: #5A5D63;
+  --color-light-border: #E5E4DE;
+}
+
 @layer base {
   :root {
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-display: 'Outfit', 'Plus Jakarta Sans', sans-serif;
   }
 
   * {
-    border-color: #E2E8F0;
+    border-color: #45484E;
   }
 
   body {
     font-family: var(--font-sans);
-    background-color: #FFFFFF;
-    color: #0F172A;
-    letter-spacing: -0.015em;
+    background-color: #202124;
+    color: #F7F7F2;
+    letter-spacing: -0.014em;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.025em;
   }
 }
 
-/* Subtle Smooth Transitions */
-.transition-smooth {
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+.text-gradient-gold {
+  background: linear-gradient(135deg, #F5C542 0%, #FFF2B2 50%, #F5C542 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* Clean Minimal Card */
-.minimal-card {
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  border-radius: 12px;
-  transition: all 0.2s ease;
+.glass-panel {
+  background-color: rgba(43, 45, 49, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(69, 72, 78, 0.7);
 }
 
-.minimal-card:hover {
-  border-color: #CBD5E1;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+.glass-panel-hover:hover {
+  border-color: rgba(245, 197, 66, 0.45);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4), 0 0 25px rgba(245, 197, 66, 0.08);
+}
+
+/* Background Grid Pattern */
+.bg-grid-pattern {
+  background-image: radial-gradient(rgba(245, 197, 66, 0.08) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.bg-dot-mesh {
+  background-image: radial-gradient(#45484E 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Luxury Primary Button: Always Charcoal Text (#202124) on Yellow (#F5C542) */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #F5C542;
+  color: #202124;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px 0 rgba(245, 197, 66, 0.25);
+  cursor: pointer;
+  border: 1px solid rgba(245, 197, 66, 0.8);
+}
+
+.btn-primary:hover {
+  background-color: #E5B532;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px 0 rgba(245, 197, 66, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Secondary Button: Sleek Dark Glass */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: rgba(43, 45, 49, 0.8);
+  backdrop-filter: blur(8px);
+  color: #F7F7F2;
+  border: 1px solid #45484E;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background-color: #33363B;
+  border-color: #F5C542;
+  color: #F5C542;
+  transform: translateY(-2px);
+}
+
+/* Luxury Charcoal Card */
+.charcoal-card {
+  background-color: #2B2D31;
+  border: 1px solid #45484E;
+  border-radius: 1rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.3);
+}
+
+.charcoal-card:hover {
+  border-color: rgba(245, 197, 66, 0.45);
+  box-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.5), 0 0 20px rgba(245, 197, 66, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Radiant Glow utilities */
+.glow-yellow-sm {
+  box-shadow: 0 0 15px rgba(245, 197, 66, 0.2);
+}
+
+.glow-yellow-md {
+  box-shadow: 0 0 30px rgba(245, 197, 66, 0.25);
+}
+
+.glow-yellow-lg {
+  box-shadow: 0 0 50px rgba(245, 197, 66, 0.35);
+}
+
+/* Card Glow on Hover */
+.card-hover-gold {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card-hover-gold:hover {
+  border-color: rgba(245, 197, 66, 0.5);
+  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.5), 0 0 25px rgba(245, 197, 66, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Floating 3D Mascot Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-14px) rotate(1deg);
+  }
+}
+
+.animate-float {
+  animation: float 4.5s ease-in-out infinite;
+}
+
+@keyframes shadow-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scale(0.8);
+    opacity: 0.2;
+  }
+}
+
+.animate-shadow-pulse {
+  animation: shadow-pulse 4.5s ease-in-out infinite;
 }
 
 /* Infinite Marquee */
@@ -45,24 +203,282 @@
 .animate-marquee {
   display: flex;
   width: 200%;
-  animation: marquee 35s linear infinite;
+  animation: marquee 28s linear infinite;
 }
 
 .animate-marquee:hover {
   animation-play-state: paused;
 }
 
-/* Minimal Scrollbar */
+/* Custom Sleek Scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: #FFFFFF;
+  background: #202124;
 }
 ::-webkit-scrollbar-thumb {
-  background: #E2E8F0;
+  background: #45484E;
   border-radius: 9999px;
+  border: 1px solid #202124;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #CBD5E1;
+  background: #F5C542;
+}
+
+/* Phone Bezel Reflection */
+.phone-mockup {
+  border: 10px solid #1A1C1E;
+  border-radius: 44px;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px #45484E;
+}
+
+/* ==========================================================================
+   Ivory Light Theme System (#F5F4EF)
+   Active when <html class="theme-light"> (controlled via Admin Panel & Navbar)
+   ========================================================================== */
+
+.theme-light {
+  color-scheme: light;
+}
+
+.theme-light body,
+.theme-light .min-h-screen {
+  background-color: #F5F4EF !important;
+  color: #202124 !important;
+}
+
+/* Base Surfaces & Backgrounds */
+.theme-light section,
+.theme-light main,
+.theme-light footer {
+  background-color: #F5F4EF !important;
+  color: #202124 !important;
+}
+
+/* Replace Charcoal background class #202124 with Light Ivory #F5F4EF */
+.theme-light .bg-\[\#202124\],
+.theme-light [class*="bg-[#202124]"] {
+  background-color: #F5F4EF !important;
+}
+
+.theme-light .bg-\[\#202124\]\/90,
+.theme-light .bg-\[\#202124\]\/80,
+.theme-light .bg-\[\#202124\]\/70,
+.theme-light [class*="bg-[#202124]/"] {
+  background-color: rgba(245, 244, 239, 0.94) !important;
+}
+
+/* Replace Dark Card surface #2B2D31 with Pure White Card #FFFFFF */
+.theme-light .charcoal-card,
+.theme-light .bg-\[\#2B2D31\],
+.theme-light [class*="bg-[#2B2D31]"] {
+  background-color: #FFFFFF !important;
+}
+
+.theme-light .bg-\[\#2B2D31\]\/95,
+.theme-light .bg-\[\#2B2D31\]\/90,
+.theme-light .bg-\[\#2B2D31\]\/80,
+.theme-light .bg-\[\#2B2D31\]\/70,
+.theme-light [class*="bg-[#2B2D31]/"] {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Darker accents become light neutral surfaces */
+.theme-light .bg-\[\#33363B\],
+.theme-light .bg-\[\#373A40\],
+.theme-light .bg-\[\#1A1C1E\],
+.theme-light [class*="bg-[#33363B]"],
+.theme-light [class*="bg-[#373A40]"] {
+  background-color: #ECEAE4 !important;
+}
+
+/* Text Colors */
+.theme-light .text-\[\#F7F7F2\],
+.theme-light [class*="text-[#F7F7F2]"] {
+  color: #202124 !important;
+}
+
+.theme-light .text-\[\#C4C7CC\],
+.theme-light [class*="text-[#C4C7CC]"] {
+  color: #5A5D63 !important;
+}
+
+.theme-light .text-\[\#8E929A\],
+.theme-light [class*="text-[#8E929A]"] {
+  color: #7A7E86 !important;
+}
+
+/* Borders */
+.theme-light * {
+  border-color: #E5E4DE;
+}
+
+.theme-light .border-\[\#45484E\],
+.theme-light [class*="border-[#45484E]"] {
+  border-color: #E5E4DE !important;
+}
+
+.theme-light .border-\[\#45484E\]\/80,
+.theme-light .border-\[\#45484E\]\/70,
+.theme-light .border-\[\#45484E\]\/50 {
+  border-color: rgba(229, 228, 222, 0.8) !important;
+}
+
+.theme-light .border-\[\#5A5E66\],
+.theme-light [class*="border-[#5A5E66]"] {
+  border-color: #D6D5CE !important;
+}
+
+/* Navigation Header */
+.theme-light header {
+  background-color: rgba(245, 244, 239, 0.95) !important;
+  border-color: #E5E4DE !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.theme-light header .bg-gradient-to-b {
+  background-image: none !important;
+  background-color: rgba(245, 244, 239, 0.95) !important;
+}
+
+/* Buttons */
+/* Primary Yellow Button: ALWAYS Charcoal Text #202124 on Yellow #F5C542 */
+.theme-light .btn-primary {
+  background-color: #F5C542 !important;
+  color: #202124 !important;
+  border-color: #E5B532 !important;
+  box-shadow: 0 4px 14px 0 rgba(245, 197, 66, 0.35) !important;
+}
+
+.theme-light .btn-primary:hover {
+  background-color: #E5B532 !important;
+  color: #202124 !important;
+  box-shadow: 0 6px 20px 0 rgba(245, 197, 66, 0.45) !important;
+}
+
+/* Secondary Button in Light Mode: Crisp White Surface */
+.theme-light .btn-secondary {
+  background-color: #FFFFFF !important;
+  color: #202124 !important;
+  border-color: #E5E4DE !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+.theme-light .btn-secondary:hover {
+  background-color: #FAF9F5 !important;
+  border-color: #F5C542 !important;
+  color: #202124 !important;
+  box-shadow: 0 4px 14px rgba(245, 197, 66, 0.2) !important;
+}
+
+/* Glass Panels */
+.theme-light .glass-panel {
+  background-color: rgba(255, 255, 255, 0.92) !important;
+  border-color: #E5E4DE !important;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Cards & Hover States */
+.theme-light .charcoal-card,
+.theme-light .card-hover-gold {
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.04) !important;
+}
+
+.theme-light .charcoal-card:hover,
+.theme-light .card-hover-gold:hover {
+  border-color: #F5C542 !important;
+  box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.08), 0 0 20px rgba(245, 197, 66, 0.15) !important;
+}
+
+/* Form Inputs, Selects & Textareas */
+.theme-light input,
+.theme-light textarea,
+.theme-light select {
+  background-color: #FFFFFF !important;
+  color: #202124 !important;
+  border-color: #E5E4DE !important;
+}
+
+.theme-light input:focus,
+.theme-light textarea:focus,
+.theme-light select:focus {
+  border-color: #F5C542 !important;
+  box-shadow: 0 0 0 2px rgba(245, 197, 66, 0.2) !important;
+}
+
+.theme-light input::placeholder,
+.theme-light textarea::placeholder {
+  color: #9CA3AF !important;
+}
+
+.theme-light select option {
+  background-color: #FFFFFF !important;
+  color: #202124 !important;
+}
+
+/* Grid & Dots Patterns for Light Theme */
+.theme-light .bg-grid-pattern {
+  background-image: radial-gradient(rgba(245, 197, 66, 0.16) 1px, transparent 1px) !important;
+}
+
+.theme-light .bg-dot-mesh {
+  background-image: radial-gradient(#D6D5CE 1px, transparent 1px) !important;
+}
+
+/* Marquee Edge Gradient Masks */
+.theme-light .from-\[\#2B2D31\] {
+  --tw-gradient-from: #F5F4EF var(--tw-gradient-from-position) !important;
+}
+
+.theme-light .to-\[\#2B2D31\] {
+  --tw-gradient-to: #F5F4EF var(--tw-gradient-to-position) !important;
+}
+
+.theme-light .from-\[\#202124\] {
+  --tw-gradient-from: #F5F4EF var(--tw-gradient-from-position) !important;
+}
+
+.theme-light .to-\[\#202124\] {
+  --tw-gradient-to: #F5F4EF var(--tw-gradient-to-position) !important;
+}
+
+/* Hover Backgrounds */
+.theme-light [class*="hover:bg-[#202124]"]:hover,
+.theme-light .hover\:bg-\[\#202124\]:hover {
+  background-color: #ECEAE4 !important;
+}
+
+.theme-light [class*="hover:bg-[#33363B]"]:hover,
+.theme-light .hover\:bg-\[\#33363B\]:hover {
+  background-color: #FAF9F5 !important;
+}
+
+.theme-light [class*="hover:text-[#F7F7F2]"]:hover,
+.theme-light .hover\:text-\[\#F7F7F2\]:hover {
+  color: #202124 !important;
+}
+
+/* Floating Action Widgets (WhatsApp & Scroll to top) */
+.theme-light .fixed button,
+.theme-light .fixed a[href*="wa.me"] {
+  background-color: #FFFFFF !important;
+  color: #202124 !important;
+  border-color: #E5E4DE !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Scrollbar in Light Mode */
+.theme-light::-webkit-scrollbar-track {
+  background: #F5F4EF !important;
+}
+
+.theme-light::-webkit-scrollbar-thumb {
+  background: #D1D0C9 !important;
+  border: 1px solid #F5F4EF !important;
+}
+
+.theme-light::-webkit-scrollbar-thumb:hover {
+  background: #F5C542 !important;
 }

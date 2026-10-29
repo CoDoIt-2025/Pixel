@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
 import confetti from "canvas-confetti";
-import { CheckCircle2, Send, ShieldAlert, MapPin } from "lucide-react";
+import {
+  CheckCircle2,
+  Send,
+  ShieldAlert,
+  Mail,
+  Phone,
+  MapPin,
+  Clock,
+  Sparkles,
+  MessageCircle,
+} from "lucide-react";
 import { api } from "../lib/api";
 import { useSettings } from "../context/SettingsContext";
 
@@ -14,18 +24,58 @@ interface InquiryFormProps {
 
 export const RFPInquiryForm: React.FC<InquiryFormProps> = ({ prefillData }) => {
   const { company } = useSettings();
+  const [servicesList, setServicesList] = useState<string[]>([
+    "Website Design",
+    "SEO Services",
+    "Google Business Profile Management",
+    "Social Media Management",
+    "AI Visibility Services",
+    "Digital QR Menus",
+  ]);
+
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
-    company: "",
-    service: "Enterprise AI & LLM Systems",
-    budget: "$60,000 - $100,000",
-    message: "",
+    businessName: "",
+    emailOrPhone: "",
+    market: "Oman",
+    service: "Website Design",
+    budget: "300 - 600 OMR",
+    projectDetails: "",
+    websiteUrl: "",
+    marketingConsent: false,
   });
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
+  const budgetOptions = [
+    "Under 300 OMR",
+    "300 - 600 OMR",
+    "600 - 1,200 OMR",
+    "1,200+ OMR / Retainer",
+  ];
+
+  // Dynamically load services from backend
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const data = await api.getServices();
+        if (data && data.length > 0) {
+          const visible = data.filter((s) => s.isVisible).map((s) => s.title);
+          if (visible.length > 0) {
+            setServicesList(visible);
+            if (!formData.service || !visible.includes(formData.service)) {
+              setFormData((prev) => ({ ...prev, service: visible[0] }));
+            }
+          }
+        }
+      } catch {
+        // Fallback
+      }
+    };
+    fetchServices();
+  }, []);
 
   useEffect(() => {
     if (prefillData) {
@@ -33,7 +83,7 @@ export const RFPInquiryForm: React.FC<InquiryFormProps> = ({ prefillData }) => {
         ...prev,
         service: prefillData.service || prev.service,
         budget: prefillData.budget || prev.budget,
-        message: prefillData.message || prev.message,
+        projectDetails: prefillData.message || prev.projectDetails,
       }));
     }
   }, [prefillData]);
@@ -41,212 +91,368 @@ export const RFPInquiryForm: React.FC<InquiryFormProps> = ({ prefillData }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg("");
+
+    if (!formData.name.trim()) {
+      setErrorMsg("Please enter your name.");
+      return;
+    }
+
+    if (!formData.emailOrPhone.trim()) {
+      setErrorMsg(
+        "Please provide either an email address or a phone number so we can reach you."
+      );
+      return;
+    }
+
+    if (!formData.projectDetails.trim()) {
+      setErrorMsg("Please share a few details about your project requirements.");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      await api.submitInquiry(formData);
+      await api.submitInquiry({
+        name: formData.name,
+        email: formData.emailOrPhone.includes("@")
+          ? formData.emailOrPhone
+          : "phone-contact@pixel.dev",
+        company: formData.businessName || "Not specified",
+        service: `${formData.service} (${formData.market} Market)`,
+        budget: formData.budget,
+        message: `${formData.projectDetails}\n\n[Contact info: ${formData.emailOrPhone}]${
+          formData.websiteUrl ? `\n[Website: ${formData.websiteUrl}]` : ""
+        }`,
+      });
       setSuccess(true);
 
       confetti({
         particleCount: 50,
-        spread: 60,
+        spread: 70,
         origin: { y: 0.6 },
-        colors: ["#0F172A", "#64748B", "#94A3B8"],
+        colors: ["#F5C542", "#2B2D31", "#E5B532"],
       });
-    } catch (err: any) {
-      setErrorMsg(err.message || "Failed to submit proposal. Please verify the backend is running.");
+    } catch {
+      setErrorMsg(
+        "Your enquiry could not be sent. Please try again or use our verified contact details on the left."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section id="contact" className="py-24 sm:py-32 bg-white border-t border-slate-100">
+    <section
+      id="contact"
+      className="py-24 sm:py-32 bg-[#202124] text-[#F7F7F2] border-t border-[#45484E] relative"
+    >
       <div className="max-w-6xl mx-auto px-6 sm:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          {/* Left Column */}
-          <div className="lg:col-span-5 space-y-6">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
-              Contact
-            </span>
+          
+          {/* Left Column: Form Details & Verified Contacts from Settings */}
+          <div className="lg:col-span-5">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#2B2D31] border border-[#45484E] text-[#F5C542] text-xs font-semibold mb-4">
+              <Sparkles size={13} className="text-[#F5C542] fill-[#F5C542]" />
+              <span>Start the Conversation</span>
+            </div>
 
-            <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-950">
-              Let&apos;s build something exceptional.
+            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#F7F7F2] leading-tight">
+              Tell us what your business needs
             </h2>
 
-            <p className="text-slate-600 text-sm leading-relaxed">
-              We review every inquiry within 24 business hours. If you prefer direct correspondence, reach our principals at{" "}
-              <a href={`mailto:${company.email}`} className="text-slate-950 font-medium underline underline-offset-4">
-                {company.email}
-              </a>
-              {company.phone && (
-                <> or call <span className="text-slate-950 font-medium">{company.phone}</span></>
-              )}.
+            <p className="mt-4 text-[#C4C7CC] text-base leading-relaxed">
+              Share a few details about your business and what you would like to improve. Whether you are planning a website, reviewing your visibility or exploring a digital menu, we can discuss a suitable starting point.
             </p>
 
-            {company.address && (
-              <div className="flex items-center gap-2 text-xs text-slate-500">
-                <MapPin size={14} className="text-slate-400 shrink-0" />
-                <span>{company.address}</span>
-              </div>
-            )}
+            {/* Verified Contacts Box from Live Admin Settings */}
+            <div className="mt-8 p-6 sm:p-7 rounded-2xl bg-[#2B2D31] border border-[#45484E] space-y-4 shadow-xl card-hover-gold">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#F5C542] flex items-center gap-2">
+                <span>Verified Business Details</span>
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              </h3>
 
-            <div className="pt-6 border-t border-slate-100 space-y-3 text-xs text-slate-600">
-              <div className="flex items-center gap-2.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                <span>NDA &amp; full IP assignment on Day 1</span>
+              <div className="space-y-3 pt-2 text-xs text-[#C4C7CC]">
+                <div className="flex items-start gap-3">
+                  <MapPin size={16} className="text-[#F5C542] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-[#F7F7F2] block">Operating Office:</strong>
+                    <span>{company.address || "Muscat, Sultanate of Oman &bull; Supporting Thrissur, Kerala"}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <Mail size={16} className="text-[#F5C542] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-[#F7F7F2] block">Direct Email:</strong>
+                    <a
+                      href={`mailto:${company.email || "contact@pixelbusiness.om"}`}
+                      className="hover:text-[#F5C542] transition-colors"
+                    >
+                      {company.email || "contact@pixelbusiness.om"}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <Phone size={16} className="text-[#F5C542] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-[#F7F7F2] block">Telephone:</strong>
+                    <span>{company.phone || "+968 2400 0000"}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <Clock size={16} className="text-[#F5C542] flex-shrink-0 mt-0.5" />
+                  <div>
+                    <strong className="text-[#F7F7F2] block">Typical Response Time:</strong>
+                    <span>Within 24 business hours (Sun &ndash; Thu)</span>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-2.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                <span>Fixed-scope milestone guarantees</span>
+
+              {/* Direct WhatsApp Quick Chat */}
+              <div className="pt-4 border-t border-[#45484E]">
+                <a
+                  href="https://wa.me/96824000000"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-2.5 px-4 rounded-xl bg-[#202124] border border-[#45484E] hover:border-[#F5C542] text-xs font-semibold text-[#F7F7F2] flex items-center justify-center gap-2 transition-all group"
+                >
+                  <MessageCircle size={15} className="text-[#F5C542] group-hover:scale-110 transition-transform" />
+                  <span>Chat directly on WhatsApp</span>
+                </a>
               </div>
-              <div className="flex items-center gap-2.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                <span>Zero outsourced development</span>
-              </div>
+            </div>
+
+            <div className="mt-6 p-4 rounded-xl bg-[#2B2D31]/50 border border-[#45484E] text-[11px] text-[#C4C7CC]">
+              <em>Data Protection:</em> We use your contact details solely to reply to your inquiry. No aggressive unsolicited newsletters or third-party sharing.
             </div>
           </div>
 
-          {/* Right Column: Form */}
-          <div className="lg:col-span-7 p-8 sm:p-10 rounded-2xl border border-slate-200/80 bg-slate-50/50 shadow-2xs">
+          {/* Right Column: Interactive RFP Inquiry Form */}
+          <div className="lg:col-span-7 bg-[#2B2D31] border border-[#45484E] rounded-3xl p-6 sm:p-9 shadow-2xl relative">
             {success ? (
-              <div className="py-12 text-center space-y-4">
-                <div className="w-12 h-12 bg-slate-950 text-white rounded-full flex items-center justify-center mx-auto">
-                  <CheckCircle2 size={24} />
+              <div className="py-12 text-center space-y-4 animate-in fade-in zoom-in duration-300">
+                <div className="w-16 h-16 rounded-full bg-[#F5C542]/20 border border-[#F5C542] flex items-center justify-center text-[#F5C542] mx-auto mb-2">
+                  <CheckCircle2 size={36} />
                 </div>
-                <h3 className="text-xl font-semibold text-slate-950">
-                  Message received
+                <h3 className="font-display text-2xl font-bold text-[#F7F7F2]">
+                  Enquiry Received
                 </h3>
-                <p className="text-xs text-slate-600 max-w-sm mx-auto leading-relaxed">
-                  Thank you for reaching out. A partner will review your project brief and follow up shortly.
+                <p className="text-sm text-[#C4C7CC] max-w-md mx-auto leading-relaxed">
+                  Thank you, <strong>{formData.name}</strong>. We have logged your request and our team will review your requirements for the <strong>{formData.market}</strong> market within 24 business hours.
                 </p>
-                <div className="pt-3">
+                <div className="pt-6">
                   <button
                     type="button"
                     onClick={() => {
                       setSuccess(false);
                       setFormData({
                         name: "",
-                        email: "",
-                        company: "",
-                        service: "Enterprise AI & LLM Systems",
-                        budget: "$60,000 - $100,000",
-                        message: "",
+                        businessName: "",
+                        emailOrPhone: "",
+                        market: "Oman",
+                        service: servicesList[0] || "Website Design",
+                        budget: "300 - 600 OMR",
+                        projectDetails: "",
+                        websiteUrl: "",
+                        marketingConsent: false,
                       });
                     }}
-                    className="px-4 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-900 text-xs font-medium"
+                    className="btn-secondary text-xs py-2 px-5"
                   >
-                    Send another message
+                    Send another inquiry
                   </button>
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-5">
                 {errorMsg && (
-                  <div className="p-3.5 rounded-xl border border-rose-200 bg-rose-50 text-rose-700 text-xs flex items-center gap-2">
-                    <ShieldAlert size={15} />
+                  <div className="p-3.5 rounded-xl bg-red-900/30 border border-red-500/50 text-red-200 text-xs flex items-center gap-2">
+                    <ShieldAlert size={16} className="text-red-400 flex-shrink-0" />
                     <span>{errorMsg}</span>
                   </div>
                 )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Name */}
                   <div>
-                    <label className="text-xs font-medium text-slate-700 block mb-1.5">
-                      Your Name *
+                    <label className="block text-xs font-bold text-[#F7F7F2] uppercase tracking-wider mb-2">
+                      Your Name <span className="text-[#F5C542]">*</span>
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="Patrick Collison"
+                      placeholder="e.g. Tariq Al Balushi"
                       value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full bg-white border border-slate-200 rounded-lg px-3.5 py-2.5 text-slate-900 text-xs placeholder:text-slate-400 focus:outline-none focus:border-slate-950 focus:ring-1 focus:ring-slate-950 transition-colors"
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
+                      className="w-full px-4 py-2.5 rounded-xl bg-[#202124] border border-[#45484E] focus:border-[#F5C542] text-sm text-[#F7F7F2] outline-none transition-colors"
                     />
                   </div>
 
+                  {/* Business Name */}
                   <div>
-                    <label className="text-xs font-medium text-slate-700 block mb-1.5">
-                      Email Address *
+                    <label className="block text-xs font-bold text-[#F7F7F2] uppercase tracking-wider mb-2">
+                      Business or Project Name
                     </label>
                     <input
-                      type="email"
-                      required
-                      placeholder="patrick@stripe.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full bg-white border border-slate-200 rounded-lg px-3.5 py-2.5 text-slate-900 text-xs placeholder:text-slate-400 focus:outline-none focus:border-slate-950 focus:ring-1 focus:ring-slate-950 transition-colors"
+                      type="text"
+                      placeholder="e.g. Al Hajar Trading LLC"
+                      value={formData.businessName}
+                      onChange={(e) =>
+                        setFormData({ ...formData, businessName: e.target.value })
+                      }
+                      className="w-full px-4 py-2.5 rounded-xl bg-[#202124] border border-[#45484E] focus:border-[#F5C542] text-sm text-[#F7F7F2] outline-none transition-colors"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Email or Phone */}
                   <div>
-                    <label className="text-xs font-medium text-slate-700 block mb-1.5">
-                      Company
+                    <label className="block text-xs font-bold text-[#F7F7F2] uppercase tracking-wider mb-2">
+                      Email or Phone / WhatsApp <span className="text-[#F5C542]">*</span>
                     </label>
                     <input
                       type="text"
-                      placeholder="Stripe, Linear, etc."
-                      value={formData.company}
-                      onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                      className="w-full bg-white border border-slate-200 rounded-lg px-3.5 py-2.5 text-slate-900 text-xs placeholder:text-slate-400 focus:outline-none focus:border-slate-950 focus:ring-1 focus:ring-slate-950 transition-colors"
+                      required
+                      placeholder="+968 9000 0000 or email"
+                      value={formData.emailOrPhone}
+                      onChange={(e) =>
+                        setFormData({ ...formData, emailOrPhone: e.target.value })
+                      }
+                      className="w-full px-4 py-2.5 rounded-xl bg-[#202124] border border-[#45484E] focus:border-[#F5C542] text-sm text-[#F7F7F2] outline-none transition-colors"
                     />
                   </div>
 
+                  {/* Existing Website */}
                   <div>
-                    <label className="text-xs font-medium text-slate-700 block mb-1.5">
-                      Service
+                    <label className="block text-xs font-bold text-[#F7F7F2] uppercase tracking-wider mb-2">
+                      Existing Website (if any)
                     </label>
-                    <select
-                      value={formData.service}
-                      onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                      className="w-full bg-white border border-slate-200 rounded-lg px-3.5 py-2.5 text-slate-900 text-xs focus:outline-none focus:border-slate-950 focus:ring-1 focus:ring-slate-950 transition-colors"
-                    >
-                      <option value="Enterprise AI & LLM Systems">AI &amp; LLM Systems</option>
-                      <option value="Enterprise Web Applications">Web Applications</option>
-                      <option value="Cloud & Distributed Infrastructure">Cloud Infrastructure</option>
-                      <option value="Design Systems & UX Architecture">Design Systems</option>
-                    </select>
+                    <input
+                      type="text"
+                      placeholder="https://example.com"
+                      value={formData.websiteUrl}
+                      onChange={(e) =>
+                        setFormData({ ...formData, websiteUrl: e.target.value })
+                      }
+                      className="w-full px-4 py-2.5 rounded-xl bg-[#202124] border border-[#45484E] focus:border-[#F5C542] text-sm text-[#F7F7F2] outline-none transition-colors"
+                    />
                   </div>
                 </div>
 
+                {/* Primary Market Selector */}
                 <div>
-                  <label className="text-xs font-medium text-slate-700 block mb-1.5">
-                    Estimated Budget Range
+                  <label className="block text-xs font-bold text-[#F7F7F2] uppercase tracking-wider mb-2">
+                    Primary Market
                   </label>
-                  <input
-                    type="text"
-                    value={formData.budget}
-                    onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                    className="w-full bg-white border border-slate-200 rounded-lg px-3.5 py-2.5 text-slate-900 text-xs focus:outline-none focus:border-slate-950 focus:ring-1 focus:ring-slate-950 transition-colors"
-                  />
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, market: "Oman" })}
+                      className={`p-3 rounded-xl border text-left text-xs transition-all ${
+                        formData.market === "Oman"
+                          ? "border-[#F5C542] bg-[#F5C542]/15 text-[#F7F7F2] ring-1 ring-[#F5C542]"
+                          : "border-[#45484E] bg-[#202124] text-[#C4C7CC]"
+                      }`}
+                    >
+                      <strong className="block text-[#F7F7F2]">Sultanate of Oman</strong>
+                      <span className="text-[10px] text-[#C4C7CC]">Primary Focus</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormData({ ...formData, market: "Thrissur, Kerala" })
+                      }
+                      className={`p-3 rounded-xl border text-left text-xs transition-all ${
+                        formData.market === "Thrissur, Kerala"
+                          ? "border-[#F5C542] bg-[#F5C542]/15 text-[#F7F7F2] ring-1 ring-[#F5C542]"
+                          : "border-[#45484E] bg-[#202124] text-[#C4C7CC]"
+                      }`}
+                    >
+                      <strong className="block text-[#F7F7F2]">Thrissur, Kerala</strong>
+                      <span className="text-[10px] text-[#C4C7CC]">Secondary Market</span>
+                    </button>
+                  </div>
                 </div>
 
+                {/* Service Selector */}
                 <div>
-                  <label className="text-xs font-medium text-slate-700 block mb-1.5">
-                    Project Goals / Scope *
+                  <label className="block text-xs font-bold text-[#F7F7F2] uppercase tracking-wider mb-2">
+                    Service of Interest
+                  </label>
+                  <select
+                    value={formData.service}
+                    onChange={(e) =>
+                      setFormData({ ...formData, service: e.target.value })
+                    }
+                    className="w-full px-4 py-2.5 rounded-xl bg-[#202124] border border-[#45484E] focus:border-[#F5C542] text-sm text-[#F7F7F2] outline-none"
+                  >
+                    {servicesList.map((srv, idx) => (
+                      <option key={idx} value={srv} className="bg-[#202124] text-[#F7F7F2]">
+                        {srv}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Estimated Budget Selector */}
+                <div>
+                  <label className="block text-xs font-bold text-[#F7F7F2] uppercase tracking-wider mb-2">
+                    Estimated Budget Tier
+                  </label>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {budgetOptions.map((opt) => (
+                      <button
+                        key={opt}
+                        type="button"
+                        onClick={() => setFormData({ ...formData, budget: opt })}
+                        className={`px-3 py-2 rounded-lg text-xs font-semibold border transition-all text-center whitespace-nowrap ${
+                          formData.budget === opt
+                            ? "bg-[#F5C542] text-[#202124] border-[#F5C542] font-bold shadow-sm"
+                            : "bg-[#202124] text-[#C4C7CC] border-[#45484E] hover:border-[#F5C542]/50"
+                        }`}
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Project Details */}
+                <div>
+                  <label className="block text-xs font-bold text-[#F7F7F2] uppercase tracking-wider mb-2">
+                    Project Details &bull; What do you want to achieve?{" "}
+                    <span className="text-[#F5C542]">*</span>
                   </label>
                   <textarea
                     required
                     rows={4}
-                    placeholder="Briefly describe what you're building, target timeline, and any technical constraints..."
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full bg-white border border-slate-200 rounded-lg px-3.5 py-2.5 text-slate-900 text-xs placeholder:text-slate-400 focus:outline-none focus:border-slate-950 focus:ring-1 focus:ring-slate-950 transition-colors resize-none"
+                    placeholder="Describe your services, current challenge, or what you want to improve..."
+                    value={formData.projectDetails}
+                    onChange={(e) =>
+                      setFormData({ ...formData, projectDetails: e.target.value })
+                    }
+                    className="w-full px-4 py-2.5 rounded-xl bg-[#202124] border border-[#45484E] focus:border-[#F5C542] text-sm text-[#F7F7F2] outline-none transition-colors"
                   />
                 </div>
 
+                {/* Yellow button with charcoal text */}
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 rounded-lg bg-slate-950 hover:bg-slate-800 text-white text-xs font-semibold tracking-tight transition-colors flex items-center justify-center gap-2 disabled:opacity-50 shadow-xs"
+                  className="btn-primary w-full py-3.5 text-sm font-bold shadow-lg shadow-[#F5C542]/20 cursor-pointer"
                 >
                   {loading ? (
-                    <span>Submitting...</span>
+                    <span>Submitting enquiry...</span>
                   ) : (
                     <>
-                      <span>Send inquiry</span>
-                      <Send size={13} />
+                      <span>Send inquiry &bull; Discuss project</span>
+                      <Send size={15} />
                     </>
                   )}
                 </button>

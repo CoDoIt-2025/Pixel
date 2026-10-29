@@ -1,29 +1,42 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import type { CompanySettings, SEOSettings } from "../types";
+import type { CompanySettings, SEOSettings, AppearanceSettings } from "../types";
 import { api } from "../lib/api";
 
 const DEFAULT_COMPANY: CompanySettings = {
-  name: "Pixel Oman",
-  email: "contact@pixel.dev",
+  name: "Pixel Business Solutions LLC",
+  email: "contact@pixelbusiness.om",
   phone: "+968 2400 0000",
-  address: "Muscat, Sultanate of Oman",
+  address: "Muscat, Sultanate of Oman | Thrissur, Kerala",
   taxId: "CR-1049281",
   currency: "OMR (ر.ع.)",
-  website: "https://pixel.dev",
-  description: "Software & AI engineering studio crafting modern web platforms, autonomous inference pipelines, and design systems for enterprise leaders.",
+  website: "https://pixelbusiness.om",
+  description:
+    "Pixel Business Solutions LLC helps businesses build a clearer online presence through website design, SEO, Google Business Profile management, social media management and AI visibility. For restaurants and hotels, we also offer digital QR menus.",
 };
 
 const DEFAULT_SEO: SEOSettings = {
-  metaTitle: "Pixel Oman | Elite Enterprise Software Studio",
-  metaDescription: "Bespoke web applications, AI engineering, and cloud platforms for ambitious global enterprises.",
-  keywords: "Enterprise Software, Next.js, React, Cloud, AI Solutions",
-  ogImage: "https://pixel.dev/og-cover.png",
+  metaTitle: "Website Design and Digital Marketing Oman | Pixel",
+  metaDescription:
+    "Explore website design, SEO, Google Business Profile, social media, AI visibility and QR menus for businesses in Oman. Discuss your project with Pixel.",
+  keywords: "Website Design Oman, SEO Oman, Google Business Profile, QR Menus",
+  ogImage: "https://pixelbusiness.om/og-cover.png",
   googleAnalyticsId: "G-PXEL82710",
+};
+
+const DEFAULT_APPEARANCE: AppearanceSettings = {
+  primaryColor: "#F5C542",
+  theme: "charcoal",
+  compactMode: false,
+  highContrast: false,
 };
 
 interface SettingsContextValue {
   company: CompanySettings;
   seo: SEOSettings;
+  appearance: AppearanceSettings;
+  theme: "charcoal" | "light";
+  setTheme: (theme: "charcoal" | "light") => Promise<void>;
+  toggleTheme: () => Promise<void>;
   refreshSettings: () => Promise<void>;
   loading: boolean;
 }
@@ -31,14 +44,35 @@ interface SettingsContextValue {
 const SettingsContext = createContext<SettingsContextValue>({
   company: DEFAULT_COMPANY,
   seo: DEFAULT_SEO,
+  appearance: DEFAULT_APPEARANCE,
+  theme: "charcoal",
+  setTheme: async () => {},
+  toggleTheme: async () => {},
   refreshSettings: async () => {},
   loading: false,
 });
 
-export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [company, setCompany] = useState<CompanySettings>(DEFAULT_COMPANY);
   const [seo, setSeo] = useState<SEOSettings>(DEFAULT_SEO);
+  const [appearance, setAppearance] =
+    useState<AppearanceSettings>(DEFAULT_APPEARANCE);
   const [loading, setLoading] = useState(true);
+
+  const applyThemeClass = (t: string) => {
+    if (typeof document === "undefined") return;
+    if (t === "light") {
+      document.documentElement.classList.add("theme-light");
+      document.documentElement.classList.remove("theme-dark");
+      document.documentElement.setAttribute("data-theme", "light");
+    } else {
+      document.documentElement.classList.remove("theme-light");
+      document.documentElement.classList.add("theme-dark");
+      document.documentElement.setAttribute("data-theme", "charcoal");
+    }
+  };
 
   const fetchSettings = async () => {
     try {
@@ -53,6 +87,16 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             document.title = data.seo.metaTitle;
           }
         }
+        if (data.appearance) {
+          const app: AppearanceSettings = {
+            primaryColor: data.appearance.primaryColor || "#F5C542",
+            theme: data.appearance.theme === "light" ? "light" : "charcoal",
+            compactMode: data.appearance.compactMode,
+            highContrast: data.appearance.highContrast,
+          };
+          setAppearance(app);
+          applyThemeClass(app.theme);
+        }
       }
     } catch (err) {
       console.warn("Could not load dynamic settings, using fallback defaults:", err);
@@ -61,13 +105,31 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
+  const setTheme = async (nextTheme: "charcoal" | "light") => {
+    const updated: AppearanceSettings = { ...appearance, theme: nextTheme };
+    setAppearance(updated);
+    applyThemeClass(nextTheme);
+
+    try {
+      await api.updateSettings({ appearance: updated });
+    } catch {
+      // Ignore background error
+    }
+  };
+
+  const toggleTheme = async () => {
+    const nextTheme: "charcoal" | "light" =
+      appearance.theme === "light" ? "charcoal" : "light";
+    await setTheme(nextTheme);
+  };
+
   useEffect(() => {
     fetchSettings();
 
-    // Auto-refresh when tab regains focus or every 6 seconds to capture Admin Panel updates
+    // Auto-refresh when tab regains focus or every 5 seconds to capture Admin Panel updates
     const handleFocus = () => fetchSettings();
     window.addEventListener("focus", handleFocus);
-    const interval = setInterval(fetchSettings, 6000);
+    const interval = setInterval(fetchSettings, 5000);
 
     return () => {
       window.removeEventListener("focus", handleFocus);
@@ -80,6 +142,10 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       value={{
         company,
         seo,
+        appearance,
+        theme: appearance.theme,
+        setTheme,
+        toggleTheme,
         refreshSettings: fetchSettings,
         loading,
       }}

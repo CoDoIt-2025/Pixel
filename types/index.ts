@@ -205,6 +205,7 @@ export interface UserSettings {
   };
   appearance: {
     primaryColor: string;
+    theme?: string;
     compactMode: boolean;
     highContrast: boolean;
   };

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { ArrowDown } from "lucide-react";
-import { useSettings } from "../context/SettingsContext";
+import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
 
-interface ScopeCalculatorProps {
+interface NeedsAssessmentProps {
   onApplyEstimate: (scopeData: {
     service: string;
     budget: string;
@@ -10,219 +9,300 @@ interface ScopeCalculatorProps {
   }) => void;
 }
 
-export const InteractiveScopeCalculator: React.FC<ScopeCalculatorProps> = ({ onApplyEstimate }) => {
-  const { company } = useSettings();
-  const currencySymbol = company.currency?.includes("OMR")
-    ? "OMR "
-    : company.currency?.includes("USD")
-    ? "$"
-    : company.currency
-    ? `${company.currency} `
-    : "$";
+export const InteractiveScopeCalculator: React.FC<NeedsAssessmentProps> = ({ onApplyEstimate }) => {
+  const [market, setMarket] = useState<string>("oman");
+  const [businessType, setBusinessType] = useState<string>("services");
+  const [websiteStatus, setWebsiteStatus] = useState<string>("none");
+  const [mainGoal, setMainGoal] = useState<string>("enquiries");
 
-  const [architecture, setArchitecture] = useState<string>("ai");
-  const [scale, setScale] = useState<string>("growth");
-  const [aiTier, setAiTier] = useState<string>("finetuned");
-  const [speed, setSpeed] = useState<string>("standard");
+  // Recommendation engine based on official website plan rules
+  const getRecommendation = () => {
+    if (businessType === "hospitality" || mainGoal === "menu") {
+      return {
+        service: "Digital QR Menus",
+        headline: "Digital QR Menu Planning",
+        explanation:
+          "Because you operate a restaurant, cafe or hotel and want a simpler way for guests to browse dishes and prices on their mobile phones in OMR. Every demo dish and price is illustrative; no order or payment flow is required.",
+        nextStep: "Discuss your menu structure, categories, and update workflow.",
+        typicalTimeline: "1 - 2 weeks",
+      };
+    }
 
-  const archBasePrices: Record<string, { label: string; price: number }> = {
-    web: { label: "Web Applications", price: 40000 },
-    ai: { label: "AI & LLM Copilots", price: 65000 },
-    cloud: { label: "Cloud Infrastructure", price: 50000 },
-    design: { label: "Design Systems", price: 30000 },
+    if (websiteStatus === "none" || mainGoal === "enquiries") {
+      return {
+        service: "Website Design",
+        headline: "Website Planning Conversation",
+        explanation:
+          "A website planning conversation is your best starting point because you said you do not yet have an effective website and want customers to discover your services and get in touch. This suggestion uses your answers, not a technical inspection.",
+        nextStep: "Identify your services, target audience, and gather approved brand assets.",
+        typicalTimeline: "3 - 5 weeks",
+      };
+    }
+
+    if (mainGoal === "search" && websiteStatus === "exists") {
+      return {
+        service: "SEO Services",
+        headline: "Search Engine Optimization Review",
+        explanation:
+          "Because your website is already live and your primary objective is helping Oman and regional customers find your services through search engines. We focus on content structure and search console data without false ranking guarantees.",
+        nextStep: "Review existing pages and capture a Google Search Console baseline.",
+        typicalTimeline: "Ongoing monthly review",
+      };
+    }
+
+    if (mainGoal === "local_visits") {
+      return {
+        service: "Google Business Profile Management",
+        headline: "Google Business Profile Eligibility & Setup",
+        explanation:
+          "Because you welcome local customer visits in Oman or Thrissur. Accurate address, operating hours, and verified photos ensure customers find truthful information on Google Maps.",
+        nextStep: "Verify platform eligibility and owner account access.",
+        typicalTimeline: "Monthly profile management",
+      };
+    }
+
+    if (mainGoal === "social_consistency") {
+      return {
+        service: "Social Media Management",
+        headline: "Social Media Content Strategy",
+        explanation:
+          "Because your business wants a consistent presence with content that explains services and answers customer questions. Platforms are selected around where your customers spend time.",
+        nextStep: "Establish a content calendar and review approval workflow.",
+        typicalTimeline: "Monthly content management",
+      };
+    }
+
+    return {
+      service: "AI Visibility Services",
+      headline: "AI Visibility & Search Clarity",
+      explanation:
+        "Because you want your business information to be clearer and easier to understand across conversational AI and modern search experiences through structured data and authentic entity details.",
+      nextStep: "Review entity facts, visible website answers, and Schema markup.",
+      typicalTimeline: "Monthly advisory retainer",
+    };
   };
 
-  const scaleMultipliers: Record<string, { label: string; mult: number }> = {
-    startup: { label: "Early Stage", mult: 1.0 },
-    growth: { label: "Growth", mult: 1.35 },
-    enterprise: { label: "Enterprise", mult: 1.85 },
-  };
-
-  const aiAddons: Record<string, { label: string; cost: number }> = {
-    none: { label: "None", cost: 0 },
-    api: { label: "API Ingestion", cost: 15000 },
-    finetuned: { label: "Custom Fine-tuned LLM", cost: 35000 },
-  };
-
-  const speedMultipliers: Record<string, { label: string; mult: number }> = {
-    standard: { label: "Standard (8-10 wks)", mult: 1.0 },
-    rush: { label: "Sprint (4-6 wks)", mult: 1.25 },
-  };
-
-  const base = archBasePrices[architecture].price;
-  const scaleMult = scaleMultipliers[scale].mult;
-  const aiCost = aiAddons[aiTier].cost;
-  const speedMult = speedMultipliers[speed].mult;
-
-  const totalCalculated = Math.round(((base * scaleMult) + aiCost) * speedMult / 1000) * 1000;
-  const lowRange = Math.round(totalCalculated * 0.95 / 1000) * 1000;
-  const highRange = Math.round(totalCalculated * 1.15 / 1000) * 1000;
+  const recommendation = getRecommendation();
 
   const handleApply = () => {
     onApplyEstimate({
-      service: archBasePrices[architecture].label,
-      budget: `${currencySymbol}${lowRange.toLocaleString()} - ${currencySymbol}${highRange.toLocaleString()}`,
-      message: `Configured Scope: Scale: ${scaleMultipliers[scale].label}, AI: ${aiAddons[aiTier].label}, Delivery: ${speedMultipliers[speed].label}.`,
+      service: recommendation.service,
+      budget: "Standard proposal discussion",
+      message: `Needs Assessment Result (${market === "oman" ? "Oman" : "Thrissur"} market): Interested in ${recommendation.headline}. Current website status: ${websiteStatus === "none" ? "No website yet" : "Existing website live"}. Primary goal: ${mainGoal}.`,
     });
 
-    const formEl = document.getElementById("contact");
-    if (formEl) {
-      formEl.scrollIntoView({ behavior: "smooth" });
+    const contactSection = document.getElementById("contact");
+    if (contactSection) {
+      contactSection.scrollIntoView({ behavior: "smooth" });
     }
   };
 
   return (
-    <section id="calculator" className="py-24 sm:py-32 bg-white border-t border-slate-100">
+    <section id="assessment" className="py-24 sm:py-32 bg-[#F5F4EF] text-[#202124] border-t border-[#45484E]">
       <div className="max-w-6xl mx-auto px-6 sm:px-8">
-        <div className="max-w-2xl mb-14">
-          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-2">
-            Estimator
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-950">
-            Interactive scope &amp; cost calculator
+        {/* Header from docx */}
+        <div className="max-w-3xl mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E5E4DE] text-[#202124] text-xs font-semibold mb-3">
+            <Sparkles size={13} className="text-[#F5C542] fill-[#F5C542]" />
+            <span>Interactive Guided Needs Assessment</span>
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#202124]">
+            Not sure where to start?
           </h2>
-          <p className="mt-3 text-slate-600 text-base leading-relaxed">
-            Select your architectural requirements to generate an instant project estimate.
+          <p className="mt-4 text-[#5A5D63] text-base sm:text-lg leading-relaxed">
+            Answer a few questions about your business and your goals. Our assessment will suggest a practical starting point and explain why. It uses your answers; it does not scan your website or measure your current ranking.
           </p>
         </div>
 
+        {/* Two-Column Interactive Tool: Left Questions, Right Live Recommendation */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Controls */}
-          <div className="lg:col-span-8 space-y-7">
-            {/* 1. Core Service */}
-            <div>
-              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider block mb-3">
-                1. Select Core Service
+          {/* Questions Panel */}
+          <div className="lg:col-span-7 bg-[#FFFFFF] border border-[#E5E4DE] rounded-2xl p-6 sm:p-8 shadow-sm">
+            <h3 className="text-lg font-bold text-[#202124] mb-6 flex items-center justify-between">
+              <span>Tell us about your situation</span>
+              <span className="text-xs font-normal text-[#5A5D63]">Select what applies</span>
+            </h3>
+
+            {/* Q1: Market */}
+            <div className="mb-6">
+              <label className="block text-xs font-bold text-[#202124] uppercase tracking-wider mb-2.5">
+                1. Where do you primarily serve customers?
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setMarket("oman")}
+                  className={`p-3 rounded-lg border text-left text-xs font-semibold transition-all ${
+                    market === "oman"
+                      ? "border-[#F5C542] bg-[#F5C542]/15 text-[#202124] ring-1 ring-[#F5C542]"
+                      : "border-[#E5E4DE] bg-[#FFFFFF] text-[#5A5D63] hover:border-[#C4C7CC]"
+                  }`}
+                >
+                  <span className="block font-bold text-[#202124]">Sultanate of Oman</span>
+                  <span className="text-[11px] font-normal text-[#5A5D63]">Primary Focus</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMarket("thrissur")}
+                  className={`p-3 rounded-lg border text-left text-xs font-semibold transition-all ${
+                    market === "thrissur"
+                      ? "border-[#F5C542] bg-[#F5C542]/15 text-[#202124] ring-1 ring-[#F5C542]"
+                      : "border-[#E5E4DE] bg-[#FFFFFF] text-[#5A5D63] hover:border-[#C4C7CC]"
+                  }`}
+                >
+                  <span className="block font-bold text-[#202124]">Thrissur, Kerala</span>
+                  <span className="text-[11px] font-normal text-[#5A5D63]">Secondary Market</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Q2: Business Type */}
+            <div className="mb-6">
+              <label className="block text-xs font-bold text-[#202124] uppercase tracking-wider mb-2.5">
+                2. What type of business do you operate?
+              </label>
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { id: "services", label: "Commercial Services", sub: "Trade & Professional" },
+                  { id: "hospitality", label: "Dining & Hotel", sub: "Restaurants / Cafes" },
+                  { id: "retail", label: "Retail Store", sub: "Physical / Local Shop" },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setBusinessType(item.id)}
+                    className={`p-3 rounded-lg border text-left text-xs transition-all ${
+                      businessType === item.id
+                        ? "border-[#F5C542] bg-[#F5C542]/15 text-[#202124] ring-1 ring-[#F5C542]"
+                        : "border-[#E5E4DE] bg-[#FFFFFF] text-[#5A5D63] hover:border-[#C4C7CC]"
+                    }`}
+                  >
+                    <span className="block font-bold text-[#202124]">{item.label}</span>
+                    <span className="text-[10px] text-[#5A5D63]">{item.sub}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Q3: Website Status */}
+            <div className="mb-6">
+              <label className="block text-xs font-bold text-[#202124] uppercase tracking-wider mb-2.5">
+                3. What is the current status of your website?
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setWebsiteStatus("none")}
+                  className={`p-3 rounded-lg border text-left text-xs transition-all ${
+                    websiteStatus === "none"
+                      ? "border-[#F5C542] bg-[#F5C542]/15 text-[#202124] ring-1 ring-[#F5C542]"
+                      : "border-[#E5E4DE] bg-[#FFFFFF] text-[#5A5D63] hover:border-[#C4C7CC]"
+                  }`}
+                >
+                  <span className="block font-bold text-[#202124]">No website yet</span>
+                  <span className="text-[10px] text-[#5A5D63]">Starting from scratch</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setWebsiteStatus("exists")}
+                  className={`p-3 rounded-lg border text-left text-xs transition-all ${
+                    websiteStatus === "exists"
+                      ? "border-[#F5C542] bg-[#F5C542]/15 text-[#202124] ring-1 ring-[#F5C542]"
+                      : "border-[#E5E4DE] bg-[#FFFFFF] text-[#5A5D63] hover:border-[#C4C7CC]"
+                  }`}
+                >
+                  <span className="block font-bold text-[#202124]">Website is live</span>
+                  <span className="text-[10px] text-[#5A5D63]">Needs review or redesign</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Q4: Main Goal */}
+            <div className="mb-4">
+              <label className="block text-xs font-bold text-[#202124] uppercase tracking-wider mb-2.5">
+                4. What is your most important online priority right now?
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {Object.entries(archBasePrices).map(([key, val]) => (
+                {[
+                  { id: "enquiries", label: "Get customer enquiries", desc: "Clear contact details & forms" },
+                  { id: "search", label: "Improve search rankings", desc: "Show up for relevant searches" },
+                  { id: "local_visits", label: "Help customers find our location", desc: "Google Maps & opening hours" },
+                  { id: "menu", label: "Share our food / cafe menu", desc: "Digital QR code on mobile" },
+                  { id: "social_consistency", label: "Regular social media posts", desc: "Consistent branded updates" },
+                  { id: "ai_clarity", label: "Accurate details in AI answers", desc: "Clear entity information" },
+                ].map((goal) => (
                   <button
-                    key={key}
+                    key={goal.id}
                     type="button"
-                    onClick={() => setArchitecture(key)}
-                    className={`p-4 rounded-xl border text-left transition-all ${
-                      architecture === key
-                        ? "border-slate-950 bg-slate-950 text-white shadow-xs"
-                        : "border-slate-200 bg-white text-slate-800 hover:border-slate-300 hover:bg-slate-50/50"
+                    onClick={() => setMainGoal(goal.id)}
+                    className={`p-3 rounded-lg border text-left text-xs transition-all ${
+                      mainGoal === goal.id
+                        ? "border-[#F5C542] bg-[#F5C542]/15 text-[#202124] ring-1 ring-[#F5C542]"
+                        : "border-[#E5E4DE] bg-[#FFFFFF] text-[#5A5D63] hover:border-[#C4C7CC]"
                     }`}
                   >
-                    <span className="text-sm font-medium block">{val.label}</span>
-                    <span className={`text-xs mt-1 block ${architecture === key ? "text-slate-300" : "text-slate-500"}`}>
-                      From ${val.price.toLocaleString()}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* 2. Scale */}
-            <div>
-              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider block mb-3">
-                2. Company Scale
-              </label>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                {Object.entries(scaleMultipliers).map(([key, val]) => (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => setScale(key)}
-                    className={`p-3 rounded-xl border text-center transition-all ${
-                      scale === key
-                        ? "border-slate-950 bg-slate-950 text-white shadow-xs"
-                        : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50/50"
-                    }`}
-                  >
-                    <span className="text-xs font-medium">{val.label}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* 3. AI / Intelligence */}
-            <div>
-              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider block mb-3">
-                3. AI &amp; Inference Pipeline
-              </label>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                {Object.entries(aiAddons).map(([key, val]) => (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => setAiTier(key)}
-                    className={`p-3 rounded-xl border text-center transition-all ${
-                      aiTier === key
-                        ? "border-slate-950 bg-slate-950 text-white shadow-xs"
-                        : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50/50"
-                    }`}
-                  >
-                    <span className="text-xs font-medium block">{val.label}</span>
-                    <span className={`text-[11px] mt-0.5 block ${aiTier === key ? "text-slate-300" : "text-slate-400"}`}>
-                      +{val.cost > 0 ? `${currencySymbol}${val.cost.toLocaleString()}` : "Included"}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* 4. Velocity */}
-            <div>
-              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider block mb-3">
-                4. Project Velocity
-              </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {Object.entries(speedMultipliers).map(([key, val]) => (
-                  <button
-                    key={key}
-                    type="button"
-                    onClick={() => setSpeed(key)}
-                    className={`p-3 rounded-xl border text-center transition-all ${
-                      speed === key
-                        ? "border-slate-950 bg-slate-950 text-white shadow-xs"
-                        : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50/50"
-                    }`}
-                  >
-                    <span className="text-xs font-medium">{val.label}</span>
+                    <span className="block font-bold text-[#202124]">{goal.label}</span>
+                    <span className="text-[11px] text-[#5A5D63]">{goal.desc}</span>
                   </button>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Sizing Readout Sticky Card */}
-          <div className="lg:col-span-4 p-7 rounded-2xl border border-slate-200/80 bg-slate-50/80 sticky top-24 shadow-2xs">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-3">
-              Estimated Investment
-            </span>
+          {/* Recommendation Output Box */}
+          <div className="lg:col-span-5 bg-[#FFFFFF] border border-[#E5E4DE] rounded-2xl p-6 sm:p-8 shadow-sm flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[11px] font-bold text-[#5A5D63] uppercase tracking-widest">
+                  Suggested Starting Point
+                </span>
+                <span className="px-2.5 py-1 rounded-full bg-[#F5C542]/20 text-[#202124] text-[11px] font-bold">
+                  Rule-based
+                </span>
+              </div>
 
-            <div className="text-3xl font-semibold tracking-tight text-slate-950 mb-1">
-              {currencySymbol}{lowRange.toLocaleString()} &ndash; {currencySymbol}{highRange.toLocaleString()}
+              <div className="p-4 rounded-xl bg-[#F5F4EF] border border-[#E5E4DE] mb-6">
+                <span className="text-xs font-bold text-[#F5C542] uppercase tracking-wider block mb-1">
+                  Recommended Service
+                </span>
+                <h4 className="text-xl font-bold text-[#202124]">
+                  {recommendation.headline}
+                </h4>
+              </div>
+
+              <div className="space-y-4 text-xs text-[#5A5D63] leading-relaxed mb-6">
+                <p className="bg-[#FFFFFF] p-4 rounded-xl border border-[#E5E4DE]">
+                  <strong className="text-[#202124] block mb-1">Why this fits:</strong>
+                  {recommendation.explanation}
+                </p>
+
+                <div className="flex items-start gap-2.5 text-xs text-[#202124]">
+                  <CheckCircle2 size={16} className="text-[#F5C542] flex-shrink-0 mt-0.5" />
+                  <span>
+                    <strong>Next practical step:</strong> {recommendation.nextStep}
+                  </span>
+                </div>
+
+                <div className="flex items-start gap-2.5 text-xs text-[#202124]">
+                  <CheckCircle2 size={16} className="text-[#F5C542] flex-shrink-0 mt-0.5" />
+                  <span>
+                    <strong>Typical timeline:</strong> {recommendation.typicalTimeline}
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-lg bg-[#FAF9F5] border border-[#E5E4DE] text-[11px] text-[#5A5D63] mb-6">
+                <em>Note:</em> This result is illustrative and based entirely on your answers. It does not bind you to a quote or perform automatic data submission.
+              </div>
             </div>
-            <p className="text-xs text-slate-500 leading-relaxed pb-6 border-b border-slate-200">
-              Includes full source ownership, automated CI/CD setup, and 60 days of warranty support.
-            </p>
 
-            {/* Summary lines */}
-            <div className="py-4 space-y-2.5 text-xs text-slate-600">
-              <div className="flex justify-between">
-                <span>Architecture</span>
-                <span className="text-slate-900 font-medium">{archBasePrices[architecture].label}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Company Scale</span>
-                <span className="text-slate-900 font-medium">{scaleMultipliers[scale].label}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>AI Pipeline</span>
-                <span className="text-slate-900 font-medium">{aiTier === "none" ? "None" : "Included"}</span>
-              </div>
-            </div>
-
+            {/* Yellow button with charcoal text */}
             <button
               onClick={handleApply}
-              className="mt-4 w-full py-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-white text-xs font-semibold tracking-tight transition-colors flex items-center justify-center gap-1.5 shadow-xs"
+              className="w-full py-3.5 px-5 rounded-lg bg-[#F5C542] hover:bg-[#E5B532] text-[#202124] font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-sm"
             >
-              <span>Apply estimate to inquiry</span>
-              <ArrowDown size={14} />
+              <span>Discuss this recommendation</span>
+              <ArrowRight size={16} />
             </button>
           </div>
         </div>

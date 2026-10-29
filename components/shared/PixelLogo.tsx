@@ -36,8 +36,8 @@ export function PixelLogo({ collapsed = false, className }: PixelLogoProps) {
               Admin
             </span>
           </div>
-          <span className="text-[11px] font-medium text-zinc-400">
-            Enterprise Studio
+          <span className="text-[11px] font-medium text-zinc-500">
+            Oman &bull; Thrissur
           </span>
         </div>
       )}

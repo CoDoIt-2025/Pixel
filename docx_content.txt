@@ -1,0 +1,691 @@
+Pixel Business Solutions Website Plan
+
+Oman first with a secondary focus on Thrissur Kerala
+
+Prepared for Pixel Business Solutions LLC  |  23 October 2026
+
+Recommended direction
+
+Make the website a practical introduction to Pixel’s six services, with Oman as the primary market. Explain what each service includes, show useful demonstrations, and make it easy for visitors to describe their needs. Build a separate, genuinely useful Thrissur page rather than mixing both markets into every headline.
+
+Decisions before development
+
+Replace broad software and enterprise AI positioning with the confirmed website, search, social media and hospitality services. Retain software engineering claims only if Pixel confirms those capabilities.
+
+Use one primary action across the site: Discuss your project. Use Try the sample QR menu as a secondary action on hospitality content.
+
+Remove all dummy testimonials, logos, numbers, staff biographies, prices and contact details. Do not publish Adox projects or history as Pixel work.
+
+Keep the present visual identity if it passes a separate mobile and desktop review. A full redesign is not justified by the available evidence alone.
+
+Proposed navigation
+
+Home | Services | QR Menu Demo | About | Insights | Contact. Under Services, list all six services. Link the Thrissur page from the service-area section and footer, not as a competing homepage headline. Add Work only when permission-cleared projects are available.
+
+Publishing instructions
+
+The copy in this plan is proposed website text. Confirm delivery scope before publishing promises about process or features. Square-bracketed fields are owner inputs and must be replaced or removed. Internal build notes are not website copy. Arabic content should be professionally reviewed before launch; do not imply a local office or language capability that has not been confirmed.
+
+Suggested build order
+
+First: core pages, truthful business details and working contact journey. Next: sample QR menu and needs assessment. Then: useful Oman guides, approved work examples and the Thrissur page. Search visibility is an ongoing effort, not a guaranteed ranking outcome.
+
+Homepage copy
+
+Hero heading
+
+Websites and digital marketing for businesses in Oman
+
+Hero introduction
+
+Pixel Business Solutions LLC helps businesses build a clearer online presence through website design, SEO, Google Business Profile management, social media management and AI visibility. For restaurants and hotels, we also offer digital QR menus.
+
+Primary and secondary buttons
+
+Discuss your project  |  Explore our services
+
+Service introduction
+
+Choose the support your business needs
+
+Whether you need a new website, better information in local search or a simpler way to share your menu, start with the service that matches your next priority.
+
+Website design card
+
+Give customers a clear, mobile-friendly place to understand your business and get in touch. Explore website design.
+
+SEO card
+
+Improve your website’s structure and content around the searches that matter to your business. Explore SEO.
+
+Google Business Profile card
+
+Keep your eligible business profile accurate, useful and up to date for customers finding you on Google. Explore profile management.
+
+Social media card
+
+Build a consistent presence with content that explains your services, answers questions and reflects your brand. Explore social media management.
+
+AI visibility card
+
+Make your business information clearer and easier to understand across search and AI-assisted discovery. Explore AI visibility.
+
+Digital QR menu card
+
+Let guests browse your restaurant or hotel menu on their phones. Explore digital QR menus.
+
+Interactive feature introduction
+
+Not sure where to start?
+
+Answer a few questions about your business and your goals. Our needs assessment will suggest a starting point and explain why. It uses your answers; it does not scan your website or measure your current ranking.
+
+Button: Find my starting point
+
+Homepage continuation and About copy
+
+Homepage process heading
+
+A clear plan before the work begins
+
+Tell us about your business, your customers and what you want to improve. We will discuss the relevant services, agree the scope and outline the next steps before work begins. The plan should make clear what is included, what we need from you and how progress will be reviewed.
+
+Homepage hospitality feature
+
+See how a digital menu could work for your business
+
+Explore a sample menu on your phone. Browse categories and see how clear item descriptions can help guests choose. This demonstration uses sample dishes and prices; it is not a live restaurant menu.
+
+Button: Try the sample QR menu
+
+Homepage market section
+
+Focused on Oman and supporting businesses in Thrissur
+
+Oman is our primary focus. We also welcome enquiries from businesses in Thrissur, Kerala, looking for website and digital marketing support. Tell us where you serve customers so we can discuss a plan for your market.
+
+Homepage final call to action
+
+What would you like to improve online?
+
+Tell us about your website, your business visibility or your restaurant menu. We will help you identify a practical next step.
+
+Button: Discuss your project
+
+About page
+
+About heading
+
+Digital support built around your business priorities
+
+Pixel Business Solutions LLC provides website design, SEO, Google Business Profile management, social media management, AI visibility and digital QR menu services. Our primary focus is Oman, with a secondary focus on Thrissur in Kerala.
+
+A useful online presence starts with clear information. Customers should be able to understand what you offer, find the details they need and know how to contact you. We bring these priorities into the discussion before deciding which services fit your business.
+
+Our approach is to define the scope clearly, work with accurate business information and review the work against agreed goals. We do not promise guaranteed search rankings or guaranteed placement in AI answers.
+
+Have a project in mind? Tell us what your business needs, and let us discuss the right starting point.
+
+About page build notes
+
+Add founder information, photographs, registration details or operating history only after owner confirmation and permission. A small, factual About page is stronger than an invented company story.
+
+Website design service copy
+
+Suggested URL: /services/website-design/
+
+Page heading
+
+Website design for businesses in Oman
+
+Make your business easy to understand on every screen. Pixel designs websites that explain your services clearly and give visitors a straightforward way to enquire.
+
+Who this is for
+
+Businesses launching their first website, replacing unclear or outdated pages, or giving customers a better mobile experience.
+
+What your project can include
+
+A page structure built around your services, mobile-friendly layouts, clear enquiry paths and content support. We can discuss contact forms, click-to-call links and other practical features as part of the agreed scope.
+
+How we approach your website
+
+We start by understanding your audience and the actions you want visitors to take. Then we agree the pages and content, develop the approved design and check the key journeys before launch. Hosting, ongoing updates and third-party tools should be agreed separately where relevant.
+
+What we need from you
+
+Your service details, logo, approved images, contact information and any existing website access needed for the project. If content is missing, we will identify the gaps before development.
+
+Frequently asked questions
+
+Can you redesign our existing site? Yes, we can discuss a redesign or targeted improvements after reviewing your goals and the current setup.Will the website be ready for SEO? We can include search-friendly structure and essential page information in the scope. Ongoing SEO requires further content, monitoring and improvement.How much does a website cost? Pricing depends on the number of pages, content, functionality and support required. Request a proposal based on your needs.
+
+Call to action
+
+Let us plan a website that fits your business. Button: Discuss your website
+
+Developer acceptance notes
+
+Provide a simple mobile navigation, readable type, meaningful headings, labelled forms, keyboard access and visible focus states.
+
+Test enquiry success and failure states. Show an accessible confirmation without promising an unconfirmed response time.
+
+Use approved, optimized images. Do not use fictional dashboard numbers as proof of Pixel results.
+
+SEO service copy
+
+Suggested URL: /services/seo/
+
+Page heading
+
+SEO services for businesses targeting Oman
+
+Help customers find useful information about your business through search. Pixel’s SEO service focuses on your website structure, service content and the search needs of your audience.
+
+A practical starting point
+
+We begin with your business goals and the pages that matter most. The work may include keyword research, content improvements, internal links and technical priorities, depending on your website and the agreed scope.
+
+What ongoing work can include
+
+Improving service pages, publishing useful answers to customer questions, resolving agreed technical issues and reviewing search performance. For eligible local businesses, website content and Google Business Profile information should tell a consistent story.
+
+How progress is reviewed
+
+Agree a baseline before making changes. Review relevant search impressions and clicks, the pages attracting visitors and the enquiries that can be measured reliably. Rankings are one indicator, not a complete measure of business value.
+
+Frequently asked questions
+
+Can you guarantee first position? No. Search rankings depend on many factors and change over time. We do not guarantee positions, traffic or revenue.Is SEO a one-time task? A strong setup helps, but useful content, technical maintenance and performance reviews need continued attention.Can you target Oman and Thrissur? Yes, the content plan can reflect both markets, with Oman prioritized and distinct content for Thrissur where it adds genuine value.
+
+Call to action
+
+Start with the searches and services that matter to your business. Button: Discuss your SEO priorities
+
+Developer and reporting notes
+
+Capture an initial Search Console baseline after authorized setup. Separate branded and non-branded queries and Oman versus India where data supports it.
+
+Report completed work, observed changes and the next priorities. Do not imply that every movement was caused by a single edit.
+
+Never buy or fabricate links, reviews or traffic. Do not create near-identical city pages to capture keywords.
+
+Technical reference: Google Search Central SEO Starter Guide [1].
+
+Google Business Profile service copy
+
+Suggested URL: /services/google-business-profile/
+
+Page heading
+
+Google Business Profile management for eligible businesses in Oman
+
+Give customers accurate information when they find your business on Google. Pixel helps eligible businesses organize and maintain their Google Business Profile details.
+
+What we can help with
+
+Reviewing business information, selecting appropriate categories, updating services and opening hours, publishing approved photos and updates, and preparing professional responses to customer reviews. Access, verification and the exact scope are agreed before management begins.
+
+Accuracy comes first
+
+Your profile should reflect the business customers encounter in the real world. We work with confirmed names, contact details, hours and locations or service areas. A service page on your website does not automatically make a location eligible for a profile.
+
+What we need from you
+
+Owner-authorized access, correct business details, approved images and information about how customers interact with your business. Keep business ownership under your control; do not share account passwords unnecessarily.
+
+Frequently asked questions
+
+Can every business have a profile? No. Eligibility depends on Google’s rules and how the business operates. We check eligibility before recommending setup.Can you guarantee a place in the map results? No. We focus on accurate information and useful profile management, not guaranteed placement.Can you remove negative reviews? We can help prepare responses and discuss reporting reviews that may breach platform policy. We cannot promise removal of legitimate feedback.
+
+Call to action
+
+Keep your business information clear and current. Button: Discuss profile management
+
+Implementation notes
+
+Do not create profiles for virtual offices or unverified addresses. Confirm real operating arrangements and current eligibility rules first.
+
+Use genuine, permission-cleared customer reviews only. No invented ratings, review gating or paid praise.
+
+Confirm special hours and ownership responsibilities during handover; keep an approved change log.
+
+Policy reference: Google Business Profile guidelines [3].
+
+Social media service copy
+
+Suggested URL: /services/social-media-management/
+
+Page heading
+
+Social media management for businesses in Oman
+
+Show customers what your business offers with clear, consistent content. Pixel helps plan and manage a social presence that reflects your services and gives people a useful reason to follow you.
+
+Content with a purpose
+
+Explain your services, answer common questions, introduce approved offers and share authentic business updates. Choose platforms and formats around your audience instead of trying to publish everywhere.
+
+What a plan can include
+
+A content calendar, post copy, visual content and scheduling on agreed platforms. The number of posts, revision rounds, approval process and responsibility for comments or direct messages are defined in the proposal. Paid advertising is not assumed to be included.
+
+How the work stays accurate
+
+You provide confirmed service information, approved images and offer details. We agree an approval process before publishing. Customer photographs, testimonials and behind-the-scenes content are used only with the necessary permissions.
+
+Frequently asked questions
+
+Which platforms should we use? We will discuss where your customers spend time, the content you can support and what you want to achieve.Will you reply to customer messages? Community management and response coverage must be agreed explicitly. Do not assume continuous monitoring is included.Can you guarantee followers or sales? No. We review relevant content performance and enquiries without promising a fixed business result.
+
+Call to action
+
+Build a content plan your business can sustain. Button: Discuss your social media
+
+Implementation notes
+
+Use real approved work or clearly labelled sample creative on the page. Never present sample engagement metrics as client results.
+
+Give each social link a clear label and confirm that the linked profile belongs to Pixel.
+
+Avoid embedding heavy social feeds when a few lightweight previews and profile links are sufficient.
+
+AI visibility service copy
+
+Suggested URL: /services/ai-visibility/
+
+Page heading
+
+Make your business information clearer for AI assisted discovery
+
+Customers increasingly ask questions through AI-assisted search experiences. Pixel’s AI visibility service focuses on making your business information accurate, understandable and useful, alongside established SEO practices.
+
+What we work on
+
+Clear service explanations, helpful answers to real customer questions, consistent business details and a website structure that makes important information easy to find. Where appropriate, structured data can describe information that is already visible on the page.
+
+Useful content before shortcuts
+
+The priority is content a customer can trust: what you offer, where you serve customers, how your service works and what evidence supports your claims. We do not sell guaranteed AI mentions or a special technique that forces an assistant to recommend your business.
+
+How progress can be reviewed
+
+Record selected questions, the platform used and the date of each manual check. Treat these observations as a limited sample because answers can vary. Review relevant referral data where available, without claiming complete visibility into every AI interaction.
+
+Frequently asked questions
+
+Can you guarantee our business will appear in AI answers? No. Providers decide what to show, and responses can change.Does this replace SEO? No. For Google’s AI search features, established SEO practices remain relevant. Our approach complements useful website content and technical foundations.Do we need a special AI file or special schema? Google says there are no additional technical requirements or special schema needed for its AI search features. This is not a promise about every third-party AI platform.
+
+Call to action
+
+Start with clear and trustworthy business information. Button: Discuss AI visibility
+
+Implementation notes
+
+Do not display a fabricated AI score, AI ranking certificate or logo strip suggesting endorsement. Any monitoring demonstration must show its method and limitations. Reference: Google Search Central AI features guidance [2].
+
+Digital QR menu service copy
+
+Suggested URL: /services/digital-qr-menu/
+
+Page heading
+
+Digital QR menus for restaurants and hotels in Oman
+
+Give guests a simple way to browse your menu on their phones. Pixel helps restaurants and hotels present menu categories, dishes and prices through a scannable QR code.
+
+A menu built for reading
+
+Clear categories, readable item descriptions and an uncluttered mobile layout help guests explore what you offer. Discuss the languages, menu sections and update process your business needs before choosing the final setup.
+
+What your menu can include
+
+Menu categories, item names, descriptions, approved photographs and prices. Language switching, item availability, dietary labels and staff editing are optional requirements to confirm in the project scope, not assumed features.
+
+Try a sample before you decide
+
+Open our sample menu to explore a possible guest experience. Every dish, price and business detail in the demo is illustrative. The sample does not accept orders or payments.
+
+Button: Open the sample menu
+
+Frequently asked questions
+
+Do guests need to install an app? The proposed browser-based menu opens from a QR link. The final platform and supported devices will be confirmed during planning.Can we update prices later? Yes, an update process can be included. We will agree whether updates are handled by your team or through a support arrangement.Does the menu take orders or payments? Not by default. Ordering, payments and integrations require separate discussion and scope.
+
+Call to action
+
+Make your menu easier to share and maintain. Button: Discuss your QR menu
+
+Demo acceptance notes
+
+Show a persistent Sample menu label. Disable checkout and use clearly marked sample OMR prices.
+
+Use an own-domain stable menu URL; provide a direct text link as an alternative to scanning. Test the printed QR code on real phones.
+
+Do not infer allergen safety from item names. Restaurant staff must supply and approve dietary and allergen information.
+
+Confirm hosting ownership, backups, update access and redirect continuity before printing permanent codes.
+
+Market pages and contact copy
+
+Oman positioning
+
+Use the homepage and service pages for the primary Oman proposition. Do not create a duplicate /oman/ page at launch unless it has a genuinely separate purpose. Mention specific cities only where actual service delivery and useful local content support them.
+
+Thrissur page URL and heading
+
+/locations/thrissur/Website and digital marketing support for businesses in Thrissur
+
+Pixel Business Solutions LLC also supports enquiries from businesses in Thrissur, Kerala. If you need a clearer website, search-focused service content, social media support or a digital menu, tell us about your business and the customers you want to reach.
+
+Your plan should reflect your services, your market and how customers contact you. We can discuss website design, SEO, Google Business Profile management for eligible businesses, social media, AI visibility and QR menus, with the delivery scope agreed before work begins.
+
+Tell us whether you serve a local area, welcome visitors or work with customers across Kerala. We will discuss the pages and information that fit your needs. Button: Discuss your Thrissur project
+
+Thrissur build notes
+
+Do not claim an office, local team, Malayalam service or on-site visits without confirmation. Expand the page with authentic local FAQs and approved projects over time; avoid cloning it for every town.
+
+Contact heading
+
+Tell us what your business needs
+
+Share a few details about your business and what you would like to improve. Whether you are planning a website, reviewing your visibility or exploring a digital menu, we can discuss a suitable starting point.
+
+Contact fields
+
+Name [required]; business name; email or phone [at least one required]; country or market; service of interest; project details [required]; website URL [optional]. Button: Send enquiry
+
+Success message
+
+Thank you. Your enquiry has been received.
+
+Failure message
+
+Your enquiry could not be sent. Please try again or use our verified contact details below.
+
+Contact details to supply
+
+[Verified business email] | [Verified telephone] | [Verified WhatsApp number if supported] | [Confirmed business hours and time zone] | [Public address only if accurate and appropriate]
+
+Privacy and footer
+
+Place a plain-language privacy notice beside the form, linked to an approved privacy policy. Keep optional marketing consent separate and unchecked. Footer: Pixel Business Solutions LLC | Services | About | Contact | Privacy. Add legal or registration details only after verification. Do not launch with bracketed placeholders.
+
+Page titles and descriptions
+
+Draft metadata for implementation. Use unique titles and descriptions that match the page. These are editorial suggestions, not a guarantee of the text shown by search engines.
+
+Home
+
+Title: Website Design and Digital Marketing Oman | PixelDescription: Explore website design, SEO, Google Business Profile, social media, AI visibility and QR menus for businesses in Oman. Discuss your project with Pixel.
+
+About
+
+Title: About Pixel Business Solutions LLCDescription: Meet Pixel Business Solutions LLC and explore our approach to websites and digital marketing, with Oman as our primary focus and Thrissur as a secondary market.
+
+Website design
+
+Title: Website Design Oman | Pixel Business SolutionsDescription: Plan a clear, mobile-friendly business website with Pixel. Discuss your pages, content, enquiry features and project scope for your business in Oman.
+
+SEO
+
+Title: SEO Services Oman | Pixel Business SolutionsDescription: Discuss SEO for your Oman business, from useful service content and website structure to ongoing search performance reviews. No guaranteed rankings.
+
+Google Business Profile
+
+Title: Google Business Profile Management Oman | PixelDescription: Keep your eligible business profile accurate and useful. Discuss Google Business Profile information, updates and review-response support with Pixel.
+
+Social media
+
+Title: Social Media Management Oman | PixelDescription: Plan consistent social content for your business in Oman. Discuss platforms, content calendars, approvals and the right management scope with Pixel.
+
+AI visibility
+
+Title: AI Visibility Services Oman | PixelDescription: Make your business information clear for search and AI-assisted discovery. Explore content, consistency and practical measurement with Pixel.
+
+QR menu
+
+Title: Digital QR Menus Oman | Pixel Business SolutionsDescription: Explore digital QR menus for restaurants and hotels in Oman. Try a sample menu and discuss categories, languages, prices and an update process.
+
+Thrissur
+
+Title: Websites and Digital Marketing Thrissur | PixelDescription: Discuss website design, SEO, social media and QR menus for your business in Thrissur, Kerala. Explore a plan around your customers and goals.
+
+Contact
+
+Title: Contact Pixel Business Solutions LLCDescription: Tell Pixel about your website, search visibility, social media or digital menu project. Oman is our primary focus, with enquiries welcome from Thrissur.
+
+Innovative features with a practical purpose
+
+Priority one guided needs assessment
+
+Build a short, optional questionnaire, not a fake website audit. Ask the visitor’s market, business type, website status and main goal. Show the recommendation without requiring contact details. Offer an optional enquiry after the result.
+
+Suggested rules: no website + enquiries goal → website planning; website exists + search goal → SEO review; local customer visits + profile help → eligibility discussion for Google Business Profile; restaurant or hotel + menu goal → QR menu; content consistency goal → social media; AI discovery goal → AI visibility with limitations.
+
+Result example: “A website planning conversation may be your best starting point because you said you do not yet have a website and want customers to enquire. This suggestion uses your answers, not a technical inspection.” Allow visitors to change answers and see why the result changes.
+
+Acceptance: no URL scanning, no invented scores, no automatic sales estimate, no data submission before a clear send action. Track starts and completions only through approved, privacy-conscious measurement.
+
+Priority one try the menu
+
+Build a mobile sample with three categories and a small set of sample dishes. Offer a direct link and QR code. Make text sizing and category navigation easy to use. Add Arabic switching only after accurate translation and right-to-left testing. Use demo labels throughout and no order or payment flow.
+
+Priority two project scope builder
+
+Let visitors select needed pages, languages and features, then generate an editable project brief. Display “This is a draft scope, not a quote.” Do not show prices or delivery dates until Pixel approves a real pricing model and capacity assumptions.
+
+Priority two explain the work with evidence
+
+Publish permission-cleared before-and-after project stories: the original problem, exact work, dates, screenshots and limits of the evidence. If reporting results, state the source, comparison periods and known changes such as seasonality or advertising. Avoid invented leads, revenue or ranking gains. Keep concept work labelled as concept work.
+
+Priority three an honest knowledge assistant
+
+Consider a small assistant only after the core content is reliable. Limit answers to approved service information, provide a human contact route and state that quotes need review. Do not let it invent prices, availability or guarantees. A well-organized FAQ is a lower-maintenance starting point.
+
+Recommended first release
+
+Choose the needs assessment and sample QR menu. Both make the site distinctive by helping customers decide, rather than adding distracting animation. Each should remain useful on mobile and keyboard-accessible, with no compulsory login.
+
+Launch checklist and ongoing search work
+
+Before launch
+
+Owner: confirm legal name, contact channels, operating locations, service scope, permissions and project ownership. Remove every dummy claim and unused template page.
+
+Developer: agree the final domain before publishing. Review existing indexed URLs before any migration; preserve useful URLs or plan appropriate redirects. Do not change domains solely on an untested ranking assumption.
+
+Developer: test mobile navigation, links, contact delivery, error handling, keyboard use and readable contrast. Check layout on common screen sizes and optimize heavy images and scripts.
+
+SEO lead: provide descriptive titles, headings and internal links; verify important text is available to crawlers. Check canonical URLs, sitemap, robots rules, status codes and accidental noindex directives. Keep unfinished pages out of indexing.
+
+Content owner: use original, helpful service copy. Add image descriptions where useful and verify image permissions. Match structured data to visible, accurate information; do not add fake ratings.
+
+Owner and developer: approve the privacy notice, form retention, access controls and any analytics or consent setup before collecting visitor data. Keep secrets out of client-side code.
+
+Launch verification
+
+Submit and inspect the sitemap through authorized Search Console access. Check representative live URLs and confirm contact messages reach the correct business inbox. Record the live URLs and release date.
+
+Review eligible Business Profile details with the owner. Verify all public phone, email, map and social links. A website launch does not authorize profile creation or changes.
+
+Record the initial measurement baseline and test enquiry events without collecting sensitive information in analytics. Separate genuine enquiries from spam and tests.
+
+First month after launch
+
+Weekly: check crawl or indexing issues, broken contact journeys and unexpected content problems. Review early queries and page performance without treating small samples as trends. Correct factual errors promptly. Publish the first useful Oman guide based on actual customer questions.
+
+Ongoing monthly work
+
+Review relevant impressions, clicks, qualified enquiries and key page performance. Improve a small number of important pages, maintain business information and publish useful material where there is a real content gap. Keep a change log and compare meaningful periods. Rankings can change; no plan can keep a fixed position permanently.
+
+Content ideas to prioritize
+
+Start with “What to prepare before building your business website in Oman”, “Choosing a QR menu for your restaurant” and “How to keep your business information accurate online”. Write from confirmed service knowledge, not invented local regulations or statistics.
+
+Developer handoff and reference notes
+
+Required owner inputs
+
+Confirmed logo and brand files; exact legal and trading names; domain ownership; preferred public contact details; real service scope; operating arrangements; approved photographs; language support; hosting and maintenance responsibilities; budget and delivery priorities. Obtain permission before publishing client identities or materials.
+
+Suggested component list
+
+Responsive navigation; service cards; page hero; process section; honest FAQ; enquiry form with validation and confirmation; footer; sample-menu interface; optional needs-assessment form and recommendation panel. Keep calls to action and spacing consistent across pages.
+
+Language and location architecture
+
+Launch strong English pages first if that is the only reviewed content available. Add professionally reviewed Arabic when Pixel can support it. Use separate URLs for genuine translated versions, self-referencing canonicals and matching alternate-language annotations where appropriate. Do not automatically redirect visitors away from their chosen language. Keep the Thrissur page useful in its own right rather than duplicating Oman wording [4].
+
+Suggested completion criteria
+
+Release is ready when all approved pages are live, contact delivery is verified, dummy information is absent, the sample menu is clearly labelled, the assessment explains its recommendations, mobile and keyboard journeys work, and the owner has access and a maintenance handover. Ongoing SEO is a separate continuing activity, not a completed result at launch.
+
+Evidence boundaries for review
+
+A separate rendered desktop and mobile review should assess the current visual design before deciding whether to retain or replace it. Review hierarchy, navigation, legibility, contrast, spacing, forms and page weight against the proposed content. Confirm technical findings with tests rather than assuming that a modern appearance means a healthy site.
+
+Primary technical references
+
+Checked 23 October 2026. The strategy, wording and feature priorities are recommendations; the sources below support the technical guardrails.
+
+[1] Google Search Central, SEO Starter Guidehttps://developers.google.com/search/docs/fundamentals/seo-starter-guide
+
+[2] Google Search Central, AI features and your websitehttps://developers.google.com/search/docs/appearance/ai-features
+
+[3] Google Business Profile Help, Guidelines for representing your business on Googlehttps://support.google.com/business/answer/3038177
+
+[4] Google Search Central, Tell Google about localized versions of your pagehttps://developers.google.com/search/docs/specialty/international/localized-versions
+
+Blog and Insights page copy
+
+Suggested URL: /insights/ | Navigation label: Blog
+
+Page heading
+
+Practical ideas for your website and digital presence
+
+Explore clear explanations of website planning, search visibility, social media and digital menus. Our articles are written to help business owners understand their options and ask better questions before starting a project.
+
+Article categories
+
+Website planning | SEO and local visibility | Social media | AI visibility | Digital menus
+
+Article card one
+
+What to prepare before building your business websiteA practical checklist of service information, images, contact details and decisions to prepare before your website project begins.Button: Read the checklist
+
+Article card two
+
+What to look for in a digital QR menuFrom readable categories to an agreed update process, explore the details that matter when choosing a menu for your restaurant or hotel.Button: Explore the guide
+
+Article card three
+
+SEO and AI visibility explained without the promisesUnderstand where useful content and clear business information help, and why no provider can guarantee search positions or AI recommendations.Button: Read the explanation
+
+Blog enquiry section
+
+Have a question about your business website?Tell us what you are trying to improve. We can discuss which service or next step fits your needs.Button: Discuss your project
+
+Publishing instructions
+
+These article cards are launch suggestions, not claims that articles already exist. Hide unpublished cards and links. Every published article needs a real author or responsible editorial owner, publication date, substantive body text, relevant internal links and reviewed sources for technical claims. Do not publish empty blog categories or AI-generated filler.
+
+Suggested first article opening and structure
+
+Title: What to prepare before building your business websiteOpening: Before choosing a design, gather the information your customers need. A website project is easier to plan when your services, contact details and priorities are clear. Start with the checklist below, then discuss what is missing with your website team.
+
+Sections: Define the main customer action; list your services and audience; gather approved brand assets; confirm public contact details; decide who will approve content; agree ownership and maintenance. Close with: “You do not need every detail ready to start the conversation. Tell us what you have and where you need support.”
+
+Metadata title: Website and Digital Marketing Insights | PixelDescription: Read practical guides on website planning, SEO, social media, AI visibility and digital QR menus for business owners.
+
+Frequently asked questions page copy
+
+Suggested URL: /faq/ | Link from footer and contact page
+
+Page heading
+
+Questions about working with Pixel
+
+Find answers to common questions about our services and project planning. For details specific to your business, tell us what you need and we can discuss the scope.
+
+What services does Pixel offer
+
+We offer website design, SEO, Google Business Profile management, social media management, AI visibility and digital QR menus for restaurants and hotels.
+
+Which markets do you focus on
+
+Oman is our primary focus. We also welcome enquiries from businesses in Thrissur, Kerala. Tell us where you operate and where your customers are so the plan can reflect your market.
+
+Can I choose just one service
+
+Yes. Start with the service you need, or tell us your goal if you are unsure. Any recommendation should explain its purpose and what is included.
+
+How much will my project cost
+
+The cost depends on the pages, content, features and ongoing support involved. Share your requirements so we can discuss a proposal. Published prices, if added later, should clearly explain inclusions and exclusions.
+
+How long does a project take
+
+The schedule depends on scope, content readiness, approvals and any integrations. We agree a project timeline after reviewing the requirements rather than promising the same delivery time for every business.
+
+Do you guarantee search rankings or AI mentions
+
+No. Search engines and AI providers decide what appears in their results. We focus on clear content, accurate information and agreed improvements, then review the evidence available.
+
+Can you work with my existing website
+
+We can discuss improvements to an existing website after reviewing its setup, access requirements and your goals. Some requests may need platform changes or additional scope.
+
+Are hosting and ongoing updates included
+
+These should be stated explicitly in your proposal. Ask who owns the domain and accounts, what support is included and how updates are handled after launch.
+
+Does a QR menu include ordering and payments
+
+Not automatically. A digital menu can simply help guests browse dishes and prices. Ordering, payments and other integrations require separate planning and agreement.
+
+How do I get started
+
+Use the contact form to share your business details, the service you are interested in and your main priority. You can also use the verified contact channels shown on the Contact page.
+
+Metadata title: Frequently Asked Questions | Pixel Business SolutionsDescription: Get answers about Pixel services, project scope, timelines, SEO expectations, website support and digital QR menus.
+
+Portfolio page template and final page list
+
+Suggested URL: /work/ | Publish only when approved evidence is available
+
+Page heading
+
+Selected work and project stories
+
+Explore how a project moves from a business need to a practical digital solution. Each story explains the brief, the agreed work and the outcome we can support with evidence.
+
+Project card template
+
+[Approved client or project name][Service provided][One factual sentence describing the completed work]Button: View the project
+
+Case study page template
+
+[Project name]The brief: [Client-approved description of the business problem and project scope.]The work: [Specific pages, features, content or management tasks Pixel actually delivered.]The outcome: [Documented result, or a factual description of the delivered product if business results are not available.]The evidence: [Approved screenshots, source and date range for any metrics, and relevant limitations.]Project details: [Completion date, actual Pixel role, approved client attribution and permissions.]
+
+Portfolio call to action
+
+Have a similar challenge? Tell us what you would like to improve and we can discuss an approach for your business. Button: Discuss your project
+
+When there is no publishable client work
+
+Hide the portfolio navigation rather than filling it with invented projects. Put clearly labelled concept designs or the sample QR menu on a separate Demos page. Do not use another company’s projects, testimonials or history as Pixel credentials. Client logos, quotations and performance data require permission and verification.
+
+Recommended launch pages
+
+Home; About; Website Design; SEO; Google Business Profile Management; Social Media Management; AI Visibility; Digital QR Menu; Sample QR Menu; Contact; FAQ; Privacy Policy. Add Blog when at least one complete, reviewed article is ready. Add Thrissur once service coverage and location wording are approved. Add Work only with genuine approved projects.
+
+Primary navigation and footer
+
+Primary: Home | Services | QR Menu Demo | Blog | About | Contact. Hide Blog until articles are ready. Services dropdown: the six service pages. Footer: FAQ | Thrissur | Privacy | verified contact and social links. Link the needs assessment from the homepage; it can be an in-page feature rather than another navigation item.
+
+Additional metadata
+
+Work title: Selected Work | Pixel Business SolutionsWork description: Explore approved Pixel project stories, including the brief, delivered work and documented outcomes.FAQ and Blog titles appear with their page drafts. Keep sample demo pages clearly labelled and out of the main SEO landing-page strategy.
