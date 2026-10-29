@@ -88,30 +88,35 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Navigation & Markets */}
+          {/* Navigation & Site Links */}
           <div className="md:col-span-3 space-y-3">
             <h4 className="text-xs font-bold text-[#F7F7F2] uppercase tracking-wider">
-              Navigation &amp; Markets
+              Navigation
             </h4>
             <ul className="space-y-2 text-[11px] text-[#C4C7CC]">
               <li>
-                <a href="#about" className="hover:text-[#F5C542] transition-colors">
-                  About Pixel
+                <a href="#home" className="hover:text-[#F5C542] transition-colors">
+                  Home
                 </a>
               </li>
               <li>
-                <a href="#assessment" className="hover:text-[#F5C542] transition-colors">
-                  Guided Needs Assessment
+                <a href="#services" className="hover:text-[#F5C542] transition-colors">
+                  Services
                 </a>
               </li>
               <li>
-                <a href="#qr-demo" className="hover:text-[#F5C542] transition-colors">
-                  Sample QR Menu Demo
+                <a href="#projects" className="hover:text-[#F5C542] transition-colors">
+                  Projects &amp; Delivery
                 </a>
               </li>
               <li>
-                <a href="#insights" className="hover:text-[#F5C542] transition-colors">
-                  Insights &amp; Practical Guides
+                <a href="#blog" className="hover:text-[#F5C542] transition-colors">
+                  Blog &amp; Insights
+                </a>
+              </li>
+              <li>
+                <a href="#testimonials" className="hover:text-[#F5C542] transition-colors">
+                  Client Testimonials
                 </a>
               </li>
               <li>
@@ -121,7 +126,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <a href="#contact" className="hover:text-[#F5C542] transition-colors">
-                  Contact &amp; RFPs
+                  Contact Us
                 </a>
               </li>
               <li className="pt-1">

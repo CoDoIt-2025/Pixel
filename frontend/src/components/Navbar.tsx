@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ArrowUpRight, Menu, X, QrCode, Sparkles, Sun, Moon } from "lucide-react";
+import { ArrowUpRight, Menu, X, Sun, Moon } from "lucide-react";
 import { useSettings } from "../context/SettingsContext";
 
 export const Navbar: React.FC = () => {
@@ -46,7 +46,14 @@ export const Navbar: React.FC = () => {
         </a>
 
         {/* Center Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-8 text-[13px] font-semibold text-[#C4C7CC]">
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-7 text-[13px] font-semibold text-[#C4C7CC]">
+          <a
+            href="#home"
+            className="hover:text-[#F5C542] transition-colors py-1 relative group"
+          >
+            <span>Home</span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#F5C542] transition-all duration-200 group-hover:w-full" />
+          </a>
           <a
             href="#services"
             className="hover:text-[#F5C542] transition-colors py-1 relative group"
@@ -55,33 +62,24 @@ export const Navbar: React.FC = () => {
             <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#F5C542] transition-all duration-200 group-hover:w-full" />
           </a>
           <a
-            href="#qr-demo"
-            className="hover:text-[#F5C542] transition-colors py-1 flex items-center gap-1.5 relative group"
-          >
-            <QrCode size={13} className="text-[#F5C542]" />
-            <span>QR Menu Demo</span>
-            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#F5C542] transition-all duration-200 group-hover:w-full" />
-          </a>
-          <a
-            href="#assessment"
-            className="hover:text-[#F5C542] transition-colors py-1 flex items-center gap-1.5 relative group"
-          >
-            <Sparkles size={12} className="text-[#F5C542]" />
-            <span>Needs Assessment</span>
-            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#F5C542] transition-all duration-200 group-hover:w-full" />
-          </a>
-          <a
-            href="#about"
+            href="#projects"
             className="hover:text-[#F5C542] transition-colors py-1 relative group"
           >
-            <span>About</span>
+            <span>Projects</span>
             <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#F5C542] transition-all duration-200 group-hover:w-full" />
           </a>
           <a
-            href="#insights"
+            href="#blog"
             className="hover:text-[#F5C542] transition-colors py-1 relative group"
           >
-            <span>Insights</span>
+            <span>Blog</span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#F5C542] transition-all duration-200 group-hover:w-full" />
+          </a>
+          <a
+            href="#testimonials"
+            className="hover:text-[#F5C542] transition-colors py-1 relative group"
+          >
+            <span>Testimonials</span>
             <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#F5C542] transition-all duration-200 group-hover:w-full" />
           </a>
           <a
@@ -89,6 +87,13 @@ export const Navbar: React.FC = () => {
             className="hover:text-[#F5C542] transition-colors py-1 relative group"
           >
             <span>FAQ</span>
+            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#F5C542] transition-all duration-200 group-hover:w-full" />
+          </a>
+          <a
+            href="#contact"
+            className="hover:text-[#F5C542] transition-colors py-1 relative group"
+          >
+            <span>Contact Us</span>
             <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#F5C542] transition-all duration-200 group-hover:w-full" />
           </a>
         </nav>
@@ -139,50 +144,55 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Drawer */}
       {mobileOpen && (
-        <div className="lg:hidden bg-[#2B2D31]/95 backdrop-blur-2xl border-b border-[#45484E] px-6 py-6 flex flex-col gap-3.5 text-sm font-semibold text-[#F7F7F2] shadow-2xl animate-in slide-in-from-top-4 duration-200">
+        <div className="lg:hidden bg-[#2B2D31]/95 backdrop-blur-2xl border-b border-[#45484E] px-6 py-6 flex flex-col gap-2.5 text-sm font-semibold text-[#F7F7F2] shadow-2xl animate-in slide-in-from-top-4 duration-200">
+          <a
+            href="#home"
+            onClick={() => setMobileOpen(false)}
+            className="py-2 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] transition-colors"
+          >
+            Home
+          </a>
           <a
             href="#services"
             onClick={() => setMobileOpen(false)}
-            className="py-2.5 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] transition-colors"
+            className="py-2 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] transition-colors"
           >
             Services
           </a>
           <a
-            href="#qr-demo"
+            href="#projects"
             onClick={() => setMobileOpen(false)}
-            className="py-2.5 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] flex items-center gap-2.5 transition-colors"
+            className="py-2 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] transition-colors"
           >
-            <QrCode size={16} className="text-[#F5C542]" />
-            <span>Sample QR Menu Demo</span>
+            Projects
           </a>
           <a
-            href="#assessment"
+            href="#blog"
             onClick={() => setMobileOpen(false)}
-            className="py-2.5 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] flex items-center gap-2.5 transition-colors"
+            className="py-2 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] transition-colors"
           >
-            <Sparkles size={16} className="text-[#F5C542]" />
-            <span>Guided Needs Assessment</span>
+            Blog
           </a>
           <a
-            href="#about"
+            href="#testimonials"
             onClick={() => setMobileOpen(false)}
-            className="py-2.5 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] transition-colors"
+            className="py-2 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] transition-colors"
           >
-            About Pixel
-          </a>
-          <a
-            href="#insights"
-            onClick={() => setMobileOpen(false)}
-            className="py-2.5 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] transition-colors"
-          >
-            Insights &amp; Guides
+            Testimonials
           </a>
           <a
             href="#faq"
             onClick={() => setMobileOpen(false)}
-            className="py-2.5 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] transition-colors"
+            className="py-2 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] transition-colors"
           >
-            Frequently Asked Questions
+            FAQ
+          </a>
+          <a
+            href="#contact"
+            onClick={() => setMobileOpen(false)}
+            className="py-2 px-3 rounded-lg hover:bg-[#202124] hover:text-[#F5C542] transition-colors"
+          >
+            Contact Us
           </a>
           <div className="pt-3 border-t border-[#45484E] flex items-center justify-between">
             <a

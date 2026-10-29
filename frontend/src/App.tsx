@@ -8,6 +8,7 @@ import { WorkShowcase } from "./components/WorkShowcase";
 import { InteractiveScopeCalculator } from "./components/InteractiveScopeCalculator";
 import { TeamRoster } from "./components/TeamRoster";
 import { BlogSection } from "./components/BlogSection";
+import { TestimonialsSection } from "./components/TestimonialsSection";
 import { FAQSection } from "./components/FAQSection";
 import { RFPInquiryForm } from "./components/RFPInquiryForm";
 import { Footer } from "./components/Footer";
@@ -56,6 +57,7 @@ export function App() {
           />
           <TeamRoster />
           <BlogSection />
+          <TestimonialsSection />
           <FAQSection />
           <RFPInquiryForm prefillData={calculatorPrefill} />
         </main>

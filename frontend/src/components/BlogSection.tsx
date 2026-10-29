@@ -122,7 +122,7 @@ export const BlogSection: React.FC = () => {
   }, []);
 
   return (
-    <section id="insights" className="py-24 sm:py-32 bg-[#202124] text-[#F7F7F2] border-t border-[#45484E]">
+    <section id="blog" className="py-24 sm:py-32 bg-[#202124] text-[#F7F7F2] border-t border-[#45484E]">
       <div className="max-w-6xl mx-auto px-6 sm:px-8">
         {/* Section Header from docx */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#45484E]">

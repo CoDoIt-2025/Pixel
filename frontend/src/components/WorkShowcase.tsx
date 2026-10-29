@@ -164,7 +164,7 @@ export const WorkShowcase: React.FC = () => {
 
   return (
     <section
-      id="qr-demo"
+      id="projects"
       className="py-24 sm:py-32 bg-[#202124] text-[#F7F7F2] border-t border-[#45484E] relative"
     >
       <div className="max-w-6xl mx-auto px-6 sm:px-8">

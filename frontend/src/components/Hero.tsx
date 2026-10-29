@@ -93,7 +93,7 @@ export const Hero: React.FC = () => {
     HERO_PREVIEWS.find((p) => p.id === activePreview) || HERO_PREVIEWS[0];
 
   return (
-    <section className="relative pt-24 pb-20 sm:pt-36 sm:pb-28 lg:pt-40 lg:pb-32 bg-[#202124] overflow-hidden select-none">
+    <section id="home" className="relative pt-24 pb-20 sm:pt-36 sm:pb-28 lg:pt-40 lg:pb-32 bg-[#202124] overflow-hidden select-none">
       {/* Background Ambience: Radiant Golden Glow & Dot Grid */}
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[580px] bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(245,197,66,0.18),transparent)] pointer-events-none z-0"
