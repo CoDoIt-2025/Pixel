@@ -105,7 +105,7 @@ export default function SettingsPage() {
   // Appearance States
   const [selectedColor, setSelectedColor] = useState(settings.appearance.primaryColor);
   const [compactMode, setCompactMode] = useState(settings.appearance.compactMode);
-  const [selectedTheme, setSelectedTheme] = useState(settings.appearance?.theme || "light");
+  const [selectedTheme, setSelectedTheme] = useState(settings.appearance?.theme || "charcoal");
 
   React.useEffect(() => {
     if (settings.appearance?.theme) {

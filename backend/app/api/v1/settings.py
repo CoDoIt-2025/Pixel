@@ -41,7 +41,7 @@ DEFAULT_SETTINGS = {
     },
     "appearance": {
         "primaryColor": "#F5C542",
-        "theme": "light",
+        "theme": "charcoal",
         "compactMode": False,
         "highContrast": False,
     },

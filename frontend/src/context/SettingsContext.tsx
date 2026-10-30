@@ -25,7 +25,7 @@ const DEFAULT_SEO: SEOSettings = {
 
 const DEFAULT_APPEARANCE: AppearanceSettings = {
   primaryColor: "#F5C542",
-  theme: "light",
+  theme: "charcoal",
   compactMode: false,
   highContrast: false,
 };
@@ -45,7 +45,7 @@ const SettingsContext = createContext<SettingsContextValue>({
   company: DEFAULT_COMPANY,
   seo: DEFAULT_SEO,
   appearance: DEFAULT_APPEARANCE,
-  theme: "light",
+  theme: "charcoal",
   setTheme: async () => { },
   toggleTheme: async () => { },
   refreshSettings: async () => { },
@@ -101,7 +101,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
         if (data.appearance) {
           const app: AppearanceSettings = {
             primaryColor: data.appearance.primaryColor || "#F5C542",
-            theme: data.appearance.theme === "charcoal" ? "charcoal" : "light",
+            theme: data.appearance.theme === "light" ? "light" : "charcoal",
             compactMode: data.appearance.compactMode,
             highContrast: data.appearance.highContrast,
           };
