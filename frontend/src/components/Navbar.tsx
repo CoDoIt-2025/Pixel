@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ArrowUpRight, Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import { useSettings } from "../context/SettingsContext";
 
 export const Navbar: React.FC = () => {
@@ -120,16 +120,6 @@ export const Navbar: React.FC = () => {
             )}
           </button>
 
-          <a
-            href="http://localhost:3000/dashboard"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#45484E] bg-[#2B2D31]/70 hover:border-[#F5C542] text-[12px] font-semibold text-[#C4C7CC] hover:text-[#F7F7F2] transition-all"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-[#F5C542]" />
-            <span>Admin</span>
-            <ArrowUpRight size={12} className="text-[#F5C542]" />
-          </a>
 
           {/* Mobile Menu Button */}
           <button
@@ -194,20 +184,11 @@ export const Navbar: React.FC = () => {
           >
             Contact Us
           </a>
-          <div className="pt-3 border-t border-[#45484E] flex items-center justify-between">
-            <a
-              href="http://localhost:3000/dashboard"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-[#C4C7CC] hover:text-[#F5C542] flex items-center gap-1.5 py-1"
-            >
-              <span>Open Admin Panel</span>
-              <ArrowUpRight size={13} className="text-[#F5C542]" />
-            </a>
+          <div className="pt-3 border-t border-[#45484E]">
             <a
               href="#contact"
               onClick={() => setMobileOpen(false)}
-              className="btn-primary py-2 px-3 text-xs"
+              className="btn-primary py-2 px-3 text-xs w-full text-center block"
             >
               Contact Us
             </a>

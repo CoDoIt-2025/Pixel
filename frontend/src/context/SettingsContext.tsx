@@ -25,7 +25,7 @@ const DEFAULT_SEO: SEOSettings = {
 
 const DEFAULT_APPEARANCE: AppearanceSettings = {
   primaryColor: "#F5C542",
-  theme: "charcoal",
+  theme: "light",
   compactMode: false,
   highContrast: false,
 };
@@ -45,10 +45,10 @@ const SettingsContext = createContext<SettingsContextValue>({
   company: DEFAULT_COMPANY,
   seo: DEFAULT_SEO,
   appearance: DEFAULT_APPEARANCE,
-  theme: "charcoal",
-  setTheme: async () => {},
-  toggleTheme: async () => {},
-  refreshSettings: async () => {},
+  theme: "light",
+  setTheme: async () => { },
+  toggleTheme: async () => { },
+  refreshSettings: async () => { },
   loading: false,
 });
 
@@ -58,7 +58,18 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
   const [company, setCompany] = useState<CompanySettings>(DEFAULT_COMPANY);
   const [seo, setSeo] = useState<SEOSettings>(DEFAULT_SEO);
   const [appearance, setAppearance] =
-    useState<AppearanceSettings>(DEFAULT_APPEARANCE);
+    useState<AppearanceSettings>(() => {
+      let initialTheme: "charcoal" | "light" = DEFAULT_APPEARANCE.theme;
+      if (typeof window !== "undefined") {
+        try {
+          const saved = localStorage.getItem("pixel_theme");
+          if (saved === "charcoal" || saved === "light") {
+            initialTheme = saved;
+          }
+        } catch { }
+      }
+      return { ...DEFAULT_APPEARANCE, theme: initialTheme };
+    });
   const [loading, setLoading] = useState(true);
 
   const applyThemeClass = (t: string) => {
@@ -90,7 +101,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
         if (data.appearance) {
           const app: AppearanceSettings = {
             primaryColor: data.appearance.primaryColor || "#F5C542",
-            theme: data.appearance.theme === "light" ? "light" : "charcoal",
+            theme: data.appearance.theme === "charcoal" ? "charcoal" : "light",
             compactMode: data.appearance.compactMode,
             highContrast: data.appearance.highContrast,
           };
@@ -109,6 +120,11 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
     const updated: AppearanceSettings = { ...appearance, theme: nextTheme };
     setAppearance(updated);
     applyThemeClass(nextTheme);
+    try {
+      localStorage.setItem("pixel_theme", nextTheme);
+    } catch {
+      // Ignore localStorage error
+    }
 
     try {
       await api.updateSettings({ appearance: updated });
@@ -124,6 +140,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
+    applyThemeClass(appearance.theme);
     fetchSettings();
 
     // Auto-refresh when tab regains focus or every 5 seconds to capture Admin Panel updates

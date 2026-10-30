@@ -35,7 +35,7 @@ export const initialSettings: UserSettings = {
   },
   appearance: {
     primaryColor: "#F5C542",
-    theme: "charcoal",
+    theme: "light",
     compactMode: false,
     highContrast: false,
   },

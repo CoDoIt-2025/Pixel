@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowUpRight, Mail, Phone, MapPin, QrCode } from "lucide-react";
+import { Mail, Phone, MapPin, QrCode } from "lucide-react";
 import { useSettings } from "../context/SettingsContext";
 
 export const Footer: React.FC = () => {
@@ -127,17 +127,6 @@ export const Footer: React.FC = () => {
               <li>
                 <a href="#contact" className="hover:text-[#F5C542] transition-colors">
                   Contact Us
-                </a>
-              </li>
-              <li className="pt-1">
-                <a
-                  href="http://localhost:3000/dashboard"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-[#F7F7F2] transition-colors flex items-center gap-1 text-[#F5C542]"
-                >
-                  <span>Admin Panel Console</span>
-                  <ArrowUpRight size={12} />
                 </a>
               </li>
             </ul>

@@ -6,10 +6,6 @@ import {
   Search,
   QrCode,
   MapPin,
-  Layers,
-  Compass,
-  UtensilsCrossed,
-  ShieldCheck,
   ChevronRight,
   Clock,
   Sparkles,
@@ -288,57 +284,6 @@ export const Hero: React.FC = () => {
                 <span>Plan this scope for your business</span>
                 <ChevronRight size={13} className="transition-transform group-hover:translate-x-1" />
               </a>
-            </div>
-          </div>
-        </div>
-
-        {/* 4 Key Pillars of Integrity */}
-        <div className="mt-12 sm:mt-16 pt-8 sm:pt-10 border-t border-[#45484E] grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-5 max-w-5xl mx-auto text-left">
-          <div className="p-3.5 sm:p-4.5 rounded-xl bg-[#2B2D31]/80 border border-[#45484E] hover:border-[#F5C542]/50 transition-all card-hover-gold">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#202124] border border-[#45484E] flex items-center justify-center text-[#F5C542] mb-2 sm:mb-3">
-              <Layers size={15} />
-            </div>
-            <div className="text-lg sm:text-2xl font-black tracking-tight text-[#F5C542]">
-              6 Services
-            </div>
-            <div className="text-[11px] sm:text-xs text-[#C4C7CC] mt-0.5 sm:mt-1 font-medium">
-              Web, SEO, GBP, Social, AI &amp; QR
-            </div>
-          </div>
-
-          <div className="p-3.5 sm:p-4.5 rounded-xl bg-[#2B2D31]/80 border border-[#45484E] hover:border-[#F5C542]/50 transition-all card-hover-gold">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#202124] border border-[#45484E] flex items-center justify-center text-[#F5C542] mb-2 sm:mb-3">
-              <Compass size={15} />
-            </div>
-            <div className="text-lg sm:text-2xl font-black tracking-tight text-[#F7F7F2]">
-              Oman First
-            </div>
-            <div className="text-[11px] sm:text-xs text-[#C4C7CC] mt-0.5 sm:mt-1 font-medium">
-              Muscat &amp; regional GCC
-            </div>
-          </div>
-
-          <div className="p-3.5 sm:p-4.5 rounded-xl bg-[#2B2D31]/80 border border-[#45484E] hover:border-[#F5C542]/50 transition-all card-hover-gold">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#202124] border border-[#45484E] flex items-center justify-center text-[#F5C542] mb-2 sm:mb-3">
-              <UtensilsCrossed size={15} />
-            </div>
-            <div className="text-lg sm:text-2xl font-black tracking-tight text-[#F5C542]">
-              OMR Menus
-            </div>
-            <div className="text-[11px] sm:text-xs text-[#C4C7CC] mt-0.5 sm:mt-1 font-medium">
-              Bilingual hospitality QR suites
-            </div>
-          </div>
-
-          <div className="p-3.5 sm:p-4.5 rounded-xl bg-[#2B2D31]/80 border border-[#45484E] hover:border-[#F5C542]/50 transition-all card-hover-gold">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#202124] border border-[#45484E] flex items-center justify-center text-[#F5C542] mb-2 sm:mb-3">
-              <ShieldCheck size={15} />
-            </div>
-            <div className="text-lg sm:text-2xl font-black tracking-tight text-[#F7F7F2]">
-              Truthful
-            </div>
-            <div className="text-[11px] sm:text-xs text-[#C4C7CC] mt-0.5 sm:mt-1 font-medium">
-              Zero false ranking claims
             </div>
           </div>
         </div>

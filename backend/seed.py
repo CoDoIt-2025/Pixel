@@ -72,7 +72,7 @@ def run_seed():
         }
         pixel_appearance_settings = {
             "primaryColor": "#F5C542",
-            "theme": "charcoal",
+            "theme": "light",
             "compactMode": False,
             "highContrast": False,
         }
