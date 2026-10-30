@@ -2,10 +2,10 @@
 nixPkgs = ["nodejs_22"]
 
 [phases.install]
-cmds = ["npm cache clean --force && npm install --force && npm install --no-save @rolldown/binding-linux-x64-gnu@1.2.16 @tailwindcss/oxide-linux-x64-gnu@4.3.3"]
+cmds = ["npm install --force", "node setup-bindings.js"]
 
 [phases.build]
-cmds = ["npm run build"]
+cmds = ["node setup-bindings.js", "npm run build"]
 
 [start]
 cmd = "npx --yes serve -s dist -l 80"

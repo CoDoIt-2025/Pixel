@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node setup-bindings.js",
     "build": "vite build",
     "typecheck": "tsc -b",
+    "postinstall": "node setup-bindings.js",
     "lint": "oxlint",
     "preview": "vite preview",
     "start": "serve -s dist -l 80"
@@ -31,9 +33,5 @@
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.3",
     "vite": "8.3.5"
-  },
-  "optionalDependencies": {
-    "@rolldown/binding-linux-x64-gnu": "1.2.16",
-    "@tailwindcss/oxide-linux-x64-gnu": "^4.3.3"
   }
 }
