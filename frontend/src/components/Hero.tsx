@@ -11,7 +11,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useSettings } from "../context/SettingsContext";
-import { WavyQuoteRibbon } from "./WavyQuoteRibbon";
+
 
 interface HeroPreview {
   id: string;
@@ -112,10 +112,10 @@ export const Hero: React.FC = () => {
       />
 
       <div className="max-w-6xl mx-auto px-5 sm:px-8 relative z-10">
-        
+
         {/* Top Hero Stage: Mobile-Optimized Top Mascot + Desktop 2-Column */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center mb-12 sm:mb-16">
-          
+
           {/* Mobile-Only Mascot Stage: Welcoming hero on phones */}
           <div className="lg:hidden flex flex-col items-center justify-center pt-2 pb-1 relative">
             <div
@@ -224,11 +224,10 @@ export const Hero: React.FC = () => {
                 <button
                   key={preview.id}
                   onClick={() => setActivePreview(preview.id)}
-                  className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 whitespace-nowrap flex-shrink-0 ${
-                    isActive
-                      ? "bg-[#F5C542] text-[#202124] shadow-lg shadow-[#F5C542]/25 scale-105 font-bold"
-                      : "bg-[#2B2D31]/80 text-[#C4C7CC] hover:text-[#F7F7F2] border border-[#45484E] hover:border-[#F5C542]/50 backdrop-blur-sm"
-                  }`}
+                  className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 whitespace-nowrap flex-shrink-0 ${isActive
+                    ? "bg-[#F5C542] text-[#202124] shadow-lg shadow-[#F5C542]/25 scale-105 font-bold"
+                    : "bg-[#2B2D31]/80 text-[#C4C7CC] hover:text-[#F7F7F2] border border-[#45484E] hover:border-[#F5C542]/50 backdrop-blur-sm"
+                    }`}
                 >
                   {preview.id === "web" && <Globe size={13} />}
                   {preview.id === "seo" && <Search size={13} />}
@@ -289,10 +288,6 @@ export const Hero: React.FC = () => {
           </div>
         </div>
 
-        {/* Moving Wavy Quotes Banner */}
-        <div className="mt-8 sm:mt-12 pt-6 border-t border-[#45484E]/30 w-full overflow-hidden">
-          <WavyQuoteRibbon />
-        </div>
 
       </div>
     </section>
