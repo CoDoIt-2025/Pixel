@@ -11,6 +11,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useSettings } from "../context/SettingsContext";
+import { WavyQuoteRibbon } from "./WavyQuoteRibbon";
 
 interface HeroPreview {
   id: string;
@@ -286,6 +287,11 @@ export const Hero: React.FC = () => {
               </a>
             </div>
           </div>
+        </div>
+
+        {/* Moving Wavy Quotes Banner */}
+        <div className="mt-8 sm:mt-12 pt-6 border-t border-[#45484E]/30 w-full overflow-hidden">
+          <WavyQuoteRibbon />
         </div>
 
       </div>
