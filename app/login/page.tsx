@@ -61,13 +61,12 @@ function LoginFormContent() {
       <div className="w-full max-w-md space-y-6">
         {/* Logo and Header */}
         <div className="text-center space-y-2">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-md shadow-indigo-200">
-            <div className="grid grid-cols-2 gap-1 p-2">
-              <div className="h-2.5 w-2.5 rounded-[2px] bg-white" />
-              <div className="h-2.5 w-2.5 rounded-[2px] bg-indigo-200" />
-              <div className="h-2.5 w-2.5 rounded-[2px] bg-indigo-300" />
-              <div className="h-2.5 w-2.5 rounded-[2px] bg-white" />
-            </div>
+          <div className="flex items-center justify-center pb-2">
+            <img
+              src="/brand/pixel-logo-3d-tight.png"
+              alt="Pixel Logo"
+              className="h-16 w-auto object-contain filter drop-shadow-md"
+            />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">
             Pixel Admin Panel

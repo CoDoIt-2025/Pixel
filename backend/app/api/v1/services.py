@@ -9,7 +9,7 @@ router = APIRouter(prefix="/services", tags=["Services"])
 
 @router.get("", response_model=List[ServiceResponse])
 def get_services(db: Session = Depends(get_db)):
-    services = db.query(Service).order_by(Service.starting_price.asc()).all()
+    services = db.query(Service).order_by(Service.id.asc()).all()
     return [
         ServiceResponse(
             id=s.id,
@@ -21,7 +21,10 @@ def get_services(db: Session = Depends(get_db)):
             features=s.features or [],
             isVisible=s.is_visible,
             deliveryTime=s.delivery_time or "4-6 weeks",
-            activeProjectsCount=s.active_projects_count or 0
+            activeProjectsCount=s.active_projects_count or 0,
+            bannerImage=s.banner_image or "",
+            bannerVideo=s.banner_video or "",
+            mediaType=s.media_type or "illustration"
         ) for s in services
     ]
 
@@ -36,7 +39,10 @@ def create_service(data: ServiceCreate, db: Session = Depends(get_db)):
         features=data.features,
         is_visible=data.isVisible,
         delivery_time=data.deliveryTime,
-        active_projects_count=data.activeProjectsCount
+        active_projects_count=data.activeProjectsCount,
+        banner_image=data.bannerImage or "",
+        banner_video=data.bannerVideo or "",
+        media_type=data.mediaType or "illustration"
     )
     db.add(service)
     db.commit()
@@ -51,7 +57,10 @@ def create_service(data: ServiceCreate, db: Session = Depends(get_db)):
         features=service.features or [],
         isVisible=service.is_visible,
         deliveryTime=service.delivery_time or "4-6 weeks",
-        activeProjectsCount=service.active_projects_count or 0
+        activeProjectsCount=service.active_projects_count or 0,
+        bannerImage=service.banner_image or "",
+        bannerVideo=service.banner_video or "",
+        mediaType=service.media_type or "illustration"
     )
 
 @router.put("/{service_id}", response_model=ServiceResponse)
@@ -67,6 +76,9 @@ def update_service(service_id: str, data: ServiceUpdate, db: Session = Depends(g
         "isVisible": "is_visible",
         "deliveryTime": "delivery_time",
         "activeProjectsCount": "active_projects_count",
+        "bannerImage": "banner_image",
+        "bannerVideo": "banner_video",
+        "mediaType": "media_type",
     }
     for json_k, db_k in mapping.items():
         if json_k in update_data:
@@ -88,35 +100,10 @@ def update_service(service_id: str, data: ServiceUpdate, db: Session = Depends(g
         features=service.features or [],
         isVisible=service.is_visible,
         deliveryTime=service.delivery_time or "4-6 weeks",
-        activeProjectsCount=service.active_projects_count or 0
-    )
-
-@router.patch("/{service_id}/visibility", response_model=ServiceResponse)
-def toggle_service_visibility(service_id: str, db: Session = Depends(get_db)):
-    service = db.query(Service).filter(Service.id == service_id).first()
-    if not service:
-        raise HTTPException(status_code=404, detail="Service not found")
-        
-    service.is_visible = not service.is_visible
-    db.add(ActivityItem(
-        user="Admin User",
-        action=f"toggled visibility to {'public' if service.is_visible else 'hidden'}",
-        target=service.title,
-        type="service"
-    ))
-    db.commit()
-    db.refresh(service)
-    return ServiceResponse(
-        id=service.id,
-        title=service.title,
-        category=service.category,
-        description=service.description or "",
-        iconName=service.icon_name or "Code",
-        startingPrice=service.starting_price,
-        features=service.features or [],
-        isVisible=service.is_visible,
-        deliveryTime=service.delivery_time or "4-6 weeks",
-        activeProjectsCount=service.active_projects_count or 0
+        activeProjectsCount=service.active_projects_count or 0,
+        bannerImage=service.banner_image or "",
+        bannerVideo=service.banner_video or "",
+        mediaType=service.media_type or "illustration"
     )
 
 @router.delete("/{service_id}", status_code=status.HTTP_204_NO_CONTENT)

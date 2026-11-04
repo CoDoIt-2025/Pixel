@@ -5,6 +5,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
+  Upload,
+  Sparkles,
+  Image as ImageIcon,
+  Video as VideoIcon,
+  Loader2,
   Plus,
   Globe,
   Smartphone,
@@ -84,6 +89,60 @@ export default function ServicesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Service | null>(null);
+  const [mediaTarget, setMediaTarget] = useState<Service | null>(null);
+  const [mediaMode, setMediaMode] = useState<"illustration" | "image" | "video">("illustration");
+  const [mediaImageUrl, setMediaImageUrl] = useState("");
+  const [mediaVideoUrl, setMediaVideoUrl] = useState("");
+  const [mediaUploading, setMediaUploading] = useState(false);
+  const [mediaSaving, setMediaSaving] = useState(false);
+
+  const handleOpenMedia = (srv: Service) => {
+    setMediaTarget(srv);
+    setMediaMode(srv.mediaType || "illustration");
+    setMediaImageUrl(srv.bannerImage || "");
+    setMediaVideoUrl(srv.bannerVideo || "");
+  };
+
+  const handleSaveMedia = async () => {
+    if (!mediaTarget) return;
+    setMediaSaving(true);
+    try {
+      const updates = {
+        mediaType: mediaMode,
+        bannerImage: mediaMode === "image" ? mediaImageUrl : "",
+        bannerVideo: mediaMode === "video" ? mediaVideoUrl : "",
+      };
+      await updateService(mediaTarget.id, updates);
+      toast.success(`Banner media updated for ${mediaTarget.title}`);
+      setMediaTarget(null);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to save banner media");
+    } finally {
+      setMediaSaving(false);
+    }
+  };
+
+  const handleUploadFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setMediaUploading(true);
+    try {
+      const { api } = await import("@/lib/api");
+      const res = await api.upload.file(file);
+      if (res.mediaType === "video") {
+        setMediaVideoUrl(res.url);
+        setMediaMode("video");
+      } else {
+        setMediaImageUrl(res.url);
+        setMediaMode("image");
+      }
+      toast.success("File uploaded successfully");
+    } catch (err: any) {
+      toast.error(err.message || "Upload failed");
+    } finally {
+      setMediaUploading(false);
+    }
+  };
 
   const {
     register,
@@ -254,6 +313,35 @@ export default function ServicesPage() {
                 </CardHeader>
 
                 <CardContent className="space-y-4 pt-0 text-xs">
+                  {/* Banner Media Info & Upload button */}
+                  <div className="flex items-center justify-between p-2 rounded-lg bg-amber-50/70 border border-amber-200/60">
+                    <div className="flex items-center gap-1.5">
+                      {srv.mediaType === "video" ? (
+                        <VideoIcon className="h-3.5 w-3.5 text-amber-600" />
+                      ) : srv.mediaType === "image" ? (
+                        <ImageIcon className="h-3.5 w-3.5 text-amber-600" />
+                      ) : (
+                        <Sparkles className="h-3.5 w-3.5 text-amber-600" />
+                      )}
+                      <span className="text-[11px] font-semibold text-amber-900">
+                        {srv.mediaType === "video"
+                          ? "Video Banner"
+                          : srv.mediaType === "image"
+                          ? "Image Banner"
+                          : "3D Mockup"}
+                      </span>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleOpenMedia(srv)}
+                      className="h-6 text-[10px] font-bold px-2 border-amber-300 text-amber-900 hover:bg-amber-100"
+                    >
+                      <Upload className="h-3 w-3 mr-1" />
+                      Media
+                    </Button>
+                  </div>
+
                   {/* Pricing and Timeline pill */}
                   <div className="flex items-center justify-between rounded-lg bg-slate-50 p-2.5 border border-slate-100">
                     <div>
@@ -408,6 +496,117 @@ export default function ServicesPage() {
                 </Button>
               </DialogFooter>
             </form>
+          </DialogContent>
+        </Dialog>
+
+        {/* Banner Media Upload Dialog */}
+        <Dialog open={!!mediaTarget} onOpenChange={(open) => !open && setMediaTarget(null)}>
+          <DialogContent className="sm:max-w-[550px]">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Upload className="h-5 w-5 text-amber-500" />
+                <span>Hero Banner & Video: {mediaTarget?.title}</span>
+              </DialogTitle>
+              <DialogDescription>
+                Configure whether this service displays a 3D mockup, custom image banner, or video loop on the website hero.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4 py-2">
+              <div className="grid grid-cols-3 gap-2">
+                <Button
+                  type="button"
+                  variant={mediaMode === "illustration" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setMediaMode("illustration")}
+                  className="flex flex-col h-auto py-2.5 gap-1 text-xs"
+                >
+                  <Sparkles className="h-4 w-4" />
+                  <span>3D Mockup</span>
+                </Button>
+                <Button
+                  type="button"
+                  variant={mediaMode === "image" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setMediaMode("image")}
+                  className="flex flex-col h-auto py-2.5 gap-1 text-xs"
+                >
+                  <ImageIcon className="h-4 w-4" />
+                  <span>Image Banner</span>
+                </Button>
+                <Button
+                  type="button"
+                  variant={mediaMode === "video" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setMediaMode("video")}
+                  className="flex flex-col h-auto py-2.5 gap-1 text-xs"
+                >
+                  <VideoIcon className="h-4 w-4" />
+                  <span>Video Banner</span>
+                </Button>
+              </div>
+
+              {mediaMode !== "illustration" && (
+                <div className="space-y-3 p-3.5 rounded-xl border border-slate-200 bg-slate-50">
+                  <label className="border-2 border-dashed border-slate-300 hover:border-amber-400 bg-white rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer transition-colors">
+                    <input
+                      type="file"
+                      accept={mediaMode === "image" ? "image/*" : "video/*"}
+                      onChange={handleUploadFile}
+                      disabled={mediaUploading}
+                      className="hidden"
+                    />
+                    {mediaUploading ? (
+                      <div className="flex items-center gap-2 text-amber-600 text-xs font-semibold">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Uploading to server...</span>
+                      </div>
+                    ) : (
+                      <div className="text-center">
+                        <Upload className="h-6 w-6 text-amber-500 mx-auto mb-1" />
+                        <span className="text-xs font-semibold text-slate-700 block">Click to upload {mediaMode === "image" ? "image" : "video"}</span>
+                        <span className="text-[10px] text-slate-400">{mediaMode === "image" ? "PNG, JPG, WebP" : "MP4, WebM"}</span>
+                      </div>
+                    )}
+                  </label>
+
+                  <div className="space-y-1">
+                    <span className="text-[10px] uppercase font-bold text-slate-400">Or media URL</span>
+                    <Input
+                      value={mediaMode === "image" ? mediaImageUrl : mediaVideoUrl}
+                      onChange={(e) => {
+                        if (mediaMode === "image") setMediaImageUrl(e.target.value);
+                        else setMediaVideoUrl(e.target.value);
+                      }}
+                      placeholder={mediaMode === "image" ? "https://... or /uploads/..." : "https://...mp4 or /uploads/..."}
+                      className="h-8 text-xs"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <span className="text-[10px] uppercase font-bold text-slate-400">Live Preview</span>
+                    <div className="h-28 bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center">
+                      {mediaMode === "image" && mediaImageUrl ? (
+                        <img src={mediaImageUrl} alt="Preview" className="w-full h-full object-cover" />
+                      ) : mediaMode === "video" && mediaVideoUrl ? (
+                        <video src={mediaVideoUrl} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="text-xs text-slate-500">No media uploaded yet</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <DialogFooter className="pt-2">
+              <Button variant="outline" size="sm" onClick={() => setMediaTarget(null)}>
+                Cancel
+              </Button>
+              <Button size="sm" onClick={handleSaveMedia} disabled={mediaSaving || mediaUploading}>
+                {mediaSaving ? "Saving..." : "Save Media"}
+              </Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
 

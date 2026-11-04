@@ -1,99 +1,182 @@
 import { useState, useEffect } from "react";
-import { SettingsProvider } from "./context/SettingsContext";
+import { DemoTopBanner } from "./components/DemoTopBanner";
 import { Navbar } from "./components/Navbar";
 import { Hero } from "./components/Hero";
-import { ClientTicker } from "./components/ClientTicker";
-import { ServicesMatrix } from "./components/ServicesMatrix";
-import { WorkShowcase } from "./components/WorkShowcase";
-import { InteractiveScopeCalculator } from "./components/InteractiveScopeCalculator";
-import { TeamRoster } from "./components/TeamRoster";
+import { ServicesSection } from "./components/ServicesSection";
+import { ServicePage } from "./components/ServicePage";
+import { AboutWhySection } from "./components/AboutWhySection";
+import { OurWorkSection } from "./components/OurWorkSection";
 import { BlogSection } from "./components/BlogSection";
-import { TestimonialsSection } from "./components/TestimonialsSection";
+import { AuditRequestSection } from "./components/AuditRequestSection";
 import { FAQSection } from "./components/FAQSection";
-import { RFPInquiryForm } from "./components/RFPInquiryForm";
+import { TestimonialsOptionalSection } from "./components/TestimonialsOptionalSection";
 import { Footer } from "./components/Footer";
-import { SplashScreen } from "./components/SplashScreen";
-import { MessageCircle, ArrowUp } from "lucide-react";
+import { ServiceDetailsModal } from "./components/ServiceDetailsModal";
+import { SERVICES_DATA, mapBackendServiceToItem } from "./data/servicesData";
+import type { ServiceItem } from "./data/servicesData";
+import { api } from "./lib/api";
 
 export function App() {
-  const [calculatorPrefill, setCalculatorPrefill] = useState<{
-    service: string;
-    budget: string;
-    message: string;
-  } | null>(null);
+  const [services, setServices] = useState<ServiceItem[]>(SERVICES_DATA);
+  const [selectedServiceIndex, setSelectedServiceIndex] = useState(0);
 
-  const [showScrollTop, setShowScrollTop] = useState(false);
+  // Dedicated Service Page view state
+  const [activeServicePage, setActiveServicePage] = useState<ServiceItem | null>(null);
+
+  // Optional quick preview modal
+  const [activeModalService, setActiveModalService] =
+    useState<ServiceItem | null>(null);
+
+  // About & Why Pixel settings from SQLite backend
+  const [companySettings, setCompanySettings] = useState<any>({});
+
+  // Hydrate all services directly from backend database
+  const reloadServicesFromBackend = () => {
+    api
+      .getServices()
+      .then((dbServices) => {
+        if (dbServices && dbServices.length > 0) {
+          const visibleServices = dbServices.filter((s) => s.isVisible !== false);
+          if (visibleServices.length > 0) {
+            const mapped = visibleServices.map(mapBackendServiceToItem);
+            setServices(mapped);
+            setSelectedServiceIndex((prev) => (prev >= mapped.length ? 0 : prev));
+          }
+        }
+      })
+      .catch((err) => {
+        console.warn("Could not fetch services from API, using default data:", err);
+      });
+  };
+
+  // Hydrate About Pixel & Why Pixel content from SQLite settings
+  const reloadCompanySettings = () => {
+    api
+      .getSettings()
+      .then((res) => {
+        if (res && res.company) {
+          setCompanySettings(res.company);
+        }
+      })
+      .catch((err) => {
+        console.warn("Could not fetch company settings:", err);
+      });
+  };
 
   useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 400);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    reloadServicesFromBackend();
+    reloadCompanySettings();
   }, []);
 
-  const scrollToTop = () => {
+  const handleOpenServicePage = (service: ServiceItem) => {
+    setActiveServicePage(service);
+    const idx = services.findIndex((s) => s.id === service.id);
+    if (idx !== -1) {
+      setSelectedServiceIndex(idx);
+    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const scrollToSection = (id: string) => {
+    setActiveServicePage(null);
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        const yOffset = -75; // Account for sticky navbar height
+        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    }, 70);
+  };
+
+  const handleNavigateHome = () => {
+    setActiveServicePage(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <SettingsProvider>
-      {/* Intro Logo Preloader / Splash Screen */}
-      <SplashScreen />
+    <div className="min-h-screen bg-[#FAF9F5] text-[#121418] flex flex-col font-sans selection:bg-[#FACC15] selection:text-[#121418]">
+      {/* 1. Official Corporate Top Announcement Bar */}
+      <DemoTopBanner />
 
-      <div className="min-h-screen bg-[#202124] text-[#F7F7F2] relative selection:bg-[#F5C542] selection:text-[#202124] antialiased">
-        {/* Navigation */}
-        <Navbar />
+      {/* 2. Top Header / Navigation Bar (Direct Section Scrolling) */}
+      <Navbar
+        onNavigateHome={handleNavigateHome}
+        onNavigateAbout={() => scrollToSection("about")}
+        onNavigateServices={() => scrollToSection("services")}
+        onNavigateWork={() => scrollToSection("our-work")}
+        onNavigateBlog={() => scrollToSection("blog")}
+        onNavigateContact={() => scrollToSection("audit-request")}
+        isServicePageActive={Boolean(activeServicePage)}
+      />
 
-        {/* Main Content Sections */}
-        <main>
-          <Hero />
-          <ClientTicker />
-          <ServicesMatrix />
-          <WorkShowcase />
-          {/* Occasional Light Section for Visual Balance (#F5F4EF with charcoal #202124 text) */}
-          <InteractiveScopeCalculator
-            onApplyEstimate={(data) => setCalculatorPrefill(data)}
+      {/* Main Page Content */}
+      <main className="flex-1">
+        {activeServicePage ? (
+          /* Dedicated Company-Grade Service Page View */
+          <ServicePage
+            service={activeServicePage}
+            allServices={services}
+            onBack={handleNavigateHome}
+            onSelectService={(s) => handleOpenServicePage(s)}
           />
-          <TeamRoster />
-          <BlogSection />
-          <TestimonialsSection />
-          <FAQSection />
-          <RFPInquiryForm prefillData={calculatorPrefill} />
-        </main>
+        ) : (
+          /* Official Corporate Landing Page Sections */
+          <>
+            {/* 3. Hero Section (Interactive Service Banner with Dynamic Media) */}
+            <Hero
+              services={services}
+              selectedIndex={selectedServiceIndex}
+              onSelectService={(idx) => setSelectedServiceIndex(idx)}
+              onOpenServiceDetails={(service) => handleOpenServicePage(service)}
+            />
 
-        {/* Footer */}
-        <Footer />
+            {/* 4. Compact "Explore our services" Grid (9 Services) */}
+            <ServicesSection
+              services={services}
+              selectedIndex={selectedServiceIndex}
+              onSelectService={(idx) => setSelectedServiceIndex(idx)}
+              onOpenServiceDetails={(service) => handleOpenServicePage(service)}
+            />
 
-        {/* Floating Quick Action Widget: WhatsApp & Back to Top */}
-        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex flex-col items-end gap-2.5 select-none">
-          {showScrollTop && (
-            <button
-              onClick={scrollToTop}
-              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#2B2D31]/90 backdrop-blur-md border border-[#45484E] text-[#C4C7CC] hover:text-[#F5C542] hover:border-[#F5C542] flex items-center justify-center shadow-xl transition-all cursor-pointer"
-              aria-label="Scroll to top"
-            >
-              <ArrowUp size={15} />
-            </button>
-          )}
+            {/* 5. About Pixel & Why Pixel Section (Live from SQLite CMS, zero grey bars) */}
+            <AboutWhySection
+              aboutTitle={companySettings.aboutTitle}
+              aboutText={companySettings.aboutText}
+              whyTitle={companySettings.whyTitle}
+              whyReasons={companySettings.whyReasons}
+            />
 
-          <a
-            href="https://wa.me/96824000000"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center gap-2 p-3 sm:px-4 sm:py-2.5 rounded-full bg-[#2B2D31]/95 backdrop-blur-xl border border-[#45484E] hover:border-[#F5C542] shadow-2xl text-xs font-semibold text-[#F7F7F2] transition-all hover:scale-105"
-            aria-label="Chat on WhatsApp"
-          >
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
-            </span>
-            <MessageCircle size={16} className="text-[#F5C542] group-hover:rotate-12 transition-transform" />
-            <span className="hidden sm:inline">Chat on WhatsApp</span>
-          </a>
-        </div>
-      </div>
-    </SettingsProvider>
+            {/* 6. Our Work & Case Studies Section */}
+            <OurWorkSection />
+
+            {/* 7. Blog & Industry Insights Section */}
+            <BlogSection />
+
+            {/* 8. Request a digital presence audit Form */}
+            <AuditRequestSection />
+
+            {/* 9. Frequently Asked Questions Section */}
+            <FAQSection />
+
+            {/* 10. Testimonials — optional Section */}
+            <TestimonialsOptionalSection />
+          </>
+        )}
+      </main>
+
+      {/* 11. Official Corporate Footer */}
+      <Footer onNavigateSection={scrollToSection} />
+
+      {/* Optional Quick Service Details Modal */}
+      {activeModalService && (
+        <ServiceDetailsModal
+          service={activeModalService}
+          onClose={() => setActiveModalService(null)}
+          onRequestAudit={() => scrollToSection("audit-request")}
+        />
+      )}
+    </div>
   );
 }
 

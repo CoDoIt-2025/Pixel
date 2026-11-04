@@ -89,6 +89,9 @@ export interface Service {
   isVisible: boolean;
   deliveryTime: string;
   activeProjectsCount: number;
+  bannerImage?: string;
+  bannerVideo?: string;
+  mediaType?: "illustration" | "image" | "video";
 }
 
 export type PostStatus = "Draft" | "Published" | "Scheduled";
@@ -188,6 +191,10 @@ export interface UserSettings {
     currency: string;
     website: string;
     description?: string;
+    aboutTitle?: string;
+    aboutText?: string;
+    whyTitle?: string;
+    whyReasons?: Array<{ title: string; description: string }>;
   };
   seo: {
     metaTitle: string;

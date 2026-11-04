@@ -229,6 +229,36 @@ export const api = {
       }),
   },
 
+  // Audit Requests
+  auditRequests: {
+    list: () =>
+      request<
+        Array<{
+          id: string;
+          company_name: string;
+          phone_number: string;
+          google_maps_link?: string;
+          google_maps_na?: boolean;
+          website_link?: string;
+          website_na?: boolean;
+          social_media_links?: string;
+          social_media_na?: boolean;
+          email?: string;
+          status: string;
+          created_at: string;
+        }>
+      >("/audit-requests"),
+    updateStatus: (id: string, status: string) =>
+      request<any>(`/audit-requests/${id}/status`, {
+        method: "PATCH",
+        body: JSON.stringify({ status }),
+      }),
+    delete: (id: string) =>
+      request<void>(`/audit-requests/${id}`, {
+        method: "DELETE",
+      }),
+  },
+
   // Testimonials
   testimonials: {
     list: (status?: string) => {
@@ -280,6 +310,18 @@ export const api = {
       request<void>(`/faqs/${id}`, {
         method: "DELETE",
       }),
+  },
+
+  // Upload Media
+  upload: {
+    file: (file: File) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      return request<{ url: string; filename: string; mediaType: "image" | "video"; size: number }>("/upload", {
+        method: "POST",
+        body: formData,
+      });
+    },
   },
 
   // Settings

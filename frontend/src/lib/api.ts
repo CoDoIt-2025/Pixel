@@ -1,5 +1,32 @@
 import type { Project, Service, TeamMember, Testimonial, BlogPost, FAQItem, SystemSettings, Client } from "../types";
 
+export interface AuditRequestPayload {
+  company_name: string;
+  phone_number: string;
+  google_maps_link?: string;
+  google_maps_na?: boolean;
+  website_link?: string;
+  website_na?: boolean;
+  social_media_links?: string;
+  social_media_na?: boolean;
+  email?: string;
+}
+
+export interface AuditRequestRecord {
+  id: string;
+  company_name: string;
+  phone_number: string;
+  google_maps_link?: string;
+  google_maps_na?: boolean;
+  website_link?: string;
+  website_na?: boolean;
+  social_media_links?: string;
+  social_media_na?: boolean;
+  email?: string;
+  status: string;
+  created_at: string;
+}
+
 const API_BASE =
   import.meta.env.VITE_API_URL ||
   (typeof window !== "undefined" &&
@@ -130,5 +157,176 @@ export const api = {
       throw new Error(err.detail || "Failed to submit inquiry");
     }
     return await res.json();
+  },
+
+  submitAuditRequest: async (payload: AuditRequestPayload) => {
+    const res = await fetch(`${API_BASE}/audit-requests`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || "Failed to submit audit request");
+    }
+    return await res.json();
+  },
+
+  uploadMedia: async (file: File): Promise<{ url: string; filename: string; mediaType: "image" | "video" }> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch(`${API_BASE}/upload`, {
+      method: "POST",
+      body: formData,
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || "Failed to upload media file");
+    }
+    return await res.json();
+  },
+
+  updateService: async (serviceId: string, updates: Partial<Service>): Promise<Service> => {
+    const res = await fetch(`${API_BASE}/services/${serviceId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updates),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || "Failed to update service");
+    }
+    return await res.json();
+  },
+
+  createService: async (payload: {
+    title: string;
+    category: string;
+    description: string;
+    iconName?: string;
+    startingPrice?: number;
+    features?: string[];
+    isVisible?: boolean;
+    deliveryTime?: string;
+    bannerImage?: string;
+    bannerVideo?: string;
+    mediaType?: "illustration" | "image" | "video";
+  }): Promise<Service> => {
+    const res = await fetch(`${API_BASE}/services`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        iconName: "Monitor",
+        startingPrice: 100,
+        features: [],
+        isVisible: true,
+        deliveryTime: "2-4 weeks",
+        ...payload,
+      }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || "Failed to create service");
+    }
+    return await res.json();
+  },
+
+  deleteService: async (serviceId: string): Promise<void> => {
+    const res = await fetch(`${API_BASE}/services/${serviceId}`, {
+      method: "DELETE",
+    });
+    if (!res.ok && res.status !== 204) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || "Failed to delete service");
+    }
+  },
+
+  getAuditRequests: async (): Promise<AuditRequestRecord[]> => {
+    try {
+      const res = await fetch(`${API_BASE}/audit-requests`);
+      if (!res.ok) throw new Error("Failed to fetch audit requests");
+      return await res.json();
+    } catch (err) {
+      console.warn("Failed fetching audit requests:", err);
+      return [];
+    }
+  },
+
+  updateAuditStatus: async (id: string, status: string): Promise<AuditRequestRecord> => {
+    const res = await fetch(`${API_BASE}/audit-requests/${id}/status`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || "Failed to update audit status");
+    }
+    return await res.json();
+  },
+
+  deleteAuditRequest: async (id: string): Promise<void> => {
+    const res = await fetch(`${API_BASE}/audit-requests/${id}`, {
+      method: "DELETE",
+    });
+    if (!res.ok && res.status !== 204) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || "Failed to delete audit request");
+    }
+  },
+
+  createTestimonial: async (payload: {
+    clientName: string;
+    clientRole: string;
+    company: string;
+    quote: string;
+    rating: number;
+    project?: string;
+    status?: string;
+  }): Promise<Testimonial> => {
+    const res = await fetch(`${API_BASE}/testimonials`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        status: "APPROVED",
+        ...payload,
+      }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || "Failed to create testimonial");
+    }
+    return await res.json();
+  },
+
+  deleteTestimonial: async (id: string): Promise<void> => {
+    const res = await fetch(`${API_BASE}/testimonials/${id}`, {
+      method: "DELETE",
+    });
+    if (!res.ok && res.status !== 204) {
+      throw new Error("Failed to delete testimonial");
+    }
+  },
+
+  createProject: async (payload: any): Promise<Project> => {
+    const res = await fetch(`${API_BASE}/projects`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || "Failed to create project");
+    }
+    return await res.json();
+  },
+
+  deleteProject: async (id: string): Promise<void> => {
+    const res = await fetch(`${API_BASE}/projects/${id}`, {
+      method: "DELETE",
+    });
+    if (!res.ok && res.status !== 204) {
+      throw new Error("Failed to delete project");
+    }
   },
 };

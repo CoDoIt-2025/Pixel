@@ -1,6 +1,9 @@
+import os
+from pathlib import Path
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from app.core.config import settings
 from app.core.database import engine, Base
 import app.models.models  # ensure models are registered
@@ -16,7 +19,12 @@ from app.api.v1 import (
     faqs,
     dashboard,
     settings as settings_router,
+    audit,
+    upload,
 )
+
+UPLOAD_DIR = Path(__file__).resolve().parent.parent / "uploads"
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -41,6 +49,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Mount Static Uploads
+app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
+
 # Include v1 Routers
 app.include_router(auth.router, prefix=settings.API_V1_STR)
 app.include_router(dashboard.router, prefix=settings.API_V1_STR)
@@ -53,6 +64,8 @@ app.include_router(inquiries.router, prefix=settings.API_V1_STR)
 app.include_router(testimonials.router, prefix=settings.API_V1_STR)
 app.include_router(faqs.router, prefix=settings.API_V1_STR)
 app.include_router(settings_router.router, prefix=settings.API_V1_STR)
+app.include_router(audit.router, prefix=settings.API_V1_STR)
+app.include_router(upload.router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def root():

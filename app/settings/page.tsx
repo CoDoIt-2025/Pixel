@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
+  FileText,
   User,
   Building2,
   Search,
@@ -18,6 +20,11 @@ import {
   Lock,
   Sun,
   Moon,
+  Upload,
+  Image as ImageIcon,
+  Video as VideoIcon,
+  ArrowRight,
+  ExternalLink,
 } from "lucide-react";
 import { AdminLayout } from "@/components/shared/AdminLayout";
 import { PageHeader } from "@/components/shared/PageHeader";
@@ -136,6 +143,52 @@ export default function SettingsPage() {
     );
   };
 
+  // Homepage CMS (About & Why Pixel)
+  const [aboutTitle, setAboutTitle] = useState(
+    settings.company?.aboutTitle || "About Pixel"
+  );
+  const [aboutText, setAboutText] = useState(
+    settings.company?.aboutText ||
+      "Pixel Business Solutions LLC is a Muscat-based digital agency committed to helping businesses in Oman establish a dominant online presence. We bridge technical precision with practical execution — from local search and AI visibility to high-converting websites and digital solutions."
+  );
+  const [whyTitle, setWhyTitle] = useState(
+    settings.company?.whyTitle || "Why Pixel"
+  );
+  const [whyReasons, setWhyReasons] = useState<
+    Array<{ title: string; description: string }>
+  >(
+    settings.company?.whyReasons || [
+      {
+        title: "Reason one",
+        description:
+          "Oman-first market expertise tailored for local search, customer behavior, and verified map presence.",
+      },
+      {
+        title: "Reason two",
+        description:
+          "End-to-end digital capabilities under one roof — website engineering, SEO, AI search visibility, and paid media.",
+      },
+      {
+        title: "Reason three",
+        description:
+          "Measurable business growth, direct communication, and 100% full client ownership of all digital assets.",
+      },
+    ]
+  );
+
+  const onSaveCms = () => {
+    updateSettings({
+      company: {
+        ...settings.company,
+        aboutTitle,
+        aboutText,
+        whyTitle,
+        whyReasons,
+      },
+    });
+    toast.success("Homepage About & Why Pixel updated! Reflected live on the public website.");
+  };
+
   const onSaveProfile = (data: any) => {
     updateSettings({ profile: data });
     toast.success("Profile changes saved successfully");
@@ -193,8 +246,12 @@ export default function SettingsPage() {
           description="Manage administrative profile, company legal entities, website SEO tags, and security alerts."
         />
 
-        <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid grid-cols-2 sm:grid-cols-5 w-full max-w-2xl h-auto p-1 bg-slate-100/80">
+        <Tabs defaultValue="cms" className="space-y-6">
+          <TabsList className="grid grid-cols-2 sm:grid-cols-6 w-full max-w-3xl h-auto p-1 bg-slate-100/80">
+            <TabsTrigger value="cms" className="text-xs py-2">
+              <FileText className="h-3.5 w-3.5 mr-1.5" />
+              Homepage CMS
+            </TabsTrigger>
             <TabsTrigger value="profile" className="text-xs py-2">
               <User className="h-3.5 w-3.5 mr-1.5" />
               Profile
@@ -216,6 +273,163 @@ export default function SettingsPage() {
               Appearance
             </TabsTrigger>
           </TabsList>
+
+          {/* Tab 0: Homepage CMS (About & Why Pixel) */}
+          <TabsContent value="cms">
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Homepage Content Management System</CardTitle>
+                  <CardDescription>
+                    Edit the About Pixel narrative and Why Pixel value propositions. Any updates saved here immediately sync to SQLite and reflect on the public website.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Brand Logo & Hero Banner Overview */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Brand Logo Card */}
+                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
+                          <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                          Official Brand Emblem
+                        </h3>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                          Active on Site
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-4 bg-white p-3 rounded-lg border border-slate-200">
+                        <div className="h-14 w-14 rounded-lg bg-[#121418] flex items-center justify-center p-2 shrink-0">
+                          <img
+                            src="/brand/pixel-logo-3d-tight.png"
+                            alt="Pixel 3D Emblem"
+                            className="h-10 w-auto object-contain filter drop-shadow-[0_2px_6px_rgba(250,204,21,0.3)]"
+                          />
+                        </div>
+                        <div className="text-xs space-y-1">
+                          <p className="font-bold text-slate-900">3D Metallic Gold &amp; Silver PX</p>
+                          <p className="text-slate-500 text-[11px]">Deployed across public navbar, footer, and favicon.</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Hero Service Banners Quick Action */}
+                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-3 flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
+                            <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                            Hero Service Banners &amp; Videos
+                          </h3>
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+                            9 Services
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500 mt-1">
+                          Upload custom banner images, video loops, or 3D mockups for each service on the homepage hero.
+                        </p>
+                      </div>
+                      <Link
+                        href="/services"
+                        className="inline-flex items-center justify-center gap-2 w-full py-2 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-colors"
+                      >
+                        <Upload className="h-3.5 w-3.5 text-amber-400" />
+                        <span>Open Services Banner &amp; Media Uploader</span>
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </Link>
+                    </div>
+                  </div>
+
+                  {/* About Section Form */}
+                  <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-4">
+                    <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                      About Pixel Section
+                    </h3>
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        Section Heading
+                      </label>
+                      <Input
+                        value={aboutTitle}
+                        onChange={(e) => setAboutTitle(e.target.value)}
+                        className="bg-white"
+                        placeholder="About Pixel"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        About Story & Narrative (Displayed as paragraphs on homepage)
+                      </label>
+                      <Textarea
+                        rows={4}
+                        value={aboutText}
+                        onChange={(e) => setAboutText(e.target.value)}
+                        className="bg-white"
+                        placeholder="Pixel Business Solutions LLC is a Muscat-based digital agency..."
+                      />
+                    </div>
+                  </div>
+
+                  {/* Why Pixel Form */}
+                  <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-4">
+                    <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
+                      Why Pixel Section (Golden Bullets)
+                    </h3>
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        Section Heading
+                      </label>
+                      <Input
+                        value={whyTitle}
+                        onChange={(e) => setWhyTitle(e.target.value)}
+                        className="bg-white"
+                        placeholder="Why Pixel"
+                      />
+                    </div>
+
+                    <div className="space-y-3">
+                      {whyReasons.map((reason, idx) => (
+                        <div key={idx} className="p-3 bg-white rounded-lg border border-slate-200 space-y-2">
+                          <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
+                            <Input
+                              value={reason.title}
+                              onChange={(e) => {
+                                const updated = [...whyReasons];
+                                updated[idx].title = e.target.value;
+                                setWhyReasons(updated);
+                              }}
+                              className="font-bold text-xs h-8"
+                              placeholder={`Reason ${idx + 1} Title`}
+                            />
+                          </div>
+                          <Input
+                            value={reason.description}
+                            onChange={(e) => {
+                              const updated = [...whyReasons];
+                              updated[idx].description = e.target.value;
+                              setWhyReasons(updated);
+                            }}
+                            className="text-xs h-8 text-slate-600"
+                            placeholder={`Reason ${idx + 1} Description`}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end pt-2">
+                    <Button size="sm" onClick={onSaveCms} className="bg-amber-400 text-slate-900 hover:bg-amber-500 font-bold">
+                      <Save className="h-4 w-4 mr-1.5" />
+                      Save & Publish to Public Website
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
 
           {/* Tab 1: Profile */}
           <TabsContent value="profile">

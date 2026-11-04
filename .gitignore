@@ -51,3 +51,6 @@ venv/
 env/
 ENV/
 
+
+backend/uploads/*
+!backend/uploads/.gitkeep

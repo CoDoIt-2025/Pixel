@@ -28,6 +28,9 @@ export interface Service {
   isVisible: boolean;
   deliveryTime: string;
   activeProjectsCount: number;
+  bannerImage?: string;
+  bannerVideo?: string;
+  mediaType?: "illustration" | "image" | "video";
 }
 
 export interface TeamMember {
@@ -96,6 +99,10 @@ export interface CompanySettings {
   currency: string;
   website: string;
   description?: string;
+  aboutTitle?: string;
+  aboutText?: string;
+  whyTitle?: string;
+  whyReasons?: Array<{ title: string; description: string }>;
 }
 
 export interface SEOSettings {

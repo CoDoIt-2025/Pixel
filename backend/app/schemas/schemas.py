@@ -200,6 +200,9 @@ class ServiceCreate(BaseModel):
     isVisible: bool = True
     deliveryTime: str = "4-6 weeks"
     activeProjectsCount: int = 0
+    bannerImage: Optional[str] = ""
+    bannerVideo: Optional[str] = ""
+    mediaType: Optional[str] = "illustration"
 
 class ServiceUpdate(BaseModel):
     title: Optional[str] = None
@@ -211,6 +214,9 @@ class ServiceUpdate(BaseModel):
     isVisible: Optional[bool] = None
     deliveryTime: Optional[str] = None
     activeProjectsCount: Optional[int] = None
+    bannerImage: Optional[str] = None
+    bannerVideo: Optional[str] = None
+    mediaType: Optional[str] = None
 
 class ServiceResponse(BaseModel):
     id: str
@@ -223,6 +229,9 @@ class ServiceResponse(BaseModel):
     isVisible: bool
     deliveryTime: str
     activeProjectsCount: int
+    bannerImage: Optional[str] = ""
+    bannerVideo: Optional[str] = ""
+    mediaType: Optional[str] = "illustration" 
 
     class Config:
         from_attributes = True
@@ -388,3 +397,33 @@ class FAQResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
+
+# Audit Request Schemas
+class AuditRequestCreate(BaseModel):
+    company_name: str
+    phone_number: str
+    google_maps_link: Optional[str] = ''
+    google_maps_na: Optional[bool] = False
+    website_link: Optional[str] = ''
+    website_na: Optional[bool] = False
+    social_media_links: Optional[str] = ''
+    social_media_na: Optional[bool] = False
+    email: Optional[str] = ''
+
+class AuditRequestResponse(BaseModel):
+    id: str
+    company_name: str
+    phone_number: str
+    google_maps_link: str
+    google_maps_na: bool
+    website_link: str
+    website_na: bool
+    social_media_links: str
+    social_media_na: bool
+    email: str
+    status: str
+    created_at: str
+
+    class Config:
+        from_attributes = True
