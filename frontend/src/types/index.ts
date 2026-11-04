@@ -31,6 +31,7 @@ export interface Service {
   bannerImage?: string;
   bannerVideo?: string;
   mediaType?: "illustration" | "image" | "video";
+  showInBanner?: boolean;
 }
 
 export interface TeamMember {
@@ -151,4 +152,17 @@ export interface Client {
   createdAt?: string;
 }
 
+export interface Banner {
+  id: string;
+  title: string;
+  subtitle: string;
+  mediaUrl: string;
+  mediaType: "image" | "video";
+  ctaText?: string;
+  ctaLink?: string;
+  badgeText?: string;
+  isActive: boolean;
+  sortOrder: number;
+  createdAt?: string;
+}
 

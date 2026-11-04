@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { DemoTopBanner } from "./components/DemoTopBanner";
 import { Navbar } from "./components/Navbar";
 import { Hero } from "./components/Hero";
+import type { HeroSlideItem } from "./components/Hero";
 import { ServicesSection } from "./components/ServicesSection";
 import { ServicePage } from "./components/ServicePage";
 import { AboutWhySection } from "./components/AboutWhySection";
@@ -9,15 +10,18 @@ import { OurWorkSection } from "./components/OurWorkSection";
 import { BlogSection } from "./components/BlogSection";
 import { AuditRequestSection } from "./components/AuditRequestSection";
 import { FAQSection } from "./components/FAQSection";
-import { TestimonialsOptionalSection } from "./components/TestimonialsOptionalSection";
+import { TestimonialsSection } from "./components/TestimonialsSection";
 import { Footer } from "./components/Footer";
+import { FloatingWhatsApp } from "./components/FloatingWhatsApp";
 import { ServiceDetailsModal } from "./components/ServiceDetailsModal";
 import { SERVICES_DATA, mapBackendServiceToItem } from "./data/servicesData";
 import type { ServiceItem } from "./data/servicesData";
+import type { Banner } from "./types";
 import { api } from "./lib/api";
 
 export function App() {
   const [services, setServices] = useState<ServiceItem[]>(SERVICES_DATA);
+  const [customBanners, setCustomBanners] = useState<Banner[]>([]);
   const [selectedServiceIndex, setSelectedServiceIndex] = useState(0);
 
   // Dedicated Service Page view state
@@ -40,12 +44,27 @@ export function App() {
           if (visibleServices.length > 0) {
             const mapped = visibleServices.map(mapBackendServiceToItem);
             setServices(mapped);
-            setSelectedServiceIndex((prev) => (prev >= mapped.length ? 0 : prev));
           }
         }
       })
       .catch((err) => {
         console.warn("Could not fetch services from API, using default data:", err);
+      });
+  };
+
+  // Hydrate custom standalone hero banners from backend
+  const reloadBannersFromBackend = () => {
+    api
+      .getBanners()
+      .then((data) => {
+        if (data && data.length > 0) {
+          setCustomBanners(data);
+        } else {
+          setCustomBanners([]);
+        }
+      })
+      .catch((err) => {
+        console.warn("Could not fetch banners from API:", err);
       });
   };
 
@@ -65,8 +84,51 @@ export function App() {
 
   useEffect(() => {
     reloadServicesFromBackend();
+    reloadBannersFromBackend();
     reloadCompanySettings();
   }, []);
+
+  // Combined Hero Slides: Services with showInBanner + Custom Admin Banners
+  const heroSlides = useMemo<HeroSlideItem[]>(() => {
+    // 1. Services enabled for the hero banner
+    const enabledServices = services.filter((s) => s.showInBanner !== false);
+    const serviceSlides: HeroSlideItem[] = enabledServices.map((srv) => ({
+      id: `srv-${srv.id}`,
+      title: srv.title,
+      introPlaceholder: srv.introPlaceholder,
+      bannerImage: srv.bannerImage,
+      bannerVideo: srv.bannerVideo,
+      mediaType: srv.mediaType,
+      badgeText: srv.mediaType === "video" ? "Video Banner" : "Commercial Banner Showcase",
+      ctaText: "Learn More",
+      service: srv,
+    }));
+
+    // 2. Custom standalone banners uploaded in Admin Panel
+    const bannerSlides: HeroSlideItem[] = customBanners
+      .filter((b) => b.isActive !== false)
+      .map((b) => ({
+        id: `bnr-${b.id}`,
+        title: b.title,
+        introPlaceholder: b.subtitle || "Commercial campaign & capabilities showcase.",
+        bannerImage: b.mediaType === "image" ? b.mediaUrl : undefined,
+        bannerVideo: b.mediaType === "video" ? b.mediaUrl : undefined,
+        mediaType: b.mediaType,
+        badgeText: b.badgeText || (b.mediaType === "video" ? "Video Showcase" : "Brand Campaign"),
+        ctaText: b.ctaText || "Learn More",
+        ctaLink: b.ctaLink || "#audit-request",
+        isCustomBanner: true,
+      }));
+
+    const combined = [...serviceSlides, ...bannerSlides];
+    return combined.length > 0 ? combined : serviceSlides;
+  }, [services, customBanners]);
+
+  useEffect(() => {
+    if (selectedServiceIndex >= heroSlides.length) {
+      setSelectedServiceIndex(0);
+    }
+  }, [heroSlides.length, selectedServiceIndex]);
 
   const handleOpenServicePage = (service: ServiceItem) => {
     setActiveServicePage(service);
@@ -123,15 +185,22 @@ export function App() {
         ) : (
           /* Official Corporate Landing Page Sections */
           <>
-            {/* 3. Hero Section (Interactive Service Banner with Dynamic Media) */}
+            {/* 3. Hero Section (Combined Services & Uploaded Banners) */}
             <Hero
-              services={services}
+              slides={heroSlides}
               selectedIndex={selectedServiceIndex}
               onSelectService={(idx) => setSelectedServiceIndex(idx)}
               onOpenServiceDetails={(service) => handleOpenServicePage(service)}
+              onNavigateLink={(link) => {
+                if (link.startsWith("#")) {
+                  scrollToSection(link.replace("#", ""));
+                } else {
+                  window.location.href = link;
+                }
+              }}
             />
 
-            {/* 4. Compact "Explore our services" Grid (9 Services) */}
+            {/* 4. Compact "Explore our services" Grid (All active services) */}
             <ServicesSection
               services={services}
               selectedIndex={selectedServiceIndex}
@@ -159,14 +228,17 @@ export function App() {
             {/* 9. Frequently Asked Questions Section */}
             <FAQSection />
 
-            {/* 10. Testimonials — optional Section */}
-            <TestimonialsOptionalSection />
+            {/* 10. Client Testimonials (Live from Admin/SQLite, completely hidden if empty) */}
+            <TestimonialsSection />
           </>
         )}
       </main>
 
       {/* 11. Official Corporate Footer */}
       <Footer onNavigateSection={scrollToSection} />
+
+      {/* 12. Floating WhatsApp Conversion Widget */}
+      <FloatingWhatsApp phone={companySettings.phone} />
 
       {/* Optional Quick Service Details Modal */}
       {activeModalService && (

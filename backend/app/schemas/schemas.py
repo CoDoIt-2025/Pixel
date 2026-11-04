@@ -198,6 +198,7 @@ class ServiceCreate(BaseModel):
     startingPrice: float
     features: List[str] = []
     isVisible: bool = True
+    showInBanner: Optional[bool] = True
     deliveryTime: str = "4-6 weeks"
     activeProjectsCount: int = 0
     bannerImage: Optional[str] = ""
@@ -212,6 +213,7 @@ class ServiceUpdate(BaseModel):
     startingPrice: Optional[float] = None
     features: Optional[List[str]] = None
     isVisible: Optional[bool] = None
+    showInBanner: Optional[bool] = None
     deliveryTime: Optional[str] = None
     activeProjectsCount: Optional[int] = None
     bannerImage: Optional[str] = None
@@ -227,6 +229,7 @@ class ServiceResponse(BaseModel):
     startingPrice: float
     features: List[str]
     isVisible: bool
+    showInBanner: Optional[bool] = True
     deliveryTime: str
     activeProjectsCount: int
     bannerImage: Optional[str] = ""
@@ -427,3 +430,37 @@ class AuditRequestResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+# Banner Schemas
+class BannerBase(BaseModel):
+    title: str
+    subtitle: Optional[str] = ""
+    mediaUrl: str
+    mediaType: Literal["image", "video"] = "image"
+    ctaText: Optional[str] = "Learn More"
+    ctaLink: Optional[str] = "#audit-request"
+    badgeText: Optional[str] = "Commercial Showcase"
+    isActive: bool = True
+    sortOrder: int = 0
+
+class BannerCreate(BannerBase):
+    pass
+
+class BannerUpdate(BaseModel):
+    title: Optional[str] = None
+    subtitle: Optional[str] = None
+    mediaUrl: Optional[str] = None
+    mediaType: Optional[Literal["image", "video"]] = None
+    ctaText: Optional[str] = None
+    ctaLink: Optional[str] = None
+    badgeText: Optional[str] = None
+    isActive: Optional[bool] = None
+    sortOrder: Optional[int] = None
+
+class BannerResponse(BannerBase):
+    id: str
+    createdAt: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+

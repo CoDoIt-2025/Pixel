@@ -24,7 +24,8 @@ def get_services(db: Session = Depends(get_db)):
             activeProjectsCount=s.active_projects_count or 0,
             bannerImage=s.banner_image or "",
             bannerVideo=s.banner_video or "",
-            mediaType=s.media_type or "illustration"
+            mediaType=s.media_type or "illustration",
+            showInBanner=getattr(s, "show_in_banner", True) if getattr(s, "show_in_banner", True) is not None else True
         ) for s in services
     ]
 
@@ -42,7 +43,8 @@ def create_service(data: ServiceCreate, db: Session = Depends(get_db)):
         active_projects_count=data.activeProjectsCount,
         banner_image=data.bannerImage or "",
         banner_video=data.bannerVideo or "",
-        media_type=data.mediaType or "illustration"
+        media_type=data.mediaType or "illustration",
+        show_in_banner=data.showInBanner if data.showInBanner is not None else True
     )
     db.add(service)
     db.commit()
@@ -60,7 +62,8 @@ def create_service(data: ServiceCreate, db: Session = Depends(get_db)):
         activeProjectsCount=service.active_projects_count or 0,
         bannerImage=service.banner_image or "",
         bannerVideo=service.banner_video or "",
-        mediaType=service.media_type or "illustration"
+        mediaType=service.media_type or "illustration",
+        showInBanner=getattr(service, "show_in_banner", True) if getattr(service, "show_in_banner", True) is not None else True
     )
 
 @router.put("/{service_id}", response_model=ServiceResponse)
@@ -74,6 +77,7 @@ def update_service(service_id: str, data: ServiceUpdate, db: Session = Depends(g
         "iconName": "icon_name",
         "startingPrice": "starting_price",
         "isVisible": "is_visible",
+        "showInBanner": "show_in_banner",
         "deliveryTime": "delivery_time",
         "activeProjectsCount": "active_projects_count",
         "bannerImage": "banner_image",
@@ -103,7 +107,8 @@ def update_service(service_id: str, data: ServiceUpdate, db: Session = Depends(g
         activeProjectsCount=service.active_projects_count or 0,
         bannerImage=service.banner_image or "",
         bannerVideo=service.banner_video or "",
-        mediaType=service.media_type or "illustration"
+        mediaType=service.media_type or "illustration",
+        showInBanner=getattr(service, "show_in_banner", True) if getattr(service, "show_in_banner", True) is not None else True
     )
 
 @router.delete("/{service_id}", status_code=status.HTTP_204_NO_CONTENT)

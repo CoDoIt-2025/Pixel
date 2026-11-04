@@ -11,6 +11,7 @@ import {
   ActivityItem,
   UserSettings,
   FAQ,
+  Banner,
 } from "@/types";
 import { initialProjects } from "@/data/mockProjects";
 import { initialClients } from "@/data/mockClients";
@@ -34,7 +35,14 @@ interface AdminState {
   testimonials: Testimonial[];
   faqs: FAQ[];
   activities: ActivityItem[];
+  banners: Banner[];
   settings: UserSettings;
+
+  // Banner Actions
+  addBanner: (banner: Omit<Banner, "id" | "createdAt">) => void;
+  updateBanner: (id: string, updates: Partial<Banner>) => void;
+  deleteBanner: (id: string) => void;
+  toggleBannerActive: (id: string) => void;
   sidebarCollapsed: boolean;
   backendConnected: boolean;
 
@@ -105,6 +113,7 @@ export const useAdminStore = create<AdminState>()(
       testimonials: initialTestimonials,
       faqs: initialFAQs,
       activities: initialActivities,
+      banners: [],
       settings: initialSettings,
       sidebarCollapsed: false,
       backendConnected: false,
@@ -127,6 +136,7 @@ export const useAdminStore = create<AdminState>()(
             faqs,
             activities,
             settings,
+            banners,
           ] = await Promise.all([
             api.projects.list().catch(() => null),
             api.clients.list().catch(() => null),
@@ -138,6 +148,7 @@ export const useAdminStore = create<AdminState>()(
             api.faqs.list().catch(() => null),
             api.dashboard.getActivities().catch(() => null),
             api.settings.get().catch(() => null),
+            api.banners.list().catch(() => null),
           ]);
 
           set((state) => ({
@@ -151,11 +162,50 @@ export const useAdminStore = create<AdminState>()(
             testimonials: testimonials && testimonials.length > 0 ? testimonials : state.testimonials,
             faqs: faqs && faqs.length > 0 ? faqs : state.faqs,
             activities: activities && activities.length > 0 ? activities : state.activities,
+            banners: banners && banners.length > 0 ? banners : state.banners,
             settings: settings ? settings : state.settings,
           }));
         } catch {
           set({ backendConnected: false });
         }
+      },
+
+      // Banner Actions
+      addBanner: (banner) => {
+        const tempId = `BNR-${Date.now()}`;
+        const newBanner: Banner = { ...banner, id: tempId, createdAt: new Date().toISOString() };
+        set((state) => ({
+          banners: [newBanner, ...state.banners],
+        }));
+        api.banners
+          .create(banner)
+          .then((saved) => {
+            set((state) => ({
+              banners: state.banners.map((b) => (b.id === tempId ? saved : b)),
+            }));
+          })
+          .catch(() => {});
+      },
+
+      updateBanner: (id, updates) => {
+        set((state) => ({
+          banners: state.banners.map((b) => (b.id === id ? { ...b, ...updates } : b)),
+        }));
+        api.banners.update(id, updates).catch(() => {});
+      },
+
+      deleteBanner: (id) => {
+        set((state) => ({
+          banners: state.banners.filter((b) => b.id !== id),
+        }));
+        api.banners.delete(id).catch(() => {});
+      },
+
+      toggleBannerActive: (id) => {
+        set((state) => ({
+          banners: state.banners.map((b) => (b.id === id ? { ...b, isActive: !b.isActive } : b)),
+        }));
+        api.banners.toggle(id).catch(() => {});
       },
 
       // Project Actions

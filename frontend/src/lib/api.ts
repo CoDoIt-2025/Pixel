@@ -1,4 +1,4 @@
-import type { Project, Service, TeamMember, Testimonial, BlogPost, FAQItem, SystemSettings, Client } from "../types";
+import type { Project, Service, TeamMember, Testimonial, BlogPost, FAQItem, SystemSettings, Client, Banner } from "../types";
 
 export interface AuditRequestPayload {
   company_name: string;
@@ -87,6 +87,17 @@ export const api = {
       return await res.json();
     } catch (err) {
       console.warn("Failed fetching blog posts from SQLite API:", err);
+      return [];
+    }
+  },
+
+  getBanners: async (): Promise<Banner[]> => {
+    try {
+      const res = await fetch(`${API_BASE}/banners?active_only=true`);
+      if (!res.ok) throw new Error("Failed to fetch banners");
+      return await res.json();
+    } catch (err) {
+      console.warn("Failed fetching banners from SQLite API:", err);
       return [];
     }
   },

@@ -3,82 +3,33 @@ import { Star, Quote, Sparkles } from "lucide-react";
 import type { Testimonial } from "../types";
 import { api } from "../lib/api";
 
-const FALLBACK_TESTIMONIALS: Testimonial[] = [
-  {
-    id: "test-1",
-    clientName: "Patrick Collison",
-    clientRole: "CEO & Co-Founder",
-    company: "Stripe",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
-    rating: 5,
-    quote:
-      "The Pixel engineering team operates with an obsessive dedication to code quality and systems reliability that matches Stripe's own standards. Their sovereign cloud architecture exceeded our highest benchmarks.",
-    project: "Unified Billing Portal",
-    status: "Approved",
-    date: "Sep 2026",
-  },
-  {
-    id: "test-2",
-    clientName: "Harshil Mathur",
-    clientRole: "CEO & Co-Founder",
-    company: "Razorpay",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150",
-    rating: 5,
-    quote:
-      "Pixel helped us build our offline-capable omnichannel POS dashboard from zero to live merchant production in under four months. Outstanding speed, zero production regressions.",
-    project: "OmniChannel POS",
-    status: "Approved",
-    date: "Aug 2026",
-  },
-  {
-    id: "test-3",
-    clientName: "Karri Saarinen",
-    clientRole: "Head of Product",
-    company: "Linear",
-    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
-    rating: 5,
-    quote:
-      "Pixel's craft in frontend performance and AI inference pipelines is rare. They built our issue triage agent with meticulous attention to keyboard shortcuts, latency, and aesthetic subtlety.",
-    project: "Workflow Automation SDK",
-    status: "Approved",
-    date: "Oct 2026",
-  },
-  {
-    id: "test-4",
-    clientName: "Deepinder Goyal",
-    clientRole: "Founder & CEO",
-    company: "Zomato",
-    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150",
-    rating: 5,
-    quote:
-      "When 100,000 orders stream across kitchen screens in peak dinner hours, seconds matter. Pixel's tablet UI has been virtually uncrashable under grueling real-world kitchen environments.",
-    project: "Kitchen Pulse 2.0",
-    status: "Approved",
-    date: "Sep 2026",
-  },
-];
-
 export const TestimonialsSection: React.FC = () => {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>(
-    FALLBACK_TESTIMONIALS
-  );
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   const fetchTestimonials = async () => {
     try {
       const data = await api.getTestimonials();
-      if (data && data.length > 0) {
-        const approved = data.filter((t) => t.status === "Approved" || !t.status);
-        if (approved.length > 0) {
-          setTestimonials(approved);
-        }
+      if (Array.isArray(data)) {
+        // Only display Approved testimonials on the public client frontend
+        const approved = data.filter(
+          (t) => t.status === "Approved" || !t.status
+        );
+        setTestimonials(approved);
+      } else {
+        setTestimonials([]);
       }
-    } catch {
-      // Keep fallbacks
+    } catch (err) {
+      console.warn("Could not fetch testimonials from API:", err);
+    } finally {
+      setHasLoaded(true);
     }
   };
 
   useEffect(() => {
     fetchTestimonials();
+
+    // Re-fetch when user refocuses tab or periodically to sync with admin mutations
     window.addEventListener("focus", fetchTestimonials);
     const interval = setInterval(fetchTestimonials, 6000);
 
@@ -88,35 +39,40 @@ export const TestimonialsSection: React.FC = () => {
     };
   }, []);
 
+  // When no testimonials exist or none are approved, completely hide this section (render nothing)
+  if (!hasLoaded || testimonials.length === 0) {
+    return null;
+  }
+
   return (
     <section
       id="testimonials"
-      className="py-24 sm:py-32 bg-[#202124] text-[#F7F7F2] border-t border-[#45484E] relative overflow-hidden"
+      className="w-full bg-[#121418] text-white py-16 sm:py-24 border-t border-[#242831] relative overflow-hidden select-none"
     >
-      <div className="max-w-6xl mx-auto px-6 sm:px-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-12 border-b border-[#45484E] mb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-[#242831] mb-12">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#2B2D31] border border-[#45484E] text-[#F5C542] text-xs font-semibold mb-3">
-              <Sparkles size={13} className="text-[#F5C542] fill-[#F5C542]" />
-              <span>Verified Client Feedback &bull; Live Admin Synced</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1E222B] border border-[#2B303C] text-[#FACC15] text-xs font-bold mb-3">
+              <Sparkles size={13} className="text-[#FACC15] fill-[#FACC15]" />
+              <span>Verified Client Endorsements</span>
             </div>
-            <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#F7F7F2]">
-              Trusted by leading businesses
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white">
+              Trusted by Industry Leaders
             </h2>
           </div>
 
-          <p className="text-[#C4C7CC] text-sm max-w-md leading-relaxed">
-            Real outcomes and feedback from founders, executives, and commercial teams who partnered with Pixel for their digital platforms.
+          <p className="text-[#9CA3AF] text-sm sm:text-base max-w-md leading-relaxed">
+            Real outcomes and feedback from founders, executives, and enterprise technology teams who build with Pixel.
           </p>
         </div>
 
         {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {testimonials.map((item) => (
             <div
               key={item.id}
-              className="p-6 sm:p-8 rounded-2xl bg-[#2B2D31] border border-[#45484E] flex flex-col justify-between card-hover-gold relative group"
+              className="p-6 sm:p-7 rounded-2xl bg-[#1A1D24] border border-[#2B303C] hover:border-[#FACC15]/40 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1 relative group"
             >
               <div>
                 {/* Header: Stars & Quote Icon */}
@@ -128,8 +84,8 @@ export const TestimonialsSection: React.FC = () => {
                         size={15}
                         className={
                           i < (item.rating || 5)
-                            ? "text-[#F5C542] fill-[#F5C542]"
-                            : "text-[#45484E]"
+                            ? "text-[#FACC15] fill-[#FACC15]"
+                            : "text-[#374151]"
                         }
                       />
                     ))}
@@ -137,39 +93,42 @@ export const TestimonialsSection: React.FC = () => {
 
                   <Quote
                     size={22}
-                    className="text-[#F5C542]/40 group-hover:text-[#F5C542] transition-colors"
+                    className="text-[#FACC15]/30 group-hover:text-[#FACC15] transition-colors"
                   />
                 </div>
 
                 {/* Quote Body */}
-                <p className="text-sm sm:text-base text-[#F7F7F2] leading-relaxed mb-6 italic">
+                <p className="text-sm sm:text-base text-[#E5E7EB] leading-relaxed mb-6 italic">
                   &ldquo;{item.quote}&rdquo;
                 </p>
               </div>
 
               {/* Author Info */}
-              <div className="pt-4 border-t border-[#45484E]/70 flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
+              <div className="pt-4 border-t border-[#2B303C] flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3 min-w-0">
                   <img
                     src={
                       item.avatar ||
                       "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150"
                     }
                     alt={item.clientName}
-                    className="w-10 h-10 rounded-full object-cover border border-[#45484E]"
+                    className="w-10 h-10 rounded-full object-cover border border-[#374151] shrink-0"
                   />
-                  <div>
-                    <h4 className="text-xs font-bold text-[#F7F7F2]">
+                  <div className="min-w-0">
+                    <h4 className="text-xs sm:text-sm font-bold text-white truncate">
                       {item.clientName}
                     </h4>
-                    <p className="text-[11px] text-[#C4C7CC]">
-                      {item.clientRole} &bull; <span className="text-[#F5C542]">{item.company}</span>
+                    <p className="text-[11px] text-[#9CA3AF] truncate">
+                      {item.clientRole} &bull;{" "}
+                      <span className="text-[#FACC15] font-semibold">
+                        {item.company}
+                      </span>
                     </p>
                   </div>
                 </div>
 
                 {item.project && (
-                  <span className="hidden sm:inline-block text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[#202124] border border-[#45484E] text-[#C4C7CC]">
+                  <span className="hidden sm:inline-block text-[10px] font-semibold px-2.5 py-1 rounded-full bg-[#121418] border border-[#2B303C] text-[#9CA3AF] shrink-0 max-w-[120px] truncate">
                     {item.project}
                   </span>
                 )}

@@ -19,6 +19,7 @@ import {
   ChevronRight,
   X,
   Sparkles,
+  Image as ImageIcon,
 } from "lucide-react";
 import { PixelLogo } from "./PixelLogo";
 import { cn } from "@/lib/utils";
@@ -49,6 +50,7 @@ const navGroups: NavGroup[] = [
   {
     group: "Business & Content",
     items: [
+      { label: "Hero Banners", href: "/banners", icon: ImageIcon },
       { label: "Services", href: "/services", icon: Layers },
       { label: "Blog / Posts", href: "/blog", icon: FileText },
       { label: "FAQs", href: "/faqs", icon: HelpCircle },

@@ -21,6 +21,7 @@ from app.api.v1 import (
     settings as settings_router,
     audit,
     upload,
+    banners,
 )
 
 UPLOAD_DIR = Path(__file__).resolve().parent.parent / "uploads"
@@ -66,6 +67,7 @@ app.include_router(faqs.router, prefix=settings.API_V1_STR)
 app.include_router(settings_router.router, prefix=settings.API_V1_STR)
 app.include_router(audit.router, prefix=settings.API_V1_STR)
 app.include_router(upload.router, prefix=settings.API_V1_STR)
+app.include_router(banners.router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def root():

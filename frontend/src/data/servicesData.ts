@@ -21,6 +21,7 @@ export interface ServiceItem {
   bannerImage?: string;
   bannerVideo?: string;
   mediaType?: "illustration" | "image" | "video";
+  showInBanner?: boolean;
 }
 
 export const SERVICES_DATA: ServiceItem[] = [
@@ -202,6 +203,7 @@ export function mapBackendServiceToItem(s: {
   bannerImage?: string;
   bannerVideo?: string;
   mediaType?: "illustration" | "image" | "video";
+  showInBanner?: boolean;
 }): ServiceItem {
   const titleLower = s.title.toLowerCase();
 
@@ -252,6 +254,7 @@ export function mapBackendServiceToItem(s: {
     bannerImage: s.bannerImage || matched?.bannerImage,
     bannerVideo: s.bannerVideo || matched?.bannerVideo,
     mediaType: s.mediaType || matched?.mediaType || "illustration",
+    showInBanner: s.showInBanner !== false,
   };
 }
 

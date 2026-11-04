@@ -6,7 +6,7 @@ from fastapi import APIRouter, UploadFile, File, HTTPException, status, Request
 
 router = APIRouter(prefix="/upload", tags=["Upload"])
 
-UPLOAD_DIR = Path(__file__).resolve().parent.parent.parent.parent / "uploads"
+UPLOAD_DIR = Path(__file__).resolve().parents[3] / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 ALLOWED_IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".webp", ".svg", ".gif"}
@@ -48,4 +48,3 @@ async def upload_file(request: Request, file: UploadFile = File(...)):
         "mediaType": "video" if is_video else "image",
         "size": file_path.stat().st_size,
     }
-

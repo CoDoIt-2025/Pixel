@@ -9,6 +9,7 @@ import {
   ActivityItem,
   UserSettings,
   FAQ,
+  Banner,
 } from "@/types";
 
 const API_BASE_URL =
@@ -149,6 +150,30 @@ export const api = {
       }),
     delete: (id: string) =>
       request<void>(`/team/${id}`, {
+        method: "DELETE",
+      }),
+  },
+
+  // Banners
+  banners: {
+    list: (activeOnly?: boolean) =>
+      request<Banner[]>(`/banners${activeOnly ? "?active_only=true" : ""}`),
+    create: (data: Omit<Banner, "id" | "createdAt">) =>
+      request<Banner>("/banners", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
+    update: (id: string, updates: Partial<Banner>) =>
+      request<Banner>(`/banners/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(updates),
+      }),
+    toggle: (id: string) =>
+      request<Banner>(`/banners/${id}/toggle`, {
+        method: "PATCH",
+      }),
+    delete: (id: string) =>
+      request<void>(`/banners/${id}`, {
         method: "DELETE",
       }),
   },

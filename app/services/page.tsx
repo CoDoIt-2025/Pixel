@@ -53,10 +53,11 @@ const serviceSchema = z.object({
   category: z.string().min(2, "Category is required"),
   description: z.string().min(10, "Description is required"),
   iconName: z.string().default("Globe"),
-  startingPrice: z.coerce.number().min(500, "Starting price must be at least $500"),
+  startingPrice: z.coerce.number().min(0, "Starting price cannot be negative"),
   deliveryTime: z.string().min(2, "Delivery time is required"),
   featuresString: z.string().min(5, "Enter comma-separated features"),
   isVisible: z.boolean().default(true),
+  showInBanner: z.boolean().default(true),
 });
 
 type ServiceFormData = z.infer<typeof serviceSchema>;
@@ -162,10 +163,12 @@ export default function ServicesPage() {
       deliveryTime: "6 - 10 Weeks",
       featuresString: "High performance architecture, Full test coverage, Dedicated team",
       isVisible: true,
+      showInBanner: true,
     },
   });
 
   const isVisibleValue = watch("isVisible");
+  const showInBannerValue = watch("showInBanner");
 
   const handleOpenAdd = () => {
     setEditingService(null);
@@ -178,6 +181,7 @@ export default function ServicesPage() {
       deliveryTime: "6 - 12 Weeks",
       featuresString: "Modern stack, Responsive design, 99.9% uptime SLA, Continuous integration",
       isVisible: true,
+      showInBanner: true,
     });
     setIsModalOpen(true);
   };
@@ -193,6 +197,7 @@ export default function ServicesPage() {
       deliveryTime: srv.deliveryTime,
       featuresString: srv.features.join(", "),
       isVisible: srv.isVisible,
+      showInBanner: srv.showInBanner !== false,
     });
     setIsModalOpen(true);
   };
@@ -213,6 +218,7 @@ export default function ServicesPage() {
         deliveryTime: data.deliveryTime,
         features: featuresArray,
         isVisible: data.isVisible,
+        showInBanner: data.showInBanner !== false,
       });
       toast.success(`Service '${data.title}' updated`);
     } else {
@@ -225,6 +231,7 @@ export default function ServicesPage() {
         deliveryTime: data.deliveryTime,
         features: featuresArray,
         isVisible: data.isVisible,
+        showInBanner: data.showInBanner !== false,
         activeProjectsCount: 1,
       });
       toast.success(`Service '${data.title}' created`);
@@ -238,6 +245,15 @@ export default function ServicesPage() {
       currentVal
         ? `'${title}' hidden from public website`
         : `'${title}' is now live on public website`
+    );
+  };
+
+  const handleBannerToggle = (id: string, currentVal: boolean, title: string) => {
+    updateService(id, { showInBanner: !currentVal });
+    toast.success(
+      !currentVal
+        ? `'${title}' enabled for Hero Banner`
+        : `'${title}' hidden from Hero Banner (still shown in services)`
     );
   };
 
@@ -376,16 +392,33 @@ export default function ServicesPage() {
                   </div>
 
                   {/* Toggle Switch Footer */}
-                  <div className="flex items-center justify-between pt-3 border-t border-slate-100">
-                    <span className="text-xs font-medium text-slate-600">
-                      Show on Website
-                    </span>
-                    <Switch
-                      checked={srv.isVisible}
-                      onCheckedChange={() =>
-                        handleToggle(srv.id, srv.isVisible, srv.title)
-                      }
-                    />
+                  <div className="space-y-2 pt-3 border-t border-slate-100">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium text-slate-600">
+                        Show on Website
+                      </span>
+                      <Switch
+                        checked={srv.isVisible}
+                        onCheckedChange={() =>
+                          handleToggle(srv.id, srv.isVisible, srv.title)
+                        }
+                      />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium text-slate-600">
+                        Show in Hero Banner
+                      </span>
+                      <Switch
+                        checked={srv.showInBanner !== false}
+                        onCheckedChange={() =>
+                          handleBannerToggle(
+                            srv.id,
+                            srv.showInBanner !== false,
+                            srv.title
+                          )
+                        }
+                      />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -479,6 +512,21 @@ export default function ServicesPage() {
                 <Switch
                   checked={isVisibleValue}
                   onCheckedChange={(val) => setValue("isVisible", val)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                <div className="pr-4">
+                  <label className="text-xs font-semibold text-slate-700 block">
+                    Show in Hero Banner
+                  </label>
+                  <span className="text-[11px] text-slate-400 block">
+                    When enabled, this service cycles in the top Hero banner. When disabled, it is only displayed in the services section.
+                  </span>
+                </div>
+                <Switch
+                  checked={showInBannerValue !== false}
+                  onCheckedChange={(val) => setValue("showInBanner", val)}
                 />
               </div>
 

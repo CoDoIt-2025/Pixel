@@ -103,6 +103,7 @@ class Service(Base):
     banner_image = Column(String(500), default="")
     banner_video = Column(String(500), default="")
     media_type = Column(String(50), default="illustration")
+    show_in_banner = Column(Boolean, default=True)
 
 class BlogPost(Base):
     __tablename__ = "blog_posts"
@@ -198,3 +199,19 @@ class FAQ(Base):
     order = Column(Integer, default=0)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+class Banner(Base):
+    __tablename__ = "banners"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    title = Column(String(255), nullable=False)
+    subtitle = Column(Text, default="")
+    media_url = Column(String(500), nullable=False)
+    media_type = Column(String(50), default="image")  # "image" | "video"
+    cta_text = Column(String(100), default="Learn More")
+    cta_link = Column(String(255), default="#audit-request")
+    badge_text = Column(String(100), default="Commercial Showcase")
+    is_active = Column(Boolean, default=True)
+    sort_order = Column(Integer, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
