@@ -2,7 +2,11 @@
 nixPkgs = ["nodejs_22"]
 
 [phases.install]
-cmds = ["npm cache clean --force && npm install --force && npm install --no-save @rolldown/binding-linux-x64-gnu@1.2.15 @tailwindcss/oxide-linux-x64-gnu@4.3.3"]
+cmds = [
+  "npm install",
+  "node -e 'try { const rv = require(\"./node_modules/rolldown/package.json\").version; console.log(\"Ensuring rolldown linux binding:\", rv); require(\"child_process\").execSync(\"npm install --no-save @rolldown/binding-linux-x64-gnu@\" + rv, {stdio: \"inherit\"}); } catch(e){ console.warn(e); }'",
+  "node -e 'try { const tv = require(\"./node_modules/tailwindcss/package.json\").version; console.log(\"Ensuring tailwind oxide linux binding:\", tv); require(\"child_process\").execSync(\"npm install --no-save @tailwindcss/oxide-linux-x64-gnu@\" + tv, {stdio: \"inherit\"}); } catch(e){ console.warn(e); }'"
+]
 
 [phases.build]
 cmds = ["npm run build"]
