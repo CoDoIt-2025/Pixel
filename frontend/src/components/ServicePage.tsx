@@ -230,14 +230,32 @@ export const ServicePage: React.FC<ServicePageProps> = ({
                   </span>
                 </div>
 
-                <div className="flex justify-center">
-                  <HeroIllustration
-                    type={service.illustrationType}
-                    bannerImage={service.bannerImage}
-                    bannerVideo={service.bannerVideo}
-                    mediaType={service.mediaType}
-                    title={service.title}
-                  />
+                <div className="flex justify-center w-full">
+                  {service.bannerVideo ? (
+                    <div className="w-full aspect-video rounded-xl overflow-hidden border border-[#3A3E48] bg-black shadow-lg">
+                      <video
+                        src={service.bannerVideo}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : service.bannerImage ? (
+                    <div className="w-full aspect-video rounded-xl overflow-hidden border border-[#3A3E48] bg-black shadow-lg">
+                      <img
+                        src={service.bannerImage}
+                        alt={service.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <HeroIllustration
+                      type={service.illustrationType}
+                      title={service.title}
+                    />
+                  )}
                 </div>
 
                 <div className="mt-4 pt-3 border-t border-[#2A2D37] flex items-center justify-between text-[11px] text-[#A1A5B0]">

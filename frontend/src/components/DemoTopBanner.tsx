@@ -3,7 +3,7 @@ import { MapPin, Phone, Mail } from "lucide-react";
 
 export const DemoTopBanner: React.FC = () => {
   return (
-    <div className="w-full bg-[#FACC15] text-[#111317] font-extrabold text-[11px] sm:text-[12px] py-1.5 px-4 sm:px-6 flex items-center justify-between select-none shadow-xs sticky top-0 z-50">
+    <div className="w-full bg-[#FACC15] text-[#111317] font-extrabold text-[11px] sm:text-[12px] py-1.5 px-4 sm:px-6 flex items-center justify-between select-none shadow-xs relative z-10">
       {/* Left: Location & Commercial Reg */}
       <div className="hidden md:flex items-center gap-2">
         <MapPin size={13} className="text-[#111317] shrink-0" />

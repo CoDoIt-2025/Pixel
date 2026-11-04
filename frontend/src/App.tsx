@@ -82,7 +82,7 @@ export function App() {
     setTimeout(() => {
       const el = document.getElementById(id);
       if (el) {
-        const yOffset = -75; // Account for sticky navbar height
+        const yOffset = -105; // Account for combined sticky header height
         const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
         window.scrollTo({ top: y, behavior: "smooth" });
       }
@@ -96,19 +96,19 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-[#FAF9F5] text-[#121418] flex flex-col font-sans selection:bg-[#FACC15] selection:text-[#121418]">
-      {/* 1. Official Corporate Top Announcement Bar */}
-      <DemoTopBanner />
-
-      {/* 2. Top Header / Navigation Bar (Direct Section Scrolling) */}
-      <Navbar
-        onNavigateHome={handleNavigateHome}
-        onNavigateAbout={() => scrollToSection("about")}
-        onNavigateServices={() => scrollToSection("services")}
-        onNavigateWork={() => scrollToSection("our-work")}
-        onNavigateBlog={() => scrollToSection("blog")}
-        onNavigateContact={() => scrollToSection("audit-request")}
-        isServicePageActive={Boolean(activeServicePage)}
-      />
+      {/* 1. Combined Sticky Corporate Header (Top Info Bar + Main Navigation) */}
+      <header className="sticky top-0 z-50 w-full shadow-md">
+        <DemoTopBanner />
+        <Navbar
+          onNavigateHome={handleNavigateHome}
+          onNavigateAbout={() => scrollToSection("about")}
+          onNavigateServices={() => scrollToSection("services")}
+          onNavigateWork={() => scrollToSection("our-work")}
+          onNavigateBlog={() => scrollToSection("blog")}
+          onNavigateContact={() => scrollToSection("audit-request")}
+          isServicePageActive={Boolean(activeServicePage)}
+        />
+      </header>
 
       {/* Main Page Content */}
       <main className="flex-1">

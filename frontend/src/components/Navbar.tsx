@@ -102,7 +102,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <nav className="w-full bg-[#121418] border-b border-[#242831] select-none sticky top-0 z-40 shadow-md">
+    <nav className="w-full bg-[#121418] border-b border-[#242831] select-none relative z-10 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 sm:h-20 flex items-center justify-between">
         {/* Brand Logo */}
         <button
