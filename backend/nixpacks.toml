@@ -1,2 +1,18 @@
+[phases.setup]
+nixPkgs = ["python311"]
+
+[phases.install]
+cmds = [
+  "python -m venv --copies /opt/venv",
+  ". /opt/venv/bin/activate && pip install --upgrade pip",
+  ". /opt/venv/bin/activate && pip install --no-cache-dir --default-timeout=120 --retries=5 --trusted-host pypi.org --trusted-host files.pythonhosted.org -r requirements.txt"
+]
+
+[phases.build]
+cmds = [
+  "mkdir -p data uploads",
+  ". /opt/venv/bin/activate && python seed.py"
+]
+
 [start]
-cmd = "python seed.py && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+cmd = ". /opt/venv/bin/activate && python run.py"
