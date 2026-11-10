@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import type { ServiceItem } from "../data/servicesData";
 import { SERVICE_COMPANY_DETAILS } from "../data/serviceCompanyDetails";
-import { api } from "../lib/api";
+import { api, normalizeMediaUrl } from "../lib/api";
 
 interface ServicePageProps {
   service: ServiceItem;
@@ -129,8 +129,18 @@ export const ServicePage: React.FC<ServicePageProps> = ({
       </div>
 
       {/* ── 2. Minimalist Hero Section ── */}
-      <section className="bg-[#121418] text-white pt-14 pb-16 sm:pt-20 sm:pb-24 border-b border-[#242831]">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-7">
+      <section className="relative bg-[#121418] text-white pt-14 pb-16 sm:pt-20 sm:pb-24 border-b border-[#242831] overflow-hidden">
+        {service.bannerImage && (
+          <div className="absolute inset-0 z-0 pointer-events-none">
+            <img
+              src={normalizeMediaUrl(service.bannerImage)}
+              alt={service.title}
+              className="w-full h-full object-cover object-center opacity-25"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#121418] via-[#121418]/80 to-[#121418]/60" />
+          </div>
+        )}
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-7">
           {/* Category Pill */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1A1D24] border border-[#2B303C] text-[11px] font-bold text-[#FACC15] tracking-wider uppercase">
             <Sparkles size={12} />

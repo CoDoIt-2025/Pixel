@@ -34,6 +34,21 @@ const API_BASE =
     ? "http://127.0.0.1:8000/api/v1"
     : "https://api.pixelbusiness.si/api/v1");
 
+/**
+ * Normalizes any uploaded media URL so that local and production (Dokploy) URLs
+ * always point to the reachable backend /uploads endpoint.
+ */
+export function normalizeMediaUrl(url?: string | null): string {
+  if (!url) return "";
+  if (url.startsWith("data:")) return url;
+  if (url.includes("/uploads/")) {
+    const filename = url.split("/uploads/")[1];
+    const apiOrigin = API_BASE.replace(/\/api\/v1\/?$/, "");
+    return `${apiOrigin}/uploads/${filename}`;
+  }
+  return url;
+}
+
 
 export const api = {
   getClients: async (): Promise<Client[]> => {

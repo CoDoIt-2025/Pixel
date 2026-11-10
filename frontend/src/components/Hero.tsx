@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ServiceItem } from "../data/servicesData";
+import { normalizeMediaUrl } from "../lib/api";
 
 export interface HeroSlideItem {
   id: string;
@@ -133,7 +134,7 @@ export const Hero: React.FC<HeroProps> = ({
       {hasVideo ? (
         <video
           key={currentItem.bannerVideo}
-          src={currentItem.bannerVideo}
+          src={normalizeMediaUrl(currentItem.bannerVideo)}
           autoPlay
           loop
           muted
@@ -143,7 +144,7 @@ export const Hero: React.FC<HeroProps> = ({
       ) : hasImage ? (
         <img
           key={currentItem.bannerImage}
-          src={currentItem.bannerImage}
+          src={normalizeMediaUrl(currentItem.bannerImage)}
           alt={currentItem.title}
           className="absolute inset-0 w-full h-full object-cover object-center z-0 transition-opacity duration-700 animate-in fade-in-50"
         />

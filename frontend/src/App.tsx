@@ -18,7 +18,7 @@ import { ServiceDetailsModal } from "./components/ServiceDetailsModal";
 import { SERVICES_DATA, mapBackendServiceToItem } from "./data/servicesData";
 import type { ServiceItem } from "./data/servicesData";
 import type { Banner } from "./types";
-import { api } from "./lib/api";
+import { api, normalizeMediaUrl } from "./lib/api";
 
 export function App() {
   const [services, setServices] = useState<ServiceItem[]>(SERVICES_DATA);
@@ -100,8 +100,8 @@ export function App() {
       id: `srv-${srv.id}`,
       title: srv.title,
       introPlaceholder: srv.introPlaceholder,
-      bannerImage: srv.bannerImage,
-      bannerVideo: srv.bannerVideo,
+      bannerImage: normalizeMediaUrl(srv.bannerImage),
+      bannerVideo: normalizeMediaUrl(srv.bannerVideo),
       mediaType: srv.mediaType,
       badgeText: srv.mediaType === "video" ? "Video Banner" : "Commercial Banner Showcase",
       ctaText: "Learn More",
@@ -115,8 +115,8 @@ export function App() {
         id: `bnr-${b.id}`,
         title: b.title,
         introPlaceholder: b.subtitle || "Commercial campaign & capabilities showcase.",
-        bannerImage: b.mediaType === "image" ? b.mediaUrl : undefined,
-        bannerVideo: b.mediaType === "video" ? b.mediaUrl : undefined,
+        bannerImage: b.mediaType === "image" ? normalizeMediaUrl(b.mediaUrl) : undefined,
+        bannerVideo: b.mediaType === "video" ? normalizeMediaUrl(b.mediaUrl) : undefined,
         mediaType: b.mediaType,
         badgeText: b.badgeText || (b.mediaType === "video" ? "Video Showcase" : "Brand Campaign"),
         ctaText: b.ctaText || "Learn More",
