@@ -70,13 +70,13 @@ export const AuditRequestSection: React.FC = () => {
   return (
     <section
       id="audit-request"
-      className="w-full bg-[#FAF9F5] py-12 sm:py-16 text-[#121418] border-b border-[#E5E5DF]"
+      className="w-full bg-[#FAF9F5] py-14 sm:py-20 text-[#121418] border-b border-[#E5E5DF] scroll-mt-20"
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3">
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#121418]">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-[#121418]">
               {/* Desktop heading */}
               <span className="hidden sm:inline">Request a digital presence audit</span>
               {/* Mobile heading */}
@@ -84,8 +84,8 @@ export const AuditRequestSection: React.FC = () => {
             </h2>
             <span className="w-10 sm:w-14 h-1 sm:h-1.5 bg-[#FACC15] rounded-full inline-block" />
           </div>
-          <p className="mt-1.5 text-xs sm:text-sm text-[#525763] italic">
-            Add the links you have.
+          <p className="mt-2 text-xs sm:text-sm text-[#525763]">
+            Add the links you have. Our Muscat technical team will review your local visibility and provide actionable insights.
           </p>
         </div>
 
@@ -122,7 +122,7 @@ export const AuditRequestSection: React.FC = () => {
 
         {/* Form Container */}
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Desktop 2-Column Grid (Image 1) */}
+          {/* Desktop 2-Column Grid */}
           <div className="hidden sm:grid grid-cols-2 gap-x-8 gap-y-6">
             {/* Row 1, Col 1: Company Name */}
             <div className="space-y-1.5">
@@ -130,7 +130,7 @@ export const AuditRequestSection: React.FC = () => {
                 htmlFor="company-name"
                 className="block text-xs sm:text-sm font-bold text-[#121418]"
               >
-                Company name
+                Company name <span className="text-[#D97706]">*</span>
               </label>
               <input
                 id="company-name"
@@ -148,7 +148,7 @@ export const AuditRequestSection: React.FC = () => {
                 htmlFor="phone-number"
                 className="block text-xs sm:text-sm font-bold text-[#121418]"
               >
-                Phone number
+                Phone number <span className="text-[#D97706]">*</span>
               </label>
               <input
                 id="phone-number"
@@ -160,7 +160,7 @@ export const AuditRequestSection: React.FC = () => {
               />
             </div>
 
-            {/* Row 2, Col 1: Google Business Profile / Maps Link + [ ] Not available */}
+            {/* Row 2, Col 1: Google Business Profile / Maps Link */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <label
@@ -194,7 +194,7 @@ export const AuditRequestSection: React.FC = () => {
               />
             </div>
 
-            {/* Row 2, Col 2: Website + [ ] Not available */}
+            {/* Row 2, Col 2: Website */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <label
@@ -228,7 +228,7 @@ export const AuditRequestSection: React.FC = () => {
               />
             </div>
 
-            {/* Row 3, Col 1: Social Media Links + [ ] Not available */}
+            {/* Row 3, Col 1: Social Media Links */}
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <label
@@ -262,174 +262,166 @@ export const AuditRequestSection: React.FC = () => {
               />
             </div>
 
-            {/* Row 3, Col 2: Email (optional) */}
+            {/* Row 3, Col 2: Email (Optional) */}
             <div className="space-y-1.5">
               <label
-                htmlFor="email-optional"
+                htmlFor="email-address"
                 className="block text-xs sm:text-sm font-bold text-[#121418]"
               >
-                Email (optional)
+                Email <span className="text-[#717682] font-normal">(optional)</span>
               </label>
               <input
-                id="email-optional"
+                id="email-address"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="contact@company.om"
+                placeholder="contact@company.si"
                 className="w-full bg-white border border-[#D5D8E0] rounded-xl px-4 py-3 text-sm text-[#121418] placeholder-[#9CA3AF] focus:outline-none focus:border-[#FACC15] focus:ring-2 focus:ring-[#FACC15]/20 transition-all shadow-xs"
               />
             </div>
           </div>
 
-          {/* Mobile Stacked Form (Image 2) */}
+          {/* Mobile Single Column View */}
           <div className="sm:hidden space-y-4">
-            {/* 1. Company Name */}
             <div className="space-y-1">
-              <label className="block text-xs font-bold text-[#121418]">
-                Company name
+              <label htmlFor="company-name-m" className="text-xs font-bold text-[#121418]">
+                Company name <span className="text-[#D97706]">*</span>
               </label>
               <input
+                id="company-name-m"
                 type="text"
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
-                placeholder="Company name"
-                className="w-full bg-white border border-[#D5D8E0] rounded-xl px-3.5 py-2.5 text-sm text-[#121418] placeholder-[#9CA3AF] focus:outline-none focus:border-[#FACC15]"
+                placeholder="Company Name"
+                className="w-full bg-white border border-[#D5D8E0] rounded-xl px-3.5 py-2.5 text-xs text-[#121418] placeholder-[#9CA3AF] focus:outline-none focus:border-[#FACC15]"
               />
             </div>
 
-            {/* 2. Google Business Profile / Maps link */}
+            <div className="space-y-1">
+              <label htmlFor="phone-number-m" className="text-xs font-bold text-[#121418]">
+                Phone number <span className="text-[#D97706]">*</span>
+              </label>
+              <input
+                id="phone-number-m"
+                type="tel"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="+968 9693 5606"
+                className="w-full bg-white border border-[#D5D8E0] rounded-xl px-3.5 py-2.5 text-xs text-[#121418] placeholder-[#9CA3AF] focus:outline-none focus:border-[#FACC15]"
+              />
+            </div>
+
             <div className="space-y-1">
               <div className="flex items-center justify-between">
-                <label className="block text-xs font-bold text-[#121418]">
-                  Google Business Profile / Maps link
+                <label htmlFor="maps-link-m" className="text-xs font-bold text-[#121418]">
+                  Google Maps
                 </label>
-                <label className="flex items-center gap-1.5 text-xs text-[#525763] cursor-pointer select-none">
+                <label className="flex items-center gap-1 text-[11px] text-[#525763]">
                   <input
                     type="checkbox"
                     checked={googleMapsNA}
                     onChange={(e) => setGoogleMapsNA(e.target.checked)}
-                    className="w-3.5 h-3.5 accent-[#FACC15] rounded cursor-pointer"
+                    className="accent-[#FACC15]"
                   />
-                  <span>Not available</span>
+                  <span>N/A</span>
                 </label>
               </div>
               <input
+                id="maps-link-m"
                 type="text"
                 disabled={googleMapsNA}
                 value={googleMapsNA ? "Not available" : googleMapsLink}
                 onChange={(e) => setGoogleMapsLink(e.target.value)}
-                placeholder="https://maps.google.com/..."
-                className={`w-full border rounded-xl px-3.5 py-2.5 text-sm ${
-                  googleMapsNA
-                    ? "bg-[#F3F4F6] border-[#E5E7EB] text-[#9CA3AF] italic"
-                    : "bg-white border-[#D5D8E0] text-[#121418]"
-                }`}
+                placeholder="Maps link"
+                className="w-full bg-white border border-[#D5D8E0] rounded-xl px-3.5 py-2.5 text-xs text-[#121418] placeholder-[#9CA3AF]"
               />
             </div>
 
-            {/* 3. Website */}
             <div className="space-y-1">
               <div className="flex items-center justify-between">
-                <label className="block text-xs font-bold text-[#121418]">
+                <label htmlFor="website-link-m" className="text-xs font-bold text-[#121418]">
                   Website
                 </label>
-                <label className="flex items-center gap-1.5 text-xs text-[#525763] cursor-pointer select-none">
+                <label className="flex items-center gap-1 text-[11px] text-[#525763]">
                   <input
                     type="checkbox"
                     checked={websiteNA}
                     onChange={(e) => setWebsiteNA(e.target.checked)}
-                    className="w-3.5 h-3.5 accent-[#FACC15] rounded cursor-pointer"
+                    className="accent-[#FACC15]"
                   />
-                  <span>Not available</span>
+                  <span>N/A</span>
                 </label>
               </div>
               <input
+                id="website-link-m"
                 type="text"
                 disabled={websiteNA}
                 value={websiteNA ? "Not available" : websiteLink}
                 onChange={(e) => setWebsiteLink(e.target.value)}
-                placeholder="https://..."
-                className={`w-full border rounded-xl px-3.5 py-2.5 text-sm ${
-                  websiteNA
-                    ? "bg-[#F3F4F6] border-[#E5E7EB] text-[#9CA3AF] italic"
-                    : "bg-white border-[#D5D8E0] text-[#121418]"
-                }`}
+                placeholder="website.com"
+                className="w-full bg-white border border-[#D5D8E0] rounded-xl px-3.5 py-2.5 text-xs text-[#121418] placeholder-[#9CA3AF]"
               />
             </div>
 
-            {/* 4. Social media links */}
             <div className="space-y-1">
               <div className="flex items-center justify-between">
-                <label className="block text-xs font-bold text-[#121418]">
-                  Social media links
+                <label htmlFor="social-links-m" className="text-xs font-bold text-[#121418]">
+                  Social links
                 </label>
-                <label className="flex items-center gap-1.5 text-xs text-[#525763] cursor-pointer select-none">
+                <label className="flex items-center gap-1 text-[11px] text-[#525763]">
                   <input
                     type="checkbox"
                     checked={socialMediaNA}
                     onChange={(e) => setSocialMediaNA(e.target.checked)}
-                    className="w-3.5 h-3.5 accent-[#FACC15] rounded cursor-pointer"
+                    className="accent-[#FACC15]"
                   />
-                  <span>Not available</span>
+                  <span>N/A</span>
                 </label>
               </div>
               <input
+                id="social-links-m"
                 type="text"
                 disabled={socialMediaNA}
                 value={socialMediaNA ? "Not available" : socialMediaLinks}
                 onChange={(e) => setSocialMediaLinks(e.target.value)}
-                placeholder="Instagram, Facebook..."
-                className={`w-full border rounded-xl px-3.5 py-2.5 text-sm ${
-                  socialMediaNA
-                    ? "bg-[#F3F4F6] border-[#E5E7EB] text-[#9CA3AF] italic"
-                    : "bg-white border-[#D5D8E0] text-[#121418]"
-                }`}
+                placeholder="Social media links"
+                className="w-full bg-white border border-[#D5D8E0] rounded-xl px-3.5 py-2.5 text-xs text-[#121418] placeholder-[#9CA3AF]"
               />
             </div>
 
-            {/* 5. Phone number */}
             <div className="space-y-1">
-              <label className="block text-xs font-bold text-[#121418]">
-                Phone number
-              </label>
-              <input
-                type="tel"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                placeholder="+968 ..."
-                className="w-full bg-white border border-[#D5D8E0] rounded-xl px-3.5 py-2.5 text-sm text-[#121418] placeholder-[#9CA3AF] focus:outline-none focus:border-[#FACC15]"
-              />
-            </div>
-
-            {/* 6. Email (optional) */}
-            <div className="space-y-1">
-              <label className="block text-xs font-bold text-[#121418]">
+              <label htmlFor="email-address-m" className="text-xs font-bold text-[#121418]">
                 Email (optional)
               </label>
               <input
+                id="email-address-m"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email address"
-                className="w-full bg-white border border-[#D5D8E0] rounded-xl px-3.5 py-2.5 text-sm text-[#121418] placeholder-[#9CA3AF] focus:outline-none focus:border-[#FACC15]"
+                placeholder="contact@company.si"
+                className="w-full bg-white border border-[#D5D8E0] rounded-xl px-3.5 py-2.5 text-xs text-[#121418] placeholder-[#9CA3AF]"
               />
             </div>
           </div>
 
-          {/* Submit Button (Full width or centered block in solid yellow) */}
-          <div className="pt-4 flex justify-center">
+          {/* Bottom Action Area */}
+          <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[#E5E5DF]">
+            <p className="text-[11px] sm:text-xs text-[#717682] text-center sm:text-left">
+              🔒 Your business details are strictly confidential. No spam, guaranteed.
+            </p>
+
             <button
               type="submit"
               disabled={loading}
-              className="w-full sm:w-auto sm:min-w-[340px] bg-[#FACC15] hover:bg-[#E5B532] text-[#121418] font-extrabold text-sm sm:text-base py-3.5 px-8 rounded-xl sm:rounded-2xl transition-all duration-200 shadow-[0_4px_16px_rgba(250,204,21,0.3)] hover:scale-[1.01] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-[#FACC15] hover:bg-[#F59E0B] text-[#121418] font-black text-sm tracking-wide transition-all shadow-md hover:shadow-lg hover:shadow-[#FACC15]/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
             >
               {loading ? (
                 <>
-                  <Loader2 size={18} className="animate-spin text-[#121418]" />
-                  <span>Submitting request...</span>
+                  <Loader2 size={16} className="animate-spin" />
+                  <span>Submitting Audit Request...</span>
                 </>
               ) : (
-                <span>Submit audit request</span>
+                <span>Request Digital Presence Audit</span>
               )}
             </button>
           </div>
@@ -438,4 +430,3 @@ export const AuditRequestSection: React.FC = () => {
     </section>
   );
 };
-

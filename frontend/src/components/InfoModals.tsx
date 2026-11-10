@@ -159,10 +159,10 @@ export const CareersModal: React.FC<{ onClose: () => void }> = ({ onClose }) => 
       <p className="text-xs text-[#A1A5B0]">
         Interested in joining our team? Send your portfolio and CV to{" "}
         <a
-          href="mailto:careers@pixelbusiness.om"
+          href="mailto:careers@pixelbusiness.si"
           className="text-[#FACC15] font-semibold underline"
         >
-          careers@pixelbusiness.om
+          careers@pixelbusiness.si
         </a>
         .
       </p>

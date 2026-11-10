@@ -4,14 +4,10 @@ import { MapPin, Phone, Mail } from "lucide-react";
 export const DemoTopBanner: React.FC = () => {
   return (
     <div className="w-full bg-[#FACC15] text-[#111317] font-extrabold text-[11px] sm:text-[12px] py-1.5 px-4 sm:px-6 flex items-center justify-between select-none shadow-xs relative z-10">
-      {/* Left: Location & Commercial Reg */}
+      {/* Left: Location */}
       <div className="hidden md:flex items-center gap-2">
         <MapPin size={13} className="text-[#111317] shrink-0" />
         <span>Muscat, Sultanate of Oman</span>
-        <span className="text-[#111317]/60">&bull;</span>
-        <span className="font-bold text-[10px] uppercase tracking-wider text-[#111317]/80">
-          CR: 1049281
-        </span>
       </div>
 
       {/* Center: Official Tagline */}
@@ -36,11 +32,11 @@ export const DemoTopBanner: React.FC = () => {
         </a>
         <span className="text-[#111317]/60">&bull;</span>
         <a
-          href="mailto:contact@pixelbusiness.om"
+          href="mailto:contact@pixelbusiness.si"
           className="flex items-center gap-1.5 hover:underline transition-all"
         >
           <Mail size={12} className="text-[#111317]" />
-          <span>contact@pixelbusiness.om</span>
+          <span>contact@pixelbusiness.si</span>
         </a>
       </div>
     </div>

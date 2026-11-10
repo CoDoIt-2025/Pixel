@@ -185,10 +185,10 @@ export const RFPInquiryForm: React.FC<InquiryFormProps> = ({ prefillData }) => {
                   <div>
                     <strong className="text-[#F7F7F2] block">Direct Email:</strong>
                     <a
-                      href={`mailto:${company.email || "contact@pixelbusiness.om"}`}
+                      href={`mailto:${company.email || "contact@pixelbusiness.si"}`}
                       className="hover:text-[#F5C542] transition-colors"
                     >
-                      {company.email || "contact@pixelbusiness.om"}
+                      {company.email || "contact@pixelbusiness.si"}
                     </a>
                   </div>
                 </div>

@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ServiceItem } from "../data/servicesData";
 
 export interface HeroSlideItem {
@@ -161,11 +162,11 @@ export const Hero: React.FC<HeroProps> = ({
         </div>
       )}
 
-      {/* 2. Gradient Overlays for High Contrast & Visual Depth */}
-      {/* Left-to-right gradient: dark on left for text legibility, transparent on right for full banner view */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#121418] via-[#121418]/85 md:via-[#121418]/70 to-[#121418]/25 z-0 pointer-events-none" />
-      {/* Top and bottom subtle vignettes */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#121418]/60 via-transparent to-[#121418]/80 z-0 pointer-events-none" />
+      {/* 2. Refined, Balanced Gradient Overlays (Bright, visible background image with crisp text contrast) */}
+      {/* Subtle left scrim for text readability, keeping the image bright and vibrant across center & right */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#121418]/75 via-[#121418]/40 md:via-[#121418]/20 to-transparent z-0 pointer-events-none" />
+      {/* Smooth bottom edge blend into the next section */}
+      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#121418] to-transparent z-0 pointer-events-none" />
 
       {/* 3. Foreground Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -177,7 +178,7 @@ export const Hero: React.FC<HeroProps> = ({
             <div className="min-h-[60px] sm:min-h-[75px] flex items-center">
               <h1
                 key={currentItem.id || currentItem.title}
-                className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1] drop-shadow-md animate-in fade-in duration-500"
+                className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1] drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)] animate-in fade-in duration-500"
               >
                 {currentItem.title}
               </h1>
@@ -186,7 +187,7 @@ export const Hero: React.FC<HeroProps> = ({
             {/* Subtitle */}
             <p
               key={`sub-${currentItem.id || currentItem.title}`}
-              className="text-sm sm:text-base lg:text-lg text-[#D1D5DB] font-medium tracking-wide max-w-lg leading-relaxed drop-shadow-sm animate-in fade-in duration-500"
+              className="text-sm sm:text-base lg:text-lg text-white/95 font-medium tracking-wide max-w-lg leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] animate-in fade-in duration-500"
             >
               {currentItem.introPlaceholder}
             </p>
@@ -215,29 +216,50 @@ export const Hero: React.FC<HeroProps> = ({
           </div>
         </div>
 
-        {/* Bottom Pagination Dots */}
-        <div className="mt-8 sm:mt-12 flex flex-col items-center justify-center gap-2">
-          <div className="flex items-center gap-2 sm:gap-2.5">
-            {activeItems.map((item, index) => {
-              const isActive = index === selectedIndex;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => onSelectService(index)}
-                  aria-label={`Select ${item.title}`}
-                  className={`transition-all duration-300 rounded-full cursor-pointer ${
-                    isActive
-                      ? "w-3 h-3 bg-[#FACC15] shadow-[0_0_8px_rgba(250,204,21,0.8)] scale-110"
-                      : "w-2 h-2 sm:w-2.5 sm:h-2.5 bg-[#4B5563] hover:bg-[#9CA3AF]"
-                  }`}
-                />
-              );
-            })}
+        {/* Bottom Pagination with Left & Right Navigation Arrows */}
+        <div className="mt-8 sm:mt-12 flex flex-col items-center justify-center gap-2 select-none">
+          <div className="inline-flex items-center gap-2.5 sm:gap-3.5 bg-[#121418]/70 backdrop-blur-md px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-white/10 shadow-xl">
+            {/* Left Navigation Arrow */}
+            <button
+              onClick={handlePrev}
+              aria-label="Previous slide"
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[#9CA3AF] hover:text-[#FACC15] hover:bg-white/10 active:scale-90 transition-all cursor-pointer"
+            >
+              <ChevronLeft size={18} strokeWidth={2.4} />
+            </button>
+
+            {/* Pagination Dots */}
+            <div className="flex items-center gap-2 sm:gap-2.5 px-1">
+              {activeItems.map((item, index) => {
+                const isActive = index === selectedIndex;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => onSelectService(index)}
+                    aria-label={`Select ${item.title}`}
+                    className={`transition-all duration-300 rounded-full cursor-pointer ${
+                      isActive
+                        ? "w-3 h-3 bg-[#FACC15] shadow-[0_0_10px_rgba(250,204,21,0.9)] scale-110"
+                        : "w-2 h-2 sm:w-2.5 sm:h-2.5 bg-[#4B5563] hover:bg-[#9CA3AF]"
+                    }`}
+                  />
+                );
+              })}
+            </div>
+
+            {/* Right Navigation Arrow */}
+            <button
+              onClick={handleNext}
+              aria-label="Next slide"
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[#9CA3AF] hover:text-[#FACC15] hover:bg-white/10 active:scale-90 transition-all cursor-pointer"
+            >
+              <ChevronRight size={18} strokeWidth={2.4} />
+            </button>
           </div>
 
           {/* Mobile Caption */}
-          <span className="md:hidden text-xs text-[#9CA3AF] font-medium tracking-wide mt-1">
-            Swipe to explore showcase
+          <span className="md:hidden text-[11px] text-[#9CA3AF] font-medium tracking-wide">
+            Tap arrows or swipe to explore
           </span>
         </div>
       </div>

@@ -1065,3 +1065,89 @@ export const SERVICE_COMPANY_DETAILS: Record<string, ServiceCompanyDetail> = {
   },
 };
 
+// ═══════════════════════════════════════════════════════════════════
+// Official 7 Corporate Services Mappings
+// ═══════════════════════════════════════════════════════════════════
+SERVICE_COMPANY_DETAILS["google-business-profile-local-seo"] = {
+  ...SERVICE_COMPANY_DETAILS["local-seo-gbp"],
+  heroBadge: "Local Search & Google Maps • Muscat, Oman",
+  tagline:
+    "Google Business Profile & Local SEO: Dominate Google Maps & Drive In-Store Footfall Across Muscat & Oman",
+};
+
+SERVICE_COMPANY_DETAILS["seo-ai-visibility"] = {
+  ...SERVICE_COMPANY_DETAILS["ai-search-visibility"],
+  heroBadge: "Organic SEO & Generative AI Optimization • Oman",
+  tagline:
+    "SEO & AI Visibility: Rank on Google and Be the Recommended Choice on ChatGPT, Perplexity & AI Overviews",
+  executiveSummary:
+    "Search is undergoing a generational shift. Today, clients in Oman research services both through Google's organic search results and conversational AI engines like ChatGPT, Google AI Overviews, Perplexity, and Microsoft Copilot. At Pixel Business Solutions LLC, we combine rigorous technical SEO architecture with Generative Engine Optimization (GEO) so your brand is both indexed on Google and synthesized as the authoritative answer by AI models.",
+};
+
+SERVICE_COMPANY_DETAILS["social-media-management"] = {
+  ...SERVICE_COMPANY_DETAILS["social-media-content"],
+  heroBadge: "Social Media Strategy & Community • Oman",
+  tagline:
+    "Social Media Management: Build High-Engagement Brand Presence & Conversions in Oman",
+};
+
+SERVICE_COMPANY_DETAILS["digital-advertising"] = {
+  ...SERVICE_COMPANY_DETAILS["google-meta-ads"],
+  heroBadge: "Paid Media & Performance Funnels • Muscat, Oman",
+  tagline:
+    "Digital Advertising: Precision-Targeted Google Search, YouTube, and Meta Lead Funnels",
+};
+
+SERVICE_COMPANY_DETAILS["creative-content"] = {
+  ...SERVICE_COMPANY_DETAILS["graphic-design-ai-video"],
+  heroBadge: "Brand Identity & Media Production • Oman",
+  tagline:
+    "Creative Content: Corporate Identity, High-Impact Graphics & AI-Accelerated 4K Video Reels",
+};
+
+SERVICE_COMPANY_DETAILS["business-tools"] = {
+  ...SERVICE_COMPANY_DETAILS["custom-software-web-apps"],
+  heroBadge: "Operational Software & Digital Tools • Oman",
+  tagline:
+    "Business Tools: Custom Web Portals, Dashboards & Interactive Digital Solutions",
+  executiveSummary:
+    "Accelerate your day-to-day business efficiency and eliminate manual paperwork with bespoke web applications, interactive client portals, and tailored management solutions designed specifically for businesses across Muscat and the Sultanate of Oman. We engineer tailored software solutions that automate customer onboarding, internal dispatching, digital catalogs, and local payment collections in OMR.",
+  deliverables: [
+    {
+      title: "Custom Web Applications & Operational Portals",
+      description:
+        "Bespoke internal dashboards, customer client portals, and role-based management systems with zero legacy clutter.",
+      tag: "Engineering",
+    },
+    {
+      title: "Internal Workflow Automation",
+      description:
+        "Automated dispatching, digital paperwork, customer onboarding, and operational management systems.",
+      tag: "Productivity",
+    },
+    {
+      title: "Oman Payment Gateway & Invoice Integration",
+      description:
+        "Bank Muscat, Thawani Pay, and regional GCC payment gateways with automated VAT-compliant invoice generation in OMR.",
+      tag: "Commerce",
+    },
+    {
+      title: "Cloud Infrastructure & High-Uptime Deployment",
+      description:
+        "Enterprise-grade cloud hosting with encrypted backups, SSL security, and 99.9% uptime guarantees.",
+      tag: "Reliability",
+    },
+  ],
+};
+
+SERVICE_COMPANY_DETAILS["digital-menu-qr-solutions"] = {
+  ...SERVICE_COMPANY_DETAILS["qr-menus-catalogs"],
+  heroBadge: "Digital Menus & Hospitality QR • Oman",
+  tagline:
+    "Digital Menu & QR Solutions for Restaurants: Fast, Bilingual & Touchless",
+  executiveSummary:
+    "Delight your dining guests and eliminate reprinting costs with sub-second, interactive digital QR menus engineered specifically for restaurants, specialty cafés, and luxury hotels across Muscat and the Sultanate of Oman. Guests simply point their phone camera to instantly browse rich bilingual dishes with high-definition photography, allergen badges, and real-time pricing.",
+};
+
+
+
