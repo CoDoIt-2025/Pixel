@@ -5,14 +5,7 @@ import {
   CheckCircle2,
   Phone,
   MessageCircle,
-  HelpCircle,
-  ShieldCheck,
-  ChevronDown,
-  Layers,
   Sparkles,
-  Compass,
-  Briefcase,
-  Building2,
 } from "lucide-react";
 import type { ServiceItem } from "../data/servicesData";
 import { SERVICE_COMPANY_DETAILS } from "../data/serviceCompanyDetails";
@@ -35,9 +28,8 @@ export const ServicePage: React.FC<ServicePageProps> = ({
   // Retrieve company-grade enriched details for this service
   const detail =
     SERVICE_COMPANY_DETAILS[service.id] ||
-    SERVICE_COMPANY_DETAILS["website-design-development"];
-
-  const [expandedFaqIndex, setExpandedFaqIndex] = useState<number | null>(0);
+    SERVICE_COMPANY_DETAILS["website-design-development"] ||
+    SERVICE_COMPANY_DETAILS["local-seo-gbp"];
 
   // Audit form state for this service
   const [companyName, setCompanyName] = useState("");
@@ -56,10 +48,6 @@ export const ServicePage: React.FC<ServicePageProps> = ({
     setSubmitError("");
   }, [service.id]);
 
-  const toggleFaq = (idx: number) => {
-    setExpandedFaqIndex((prev) => (prev === idx ? null : idx));
-  };
-
   const handleAuditSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!companyName.trim() || !phoneNumber.trim()) {
@@ -76,7 +64,9 @@ export const ServicePage: React.FC<ServicePageProps> = ({
         phone_number: phoneNumber.trim(),
         website_link: websiteUrl.trim() || undefined,
         email: email.trim() || undefined,
-        social_media_links: notes ? `Inquiry for ${service.title} - Notes: ${notes}` : `Direct Inquiry for: ${service.title}`,
+        social_media_links: notes
+          ? `Inquiry for ${service.title} - Notes: ${notes}`
+          : `Direct Inquiry for: ${service.title}`,
       });
 
       setSubmitSuccess(true);
@@ -102,96 +92,82 @@ export const ServicePage: React.FC<ServicePageProps> = ({
   };
 
   return (
-    <div className="w-full bg-[#FAF9F5] text-[#121418] min-h-screen">
-      {/* 1. Sticky Navigation & Breadcrumbs Bar */}
-      <div className="bg-[#121418] border-b border-[#242831] sticky top-0 z-30 shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+    <div className="w-full bg-[#FAF9F5] text-[#121418] min-h-screen selection:bg-[#FACC15] selection:text-[#121418]">
+      {/* ── 1. Minimal Sub-Nav Bar ── */}
+      <div className="bg-[#121418] border-b border-[#242831] sticky top-[105px] z-30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+          <button
+            onClick={onBack}
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#A1A5B0] hover:text-[#FACC15] transition-colors cursor-pointer"
+          >
+            <ArrowLeft size={15} />
+            <span>All Services</span>
+            <span className="text-[#3A3F4D]">/</span>
+            <span className="text-white truncate max-w-[200px] sm:max-w-none">
+              {service.title}
+            </span>
+          </button>
+
           <div className="flex items-center gap-3">
-            <button
-              onClick={onBack}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#1E2128] hover:bg-[#2A2F3B] text-white text-xs sm:text-sm font-semibold transition-colors cursor-pointer border border-[#323640]"
-            >
-              <ArrowLeft size={16} className="text-[#FACC15]" />
-              <span>Back to all services</span>
-            </button>
-
-            {/* Breadcrumb (Desktop) */}
-            <div className="hidden md:flex items-center gap-2 text-xs text-[#9CA3AF]">
-              <span>/</span>
-              <span className="text-[#9CA3AF]">Services</span>
-              <span>/</span>
-              <span className="text-white font-medium truncate max-w-xs">
-                {service.title}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2.5">
             <a
-              href="https://wa.me/96896935606?text=Hello%20Pixel%20Business%20Solutions,%20I%20am%20inquiring%20about%20your%20service:%20"
+              href="https://wa.me/96896935606"
               target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#25D366]/15 text-[#25D366] hover:bg-[#25D366]/25 text-xs font-bold border border-[#25D366]/30 transition-colors"
+              rel="noreferrer"
+              className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-[#22C55E] hover:text-[#4ADE80] transition-colors"
             >
-              <MessageCircle size={15} />
-              <span>WhatsApp Us</span>
+              <MessageCircle size={14} />
+              <span>WhatsApp</span>
             </a>
 
             <button
               onClick={scrollToAuditForm}
-              className="bg-[#FACC15] hover:bg-[#E5B532] text-[#121418] font-bold text-xs sm:text-sm px-4 py-1.5 sm:px-5 sm:py-2 rounded-lg transition-all shadow-sm cursor-pointer"
+              className="bg-[#FACC15] hover:bg-[#F59E0B] text-[#121418] font-bold text-xs px-4 py-1.5 rounded-full transition-all cursor-pointer"
             >
-              Request Service Audit
+              Request Proposal
             </button>
           </div>
         </div>
       </div>
 
-      {/* 2. Service Hero Section (Dark High-Impact Theme) */}
-      <section className="bg-[#121418] text-white pt-10 pb-16 lg:pt-14 lg:pb-20 border-b border-[#242831] relative overflow-hidden">
-        {/* Glow Accent */}
-        <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-96 h-96 bg-[#FACC15]/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
-            {/* Left Column: Corporate Pitch & Metrics */}
-            <div className="lg:col-span-7 flex flex-col items-start space-y-5">
+      {/* ── 2. Minimalist Hero Section ── */}
+      <section className="bg-[#121418] text-white pt-12 pb-16 sm:pt-16 sm:pb-24 border-b border-[#242831]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+            {/* Left: Editorial Content */}
+            <div className="lg:col-span-7 space-y-6">
               {/* Category Pill */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1E2128] border border-[#373A43] text-xs font-semibold text-[#FACC15]">
-                <Sparkles size={13} className="text-[#FACC15]" />
-                <span>{detail.heroBadge}</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1A1D24] border border-[#2B303C] text-[11px] font-bold text-[#FACC15] tracking-wide uppercase">
+                <Sparkles size={12} />
+                <span>{detail.heroBadge || service.category}</span>
               </div>
 
-              {/* Title & Tagline */}
-              <div>
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+              {/* Title & One-line Purpose */}
+              <div className="space-y-3">
+                <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-[1.1]">
                   {service.title}
                 </h1>
-                <p className="mt-3 text-lg sm:text-xl font-semibold text-[#FACC15] leading-snug">
+                <p className="text-base sm:text-lg text-[#FACC15] font-medium leading-relaxed">
                   {detail.tagline}
                 </p>
               </div>
 
-              {/* Executive Summary */}
-              <p className="text-sm sm:text-base text-[#D1D5DB] leading-relaxed">
+              {/* Clean Summary */}
+              <p className="text-sm sm:text-base text-[#9CA3AF] leading-relaxed max-w-2xl font-normal">
                 {detail.executiveSummary}
               </p>
 
-              {/* 4 Metric Badges */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full pt-2">
+              {/* Minimalist Stats Strip (Inline counters without bulky frames) */}
+              <div className="pt-4 border-t border-[#242831] grid grid-cols-2 sm:grid-cols-4 gap-6">
                 {detail.metrics.map((metric, i) => (
-                  <div
-                    key={i}
-                    className="p-3 bg-[#1A1D24] border border-[#2B2F3A] rounded-xl text-left"
-                  >
-                    <div className="text-lg sm:text-xl font-black text-[#FACC15]">
+                  <div key={i} className="space-y-0.5">
+                    <div className="text-xl sm:text-2xl font-black text-white tracking-tight">
                       {metric.value}
                     </div>
-                    <div className="text-[11px] font-bold text-white uppercase tracking-wider mt-0.5">
+                    <div className="text-xs font-semibold text-[#FACC15]">
                       {metric.label}
                     </div>
                     {metric.subtext && (
-                      <div className="text-[10px] text-[#9CA3AF] mt-0.5 truncate">
+                      <div className="text-[11px] text-[#717682]">
                         {metric.subtext}
                       </div>
                     )}
@@ -199,67 +175,57 @@ export const ServicePage: React.FC<ServicePageProps> = ({
                 ))}
               </div>
 
-              {/* CTAs */}
-              <div className="flex flex-wrap items-center gap-3.5 pt-3">
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-4 pt-3">
                 <button
                   onClick={scrollToAuditForm}
-                  className="bg-[#FACC15] hover:bg-[#E5B532] text-[#121418] font-bold text-sm px-6 py-3 rounded-xl transition-all shadow-md flex items-center gap-2 cursor-pointer"
+                  className="px-6 py-3.5 rounded-full bg-[#FACC15] hover:bg-[#F59E0B] text-[#121418] font-black text-xs sm:text-sm transition-all shadow-md flex items-center gap-2 cursor-pointer"
                 >
                   <span>Request Free Service Audit</span>
-                  <ArrowRight size={16} />
+                  <ArrowRight size={15} />
                 </button>
 
                 <a
                   href="tel:+96896935606"
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#1E2128] hover:bg-[#2B2F3A] text-white text-sm font-semibold border border-[#323640] transition-colors"
+                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#A1A5B0] hover:text-white transition-colors"
                 >
-                  <Phone size={16} className="text-[#FACC15]" />
+                  <Phone size={14} className="text-[#FACC15]" />
                   <span>Call Muscat (+968 9693 5606)</span>
                 </a>
               </div>
             </div>
 
-            {/* Right Column: Dynamic Media Illustration / Video / Image */}
+            {/* Right: Clean Visual Media (No heavy 4-layer box) */}
             <div className="lg:col-span-5 flex justify-center">
-              <div className="w-full max-w-md bg-[#181B22] border border-[#2B2F3A] rounded-2xl p-6 shadow-2xl relative">
-                <div className="text-[11px] font-bold uppercase tracking-wider text-[#A1A5B0] mb-3 flex items-center justify-between">
-                  <span>Live Agency System</span>
-                  <span className="flex items-center gap-1.5 text-[#22C55E]">
-                    <span className="w-2 h-2 rounded-full bg-[#22C55E] animate-pulse" />
-                    Active in Oman
-                  </span>
-                </div>
-
-                <div className="flex justify-center w-full">
-                  {service.bannerVideo ? (
-                    <div className="w-full aspect-video rounded-xl overflow-hidden border border-[#3A3E48] bg-black shadow-lg">
-                      <video
-                        src={service.bannerVideo}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  ) : service.bannerImage ? (
-                    <div className="w-full aspect-video rounded-xl overflow-hidden border border-[#3A3E48] bg-black shadow-lg">
-                      <img
-                        src={service.bannerImage}
-                        alt={service.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  ) : (
-                    <HeroIllustration
-                      type={service.illustrationType}
-                      title={service.title}
+              <div className="w-full max-w-md rounded-2xl overflow-hidden bg-[#181B22] border border-[#2B303C] shadow-2xl p-4 sm:p-5">
+                {service.bannerVideo ? (
+                  <div className="w-full aspect-video rounded-xl overflow-hidden bg-black">
+                    <video
+                      src={service.bannerVideo}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full h-full object-cover"
                     />
-                  )}
-                </div>
+                  </div>
+                ) : service.bannerImage ? (
+                  <div className="w-full aspect-video rounded-xl overflow-hidden bg-black">
+                    <img
+                      src={service.bannerImage}
+                      alt={service.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <HeroIllustration
+                    type={service.illustrationType}
+                    title={service.title}
+                  />
+                )}
 
-                <div className="mt-4 pt-3 border-t border-[#2A2D37] flex items-center justify-between text-[11px] text-[#A1A5B0]">
-                  <span>Sultanate of Oman</span>
+                <div className="mt-3 flex items-center justify-between text-[11px] text-[#717682]">
+                  <span>Active Deployment &bull; Oman</span>
                   <span className="text-[#FACC15] font-semibold">Pixel Business Solutions</span>
                 </div>
               </div>
@@ -268,87 +234,81 @@ export const ServicePage: React.FC<ServicePageProps> = ({
         </div>
       </section>
 
-      {/* 3. Why Businesses in Oman Need This */}
-      <section className="py-12 sm:py-16 bg-white border-b border-[#E5E5DF]">
+      {/* ── 3. Why This Matters in Oman (Clean Editorial) ── */}
+      <section className="py-14 sm:py-20 bg-white border-b border-[#E5E5DF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <div className="flex items-center gap-2.5 mb-2">
-              <Building2 size={20} className="text-[#D97706]" />
-              <span className="text-xs font-extrabold uppercase tracking-widest text-[#B45309]">
-                Oman Commercial Perspective
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+            <div className="lg:col-span-5 space-y-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#D97706]">
+                Market Relevance
               </span>
+              <h2 className="text-2xl sm:text-3xl font-black text-[#121418] tracking-tight">
+                {detail.whyOmanMatters.title}
+              </h2>
+              <p className="text-sm text-[#525763] leading-relaxed">
+                {detail.whyOmanMatters.description}
+              </p>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-[#121418] tracking-tight">
-              {detail.whyOmanMatters.title}
-            </h2>
-            <p className="mt-3 text-sm sm:text-base text-[#525763] leading-relaxed">
-              {detail.whyOmanMatters.description}
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
-            {detail.whyOmanMatters.points.map((point, i) => (
-              <div
-                key={i}
-                className="p-5 rounded-2xl bg-[#FAF9F5] border border-[#E5E5DF] flex items-start gap-3.5 hover:border-[#FACC15] transition-colors"
-              >
-                <div className="w-8 h-8 rounded-full bg-[#FACC15]/20 flex items-center justify-center shrink-0 mt-0.5">
-                  <CheckCircle2 size={18} className="text-[#B45309]" />
+            <div className="lg:col-span-7 space-y-3">
+              {detail.whyOmanMatters.points.map((point, i) => (
+                <div
+                  key={i}
+                  className="p-4 sm:p-5 rounded-2xl bg-[#FAF9F5] border border-[#E5E5DF] flex items-start gap-3.5"
+                >
+                  <CheckCircle2
+                    size={18}
+                    className="text-[#D97706] shrink-0 mt-0.5"
+                  />
+                  <p className="text-xs sm:text-sm text-[#121418] font-medium leading-relaxed">
+                    {point}
+                  </p>
                 </div>
-                <p className="text-xs sm:text-sm text-[#121418] font-medium leading-relaxed">
-                  {point}
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 4. Scope & Deliverables (6 Structured Deliverables) */}
-      <section className="py-12 sm:py-16 bg-[#FAF9F5] border-b border-[#E5E5DF]">
+      {/* ── 4. Strategic Scope & Deliverables (Clean Minimal Grid) ── */}
+      <section className="py-14 sm:py-20 bg-[#FAF9F5] border-b border-[#E5E5DF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 pb-6 border-b border-[#E5E5DF]">
             <div>
-              <div className="flex items-center gap-2.5 mb-1.5">
-                <Layers size={20} className="text-[#121418]" />
-                <span className="text-xs font-extrabold uppercase tracking-widest text-[#717682]">
-                  Scope of Work
-                </span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-black text-[#121418] tracking-tight">
-                Included Deliverables & Strategic Scope
+              <span className="text-xs font-bold uppercase tracking-wider text-[#717682]">
+                Scope of Work
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-black text-[#121418] tracking-tight mt-1">
+                Included Deliverables
               </h2>
             </div>
-            <span className="hidden sm:inline-block w-16 h-1.5 bg-[#FACC15] rounded-full" />
+            <p className="text-xs text-[#525763] max-w-sm">
+              Every engagement includes verified execution, direct communication, and 100% full asset ownership.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {detail.deliverables.map((item, idx) => (
               <div
                 key={idx}
-                className="bg-white border border-[#E2E4E9] rounded-2xl p-5 hover:border-[#FACC15] hover:shadow-md transition-all duration-200 flex flex-col justify-between"
+                className="bg-white border border-[#E2E4E9] rounded-2xl p-6 flex flex-col justify-between hover:border-[#FACC15] transition-colors"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#FACC15]/20 text-[#92400E]">
+                  <div className="flex items-center justify-between text-xs text-[#717682] mb-3">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#D97706] px-2 py-0.5 rounded-full bg-[#FACC15]/15">
                       {item.tag || "Deliverable"}
                     </span>
-                    <span className="text-xs font-bold text-[#A1A5B0]">
-                      #{idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
+                    <span className="font-mono font-bold text-[#A1A5B0]">
+                      {String(idx + 1).padStart(2, "0")}
                     </span>
                   </div>
 
-                  <h3 className="font-extrabold text-base text-[#121418] leading-snug">
+                  <h3 className="font-bold text-base text-[#121418] mb-2">
                     {item.title}
                   </h3>
-                  <p className="mt-2 text-xs sm:text-sm text-[#525763] leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#525763] leading-relaxed">
                     {item.description}
                   </p>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-[#F0F0EB] flex items-center gap-1.5 text-xs font-semibold text-[#121418]">
-                  <CheckCircle2 size={14} className="text-[#16A34A]" />
-                  <span>Guaranteed Execution</span>
                 </div>
               </div>
             ))}
@@ -356,34 +316,31 @@ export const ServicePage: React.FC<ServicePageProps> = ({
         </div>
       </section>
 
-      {/* 5. 4-Stage Agency Execution Process */}
-      <section className="py-12 sm:py-16 bg-white border-b border-[#E5E5DF]">
+      {/* ── 5. Simple 4-Stage Execution Roadmap ── */}
+      <section className="py-14 sm:py-20 bg-white border-b border-[#E5E5DF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-extrabold uppercase tracking-widest text-[#B45309]">
-              Methodology & Roadmap
+          <div className="mb-10 text-center max-w-xl mx-auto">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#D97706]">
+              Execution Process
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-[#121418] tracking-tight mt-1">
-              Our 4-Stage Execution Framework
+              How We Deliver
             </h2>
-            <p className="mt-2 text-xs sm:text-sm text-[#525763]">
-              How Pixel Business Solutions delivers measurable results from contract signing to deployment.
-            </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {detail.processSteps.map((step, idx) => (
               <div
                 key={idx}
-                className="relative bg-[#FAF9F5] border border-[#E5E5DF] rounded-2xl p-5 hover:border-[#FACC15] transition-all"
+                className="p-6 rounded-2xl bg-[#FAF9F5] border border-[#E5E5DF]"
               >
-                <div className="w-10 h-10 rounded-xl bg-[#121418] text-[#FACC15] font-black text-sm flex items-center justify-center mb-4 shadow-sm">
+                <div className="text-sm font-black text-[#D97706] mb-3">
                   {step.step}
                 </div>
-                <h3 className="font-extrabold text-base text-[#121418] leading-snug">
+                <h3 className="font-bold text-sm sm:text-base text-[#121418] mb-1.5">
                   {step.title}
                 </h3>
-                <p className="mt-2 text-xs text-[#525763] leading-relaxed">
+                <p className="text-xs text-[#525763] leading-relaxed">
                   {step.description}
                 </p>
               </div>
@@ -392,274 +349,150 @@ export const ServicePage: React.FC<ServicePageProps> = ({
         </div>
       </section>
 
-      {/* 6. Technologies & Ideal Clients */}
-      <section className="py-12 sm:py-16 bg-[#FAF9F5] border-b border-[#E5E5DF]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* Left: Ideal For in Oman */}
-            <div className="lg:col-span-6 bg-white border border-[#E2E4E9] rounded-2xl p-6 sm:p-7">
-              <div className="flex items-center gap-2 mb-4">
-                <Briefcase size={20} className="text-[#121418]" />
-                <h3 className="font-black text-lg text-[#121418]">
-                  Ideal For Businesses in Oman
-                </h3>
-              </div>
-              <p className="text-xs sm:text-sm text-[#525763] mb-4">
-                This solution is specifically calibrated for companies operating across the Sultanate of Oman:
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {detail.idealFor.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-center gap-2 p-2.5 rounded-xl bg-[#FAF9F5] border border-[#E5E5DF] text-xs font-semibold text-[#121418]"
-                  >
-                    <CheckCircle2 size={15} className="text-[#16A34A] shrink-0" />
-                    <span className="truncate">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right: Technologies & Standards */}
-            <div className="lg:col-span-6 bg-white border border-[#E2E4E9] rounded-2xl p-6 sm:p-7">
-              <div className="flex items-center gap-2 mb-4">
-                <Compass size={20} className="text-[#121418]" />
-                <h3 className="font-black text-lg text-[#121418]">
-                  Technologies, Tools & Standards
-                </h3>
-              </div>
-              <p className="text-xs sm:text-sm text-[#525763] mb-4">
-                We leverage enterprise-grade industry platforms, modern code standards, and certified APIs:
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {detail.technologies.map((tech, idx) => (
-                  <span
-                    key={idx}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF9F5] border border-[#D5D8E0] text-xs font-bold text-[#121418]"
-                  >
-                    <ShieldCheck size={14} className="text-[#D97706]" />
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 7. Frequently Asked Questions (Accordion) */}
-      <section className="py-12 sm:py-16 bg-white border-b border-[#E5E5DF]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <span className="text-xs font-extrabold uppercase tracking-widest text-[#B45309]">
-              Clarity & Transparency
+      {/* ── 6. Minimalist Service Audit Form ── */}
+      <section
+        id="service-audit-form"
+        className="py-16 sm:py-24 bg-[#121418] text-white border-b border-[#242831] scroll-mt-24"
+      >
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10 space-y-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#FACC15]">
+              Direct Inquiries
             </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-[#121418] tracking-tight mt-1">
-              Frequently Asked Questions
+            <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
+              Request a Proposal for {service.title}
             </h2>
-            <p className="mt-2 text-xs sm:text-sm text-[#525763]">
-              Clear answers regarding pricing, implementation timelines, and Oman regulatory compliance.
+            <p className="text-xs sm:text-sm text-[#A1A5B0]">
+              Tell us about your business in Oman. We'll review your scope and follow up promptly.
             </p>
           </div>
 
-          <div className="space-y-3">
-            {detail.faqs.map((faq, idx) => {
-              const isExpanded = expandedFaqIndex === idx;
-              return (
-                <div
-                  key={idx}
-                  className="border border-[#E2E4E9] rounded-2xl overflow-hidden transition-all bg-[#FAF9F5]"
-                >
-                  <button
-                    onClick={() => toggleFaq(idx)}
-                    className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 font-bold text-sm sm:text-base text-[#121418] hover:text-[#B45309] transition-colors cursor-pointer"
-                  >
-                    <span className="flex items-center gap-3">
-                      <HelpCircle size={18} className="text-[#FACC15] shrink-0" />
-                      <span>{faq.question}</span>
-                    </span>
-                    <ChevronDown
-                      size={18}
-                      className={`text-[#717682] shrink-0 transition-transform duration-200 ${
-                        isExpanded ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-
-                  {isExpanded && (
-                    <div className="px-5 pb-5 pt-1 text-xs sm:text-sm text-[#525763] leading-relaxed border-t border-[#E5E5DF] bg-white">
-                      {faq.answer}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* 8. Dedicated Service Audit & Quote Request Form */}
-      <section
-        id="service-audit-form"
-        className="py-12 sm:py-16 bg-[#FAF9F5] border-b border-[#E5E5DF]"
-      >
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white border border-[#D5D8E0] rounded-3xl p-6 sm:p-10 shadow-lg">
-            <div className="text-center mb-8">
-              <span className="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-[#FACC15]/20 text-[#92400E]">
-                Direct Service Consultation
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-black text-[#121418] tracking-tight mt-2">
-                Request an Audit for {service.title}
-              </h2>
-              <p className="mt-1.5 text-xs sm:text-sm text-[#525763]">
-                Our Muscat technical team will review your digital footprint and provide an executive proposal within 24 business hours.
+          {submitSuccess ? (
+            <div className="bg-[#10B981]/15 border border-[#10B981]/30 rounded-2xl p-6 text-center space-y-3">
+              <CheckCircle2 size={32} className="text-[#34D399] mx-auto" />
+              <h3 className="text-lg font-bold text-[#34D399]">
+                Inquiry Received Successfully
+              </h3>
+              <p className="text-xs text-[#A7F3D0] max-w-md mx-auto">
+                Thank you. Our specialists in Muscat will review your requirements for {service.title} and reach out to you shortly.
               </p>
+              <button
+                onClick={() => setSubmitSuccess(false)}
+                className="text-xs font-bold text-[#FACC15] underline cursor-pointer"
+              >
+                Submit another inquiry
+              </button>
             </div>
-
-            {submitSuccess ? (
-              <div className="p-6 rounded-2xl bg-[#DCFCE7] border border-[#86EFAC] text-center space-y-3">
-                <CheckCircle2 size={36} className="text-[#16A34A] mx-auto" />
-                <h3 className="font-black text-lg text-[#166534]">
-                  Inquiry Received Successfully!
-                </h3>
-                <p className="text-xs sm:text-sm text-[#14532D]">
-                  Thank you. An agency lead from Pixel Business Solutions LLC in Muscat will review your details and contact you via phone / WhatsApp.
-                </p>
-                <button
-                  onClick={() => setSubmitSuccess(false)}
-                  className="mt-3 px-5 py-2 bg-[#166534] text-white text-xs font-bold rounded-xl cursor-pointer hover:bg-[#14532D] transition-colors"
-                >
-                  Submit Another Inquiry
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleAuditSubmit} className="space-y-4">
-                {submitError && (
-                  <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium">
-                    {submitError}
-                  </div>
-                )}
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-[#121418] mb-1">
-                      Company Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Al Noor Medical LLC"
-                      value={companyName}
-                      onChange={(e) => setCompanyName(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D8E0] bg-[#FAF9F5] text-xs sm:text-sm text-[#121418] focus:border-[#FACC15] focus:outline-none transition-colors"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-[#121418] mb-1">
-                      Phone Number (Oman / GCC) <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="+968 9xxx xxxx"
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D8E0] bg-[#FAF9F5] text-xs sm:text-sm text-[#121418] focus:border-[#FACC15] focus:outline-none transition-colors"
-                    />
-                  </div>
+          ) : (
+            <form onSubmit={handleAuditSubmit} className="space-y-4">
+              {submitError && (
+                <div className="p-3.5 rounded-xl bg-red-500/15 border border-red-500/30 text-red-400 text-xs">
+                  {submitError}
                 </div>
+              )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-[#121418] mb-1">
-                      Website URL or Google Maps Link
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="https://yourwebsite.com or Maps link"
-                      value={websiteUrl}
-                      onChange={(e) => setWebsiteUrl(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D8E0] bg-[#FAF9F5] text-xs sm:text-sm text-[#121418] focus:border-[#FACC15] focus:outline-none transition-colors"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-[#121418] mb-1">
-                      Official Email (optional)
-                    </label>
-                    <input
-                      type="email"
-                      placeholder="contact@company.om"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D8E0] bg-[#FAF9F5] text-xs sm:text-sm text-[#121418] focus:border-[#FACC15] focus:outline-none transition-colors"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[#121418] mb-1">
-                    Specific Requirements or Questions (optional)
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-white">
+                    Company Name <span className="text-[#FACC15]">*</span>
                   </label>
-                  <textarea
-                    rows={3}
-                    placeholder="Tell us about your current challenges, target audience, or specific objectives in Oman..."
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[#D5D8E0] bg-[#FAF9F5] text-xs sm:text-sm text-[#121418] focus:border-[#FACC15] focus:outline-none transition-colors resize-none"
+                  <input
+                    type="text"
+                    required
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    placeholder="e.g. Muscat Trading LLC"
+                    className="w-full bg-[#1A1D24] border border-[#2B303C] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-[#717682] focus:outline-none focus:border-[#FACC15]"
                   />
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full py-3.5 bg-[#FACC15] hover:bg-[#E5B532] text-[#121418] font-black text-sm rounded-xl transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-                >
-                  {isSubmitting ? (
-                    <span>Submitting Request...</span>
-                  ) : (
-                    <>
-                      <span>Submit Request for {service.title}</span>
-                      <ArrowRight size={16} />
-                    </>
-                  )}
-                </button>
-              </form>
-            )}
-          </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-white">
+                    Phone Number <span className="text-[#FACC15]">*</span>
+                  </label>
+                  <input
+                    type="tel"
+                    required
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    placeholder="+968 9xxx xxxx"
+                    className="w-full bg-[#1A1D24] border border-[#2B303C] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-[#717682] focus:outline-none focus:border-[#FACC15]"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-white">
+                    Website or Maps Link (optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={websiteUrl}
+                    onChange={(e) => setWebsiteUrl(e.target.value)}
+                    placeholder="https://..."
+                    className="w-full bg-[#1A1D24] border border-[#2B303C] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-[#717682] focus:outline-none focus:border-[#FACC15]"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-white">
+                    Official Email (optional)
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="contact@company.si"
+                    className="w-full bg-[#1A1D24] border border-[#2B303C] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-[#717682] focus:outline-none focus:border-[#FACC15]"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-white">
+                  Project Notes (optional)
+                </label>
+                <textarea
+                  rows={3}
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Share any specific goals or questions..."
+                  className="w-full bg-[#1A1D24] border border-[#2B303C] rounded-xl px-4 py-3 text-xs sm:text-sm text-white placeholder-[#717682] focus:outline-none focus:border-[#FACC15] resize-none"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full py-3.5 rounded-xl bg-[#FACC15] hover:bg-[#F59E0B] text-[#121418] font-black text-sm transition-all shadow-md cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                <span>{isSubmitting ? "Submitting..." : `Submit Request for ${service.title}`}</span>
+                <ArrowRight size={15} />
+              </button>
+            </form>
+          )}
         </div>
       </section>
 
-      {/* 9. Explore Other Services Switcher */}
-      <section className="py-10 bg-white border-b border-[#E5E5DF]">
+      {/* ── 7. Clean Service Switcher Pills ── */}
+      <section className="py-12 bg-white border-b border-[#E5E5DF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg sm:text-xl font-black text-[#121418]">
-              Explore Other Specialized Solutions
-            </h3>
-            <span className="text-xs text-[#717682]">
-              Switch to any of our 9 services
-            </span>
+          <div className="text-xs font-bold uppercase tracking-wider text-[#717682] mb-4">
+            Explore Other Services
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5">
+          <div className="flex flex-wrap gap-2.5">
             {allServices
               .filter((s) => s.id !== service.id)
-              .map((other) => (
+              .map((s) => (
                 <button
-                  key={other.id}
-                  onClick={() => onSelectService(other)}
-                  className="p-3 rounded-xl bg-[#FAF9F5] border border-[#E5E5DF] hover:border-[#FACC15] hover:bg-white text-left transition-all cursor-pointer group"
+                  key={s.id}
+                  onClick={() => onSelectService(s)}
+                  className="px-4 py-2.5 rounded-full bg-[#FAF9F5] border border-[#E5E5DF] hover:border-[#FACC15] hover:bg-white text-xs font-bold text-[#121418] transition-all cursor-pointer flex items-center gap-2"
                 >
-                  <div className="text-[11px] font-bold text-[#121418] line-clamp-2 leading-tight group-hover:text-[#B45309]">
-                    {other.title}
-                  </div>
-                  <div className="text-[10px] text-[#A1A5B0] mt-1 flex items-center gap-1">
-                    <span>View</span>
-                    <ArrowRight size={10} />
-                  </div>
+                  <span>{s.title}</span>
+                  <ArrowRight size={13} className="text-[#D97706]" />
                 </button>
               ))}
           </div>
@@ -668,4 +501,3 @@ export const ServicePage: React.FC<ServicePageProps> = ({
     </div>
   );
 };
-

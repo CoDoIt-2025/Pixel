@@ -10,6 +10,7 @@ import { OurWorkSection } from "./components/OurWorkSection";
 import { BlogSection } from "./components/BlogSection";
 import { AuditRequestSection } from "./components/AuditRequestSection";
 import { FAQSection } from "./components/FAQSection";
+import { FAQPage } from "./components/FAQPage";
 import { TestimonialsSection } from "./components/TestimonialsSection";
 import { Footer } from "./components/Footer";
 import { FloatingWhatsApp } from "./components/FloatingWhatsApp";
@@ -26,6 +27,9 @@ export function App() {
 
   // Dedicated Service Page view state
   const [activeServicePage, setActiveServicePage] = useState<ServiceItem | null>(null);
+
+  // Dedicated FAQ Page view state
+  const [isFaqPageActive, setIsFaqPageActive] = useState(false);
 
   // Optional quick preview modal
   const [activeModalService, setActiveModalService] =
@@ -132,6 +136,7 @@ export function App() {
 
   const handleOpenServicePage = (service: ServiceItem) => {
     setActiveServicePage(service);
+    setIsFaqPageActive(false);
     const idx = services.findIndex((s) => s.id === service.id);
     if (idx !== -1) {
       setSelectedServiceIndex(idx);
@@ -141,6 +146,7 @@ export function App() {
 
   const scrollToSection = (id: string) => {
     setActiveServicePage(null);
+    setIsFaqPageActive(false);
     setTimeout(() => {
       const el = document.getElementById(id);
       if (el) {
@@ -153,6 +159,13 @@ export function App() {
 
   const handleNavigateHome = () => {
     setActiveServicePage(null);
+    setIsFaqPageActive(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleNavigateFaq = () => {
+    setActiveServicePage(null);
+    setIsFaqPageActive(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -168,7 +181,9 @@ export function App() {
           onNavigateWork={() => scrollToSection("our-work")}
           onNavigateBlog={() => scrollToSection("blog")}
           onNavigateContact={() => scrollToSection("audit-request")}
+          onNavigateFaq={handleNavigateFaq}
           isServicePageActive={Boolean(activeServicePage)}
+          isFaqPageActive={isFaqPageActive}
         />
       </header>
 
@@ -181,6 +196,15 @@ export function App() {
             allServices={services}
             onBack={handleNavigateHome}
             onSelectService={(s) => handleOpenServicePage(s)}
+          />
+        ) : isFaqPageActive ? (
+          /* Dedicated Company FAQ Page View */
+          <FAQPage
+            onBack={handleNavigateHome}
+            onRequestAudit={() => {
+              setIsFaqPageActive(false);
+              scrollToSection("audit-request");
+            }}
           />
         ) : (
           /* Official Corporate Landing Page Sections */
@@ -219,14 +243,14 @@ export function App() {
             {/* 6. Our Work & Case Studies Section */}
             <OurWorkSection />
 
-            {/* 7. Blog & Industry Insights Section */}
-            <BlogSection />
-
-            {/* 8. Request a digital presence audit Form */}
+            {/* 7. Request a digital presence audit Form (Placed before Blog as requested) */}
             <AuditRequestSection />
 
-            {/* 9. Frequently Asked Questions Section */}
-            <FAQSection />
+            {/* 8. Blog & Industry Insights Section */}
+            <BlogSection />
+
+            {/* 9. Interactive FAQ Accordion Section with Full Page Link */}
+            <FAQSection onOpenFullFaqPage={handleNavigateFaq} />
 
             {/* 10. Client Testimonials (Live from Admin/SQLite, completely hidden if empty) */}
             <TestimonialsSection />
@@ -235,7 +259,15 @@ export function App() {
       </main>
 
       {/* 11. Official Corporate Footer */}
-      <Footer onNavigateSection={scrollToSection} />
+      <Footer
+        onNavigateSection={(id) => {
+          if (id === "faq") {
+            handleNavigateFaq();
+          } else {
+            scrollToSection(id);
+          }
+        }}
+      />
 
       {/* 12. Floating WhatsApp Conversion Widget */}
       <FloatingWhatsApp phone={companySettings.phone} />

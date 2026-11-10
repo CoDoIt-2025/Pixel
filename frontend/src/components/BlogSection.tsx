@@ -102,50 +102,50 @@ export const BlogSection: React.FC = () => {
   return (
     <section
       id="blog"
-      className="w-full bg-[#FAF9F5] text-[#121418] py-14 sm:py-20 border-b border-[#E5E5DF] scroll-mt-20"
+      className="w-full bg-[#121418] text-white py-14 sm:py-20 border-b border-[#242831] scroll-mt-20"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-6 border-b border-[#E5E5DF]">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-6 border-b border-[#242831]">
           <div>
             <div className="flex items-center gap-3">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-[#121418]">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white">
                 Blog & Industry Insights
               </h2>
               <span className="w-10 sm:w-14 h-1 sm:h-1.5 bg-[#FACC15] rounded-full inline-block" />
             </div>
-            <p className="mt-2 text-xs sm:text-sm text-[#525763] max-w-xl">
+            <p className="mt-2 text-xs sm:text-sm text-[#A1A5B0] max-w-xl">
               Practical guides and strategic market analysis on search visibility, AI discovery, and web engineering in Oman.
             </p>
           </div>
 
-          <div className="text-xs font-semibold text-[#717682] flex items-center gap-1.5">
-            <BookOpen size={16} className="text-[#D97706]" />
+          <div className="text-xs font-semibold text-[#A1A5B0] flex items-center gap-1.5">
+            <BookOpen size={16} className="text-[#FACC15]" />
             <span>Authored by Pixel Agency Specialists</span>
           </div>
         </div>
 
         {/* Selected Article Reader Inline View */}
         {selectedPost && (
-          <div className="mb-10 bg-white border border-[#D5D8E0] rounded-3xl p-6 sm:p-10 shadow-lg animate-in fade-in duration-200 relative">
+          <div className="mb-10 bg-[#181B22] border border-[#2B303C] rounded-3xl p-6 sm:p-10 shadow-2xl animate-in fade-in duration-200 relative">
             <button
               onClick={() => setSelectedPost(null)}
-              className="absolute top-6 right-6 w-9 h-9 rounded-full bg-[#FAF9F5] hover:bg-[#E5E5DF] text-[#121418] flex items-center justify-center transition-colors cursor-pointer border border-[#D5D8E0]"
+              className="absolute top-6 right-6 w-9 h-9 rounded-full bg-[#242831] hover:bg-[#2B303C] text-white flex items-center justify-center transition-colors cursor-pointer border border-[#3A4050]"
               aria-label="Close article"
             >
               <X size={18} />
             </button>
 
             <div className="max-w-3xl">
-              <span className="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-[#FACC15]/20 text-[#92400E]">
+              <span className="text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full bg-[#FACC15]/20 text-[#FACC15] border border-[#FACC15]/30">
                 {selectedPost.category}
               </span>
 
-              <h3 className="text-2xl sm:text-3xl font-black text-[#121418] tracking-tight mt-3 mb-4 leading-tight">
+              <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight mt-3 mb-4 leading-tight">
                 {selectedPost.title}
               </h3>
 
-              <div className="flex items-center gap-4 text-xs text-[#717682] pb-6 border-b border-[#E5E5DF] mb-6">
+              <div className="flex items-center gap-4 text-xs text-[#A1A5B0] pb-6 border-b border-[#242831] mb-6">
                 <span>By {selectedPost.author.name}</span>
                 <span>&bull;</span>
                 <span>{selectedPost.publishedAt}</span>
@@ -153,21 +153,21 @@ export const BlogSection: React.FC = () => {
                 <span>{selectedPost.readingTime}</span>
               </div>
 
-              <div className="text-sm sm:text-base text-[#374151] leading-relaxed space-y-4 whitespace-pre-line font-normal">
+              <div className="text-sm sm:text-base text-[#D1D5DB] leading-relaxed space-y-4 whitespace-pre-line font-normal">
                 {selectedPost.content}
               </div>
 
-              <div className="pt-8 mt-8 border-t border-[#E5E5DF] flex items-center justify-between">
+              <div className="pt-8 mt-8 border-t border-[#242831] flex items-center justify-between">
                 <button
                   onClick={() => setSelectedPost(null)}
-                  className="px-5 py-2.5 rounded-xl bg-[#FAF9F5] hover:bg-[#E5E5DF] text-xs font-bold text-[#121418] transition-colors cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-[#242831] hover:bg-[#2B303C] text-xs font-bold text-white transition-colors cursor-pointer"
                 >
                   &larr; Back to all articles
                 </button>
 
                 <a
                   href="#audit-request"
-                  className="bg-[#FACC15] hover:bg-[#E5B532] text-[#121418] font-bold text-xs px-5 py-2.5 rounded-xl transition-all shadow-sm"
+                  className="bg-[#FACC15] hover:bg-[#F59E0B] text-[#121418] font-bold text-xs px-5 py-2.5 rounded-xl transition-all shadow-sm"
                 >
                   Discuss this strategy for your business
                 </a>
@@ -181,7 +181,7 @@ export const BlogSection: React.FC = () => {
           {posts.map((post) => (
             <article
               key={post.id}
-              className="bg-white border border-[#E2E4E9] hover:border-[#FACC15] rounded-2xl overflow-hidden transition-all duration-200 flex flex-col justify-between hover:shadow-md cursor-pointer group"
+              className="bg-[#181B22] border border-[#2B303C] hover:border-[#FACC15] rounded-2xl overflow-hidden transition-all duration-200 flex flex-col justify-between hover:shadow-lg hover:shadow-[#FACC15]/5 cursor-pointer group"
               onClick={() => {
                 setSelectedPost(post);
                 const el = document.getElementById("blog");
@@ -189,30 +189,30 @@ export const BlogSection: React.FC = () => {
               }}
             >
               <div className="p-6">
-                <div className="flex items-center justify-between text-xs text-[#717682] mb-3">
-                  <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#FAF9F5] text-[#92400E] border border-[#E5E5DF]">
+                <div className="flex items-center justify-between text-xs text-[#A1A5B0] mb-3">
+                  <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#121418] text-[#FACC15] border border-[#2B303C]">
                     {post.category}
                   </span>
-                  <div className="flex items-center gap-1 text-[11px]">
+                  <div className="flex items-center gap-1 text-[11px] text-[#A1A5B0]">
                     <Clock size={12} />
                     <span>{post.readingTime}</span>
                   </div>
                 </div>
 
-                <h3 className="font-extrabold text-base sm:text-lg text-[#121418] leading-snug group-hover:text-[#B45309] transition-colors mb-2.5">
+                <h3 className="font-extrabold text-base sm:text-lg text-white leading-snug group-hover:text-[#FACC15] transition-colors mb-2.5">
                   {post.title}
                 </h3>
 
-                <p className="text-xs sm:text-sm text-[#525763] leading-relaxed line-clamp-3">
+                <p className="text-xs sm:text-sm text-[#9CA3AF] leading-relaxed line-clamp-3">
                   {post.excerpt}
                 </p>
               </div>
 
-              <div className="px-6 py-4 bg-[#FAF9F5] border-t border-[#F0F0EB] flex items-center justify-between text-xs font-bold text-[#121418]">
+              <div className="px-6 py-4 bg-[#14161C] border-t border-[#242831] flex items-center justify-between text-xs font-bold text-white group-hover:text-[#FACC15] transition-colors">
                 <span>Read Full Article</span>
                 <ArrowRight
                   size={15}
-                  className="text-[#121418] group-hover:translate-x-1 transition-transform"
+                  className="text-[#FACC15] group-hover:translate-x-1 transition-transform"
                 />
               </div>
             </article>

@@ -9,7 +9,7 @@ import {
   Megaphone,
   Film,
   QrCode,
-  ArrowRight,
+  ArrowUpRight,
 } from "lucide-react";
 import type { ServiceItem } from "../data/servicesData";
 
@@ -20,21 +20,81 @@ interface ServicesSectionProps {
   onOpenServiceDetails: (service: ServiceItem) => void;
 }
 
-/** Returns the matching Lucide icon component for a given icon name string */
-const getServiceIcon = (iconName: string, className: string) => {
-  const props = { size: 20, className, strokeWidth: 1.75 };
+/** Icon renderer with inline color */
+const ServiceIcon: React.FC<{ iconName: string; color: string }> = ({ iconName, color }) => {
+  const props = { size: 24, strokeWidth: 1.7, style: { color } };
   switch (iconName) {
-    case "MapPin":       return <MapPin {...props} />;
-    case "Search":       return <Search {...props} />;
-    case "Cpu":          return <Cpu {...props} />;
-    case "Monitor":      return <Monitor {...props} />;
-    case "Layers":       return <Layers {...props} />;
+    case "MapPin": return <MapPin {...props} />;
+    case "Search": return <Search {...props} />;
+    case "Cpu": return <Cpu {...props} />;
+    case "Monitor": return <Monitor {...props} />;
+    case "Layers": return <Layers {...props} />;
     case "MessageSquare": return <MessageSquare {...props} />;
-    case "Megaphone":    return <Megaphone {...props} />;
-    case "Film":         return <Film {...props} />;
-    case "QrCode":       return <QrCode {...props} />;
-    default:             return <MapPin {...props} />;
+    case "Megaphone": return <Megaphone {...props} />;
+    case "Film": return <Film {...props} />;
+    case "QrCode": return <QrCode {...props} />;
+    default: return <MapPin {...props} />;
   }
+};
+
+/**
+ * Clean 2-Tone Alternating Palette:
+ * 0: Deep Black
+ * 1: Crisp Pure White
+ */
+const PALETTE = [
+  // 0: Black tile
+  {
+    bg: "#111317",
+    hover: "#1A1D24",
+    text: "#FFFFFF",
+    icon: "#FACC15",
+    sub: "#9CA3AF",
+    border: "#242831",
+    iconBg: "rgba(250, 204, 21, 0.14)",
+  },
+  // 1: White tile
+  {
+    bg: "#FFFFFF",
+    hover: "#F4F4EE",
+    text: "#111317",
+    icon: "#111317",
+    sub: "#525763",
+    border: "#E2E4E9",
+    iconBg: "rgba(17, 19, 23, 0.08)",
+  },
+];
+
+/** Panel with JS hover state */
+const Panel: React.FC<{
+  bg: string;
+  hover: string;
+  border: string;
+  onClick: () => void;
+  title: string;
+  children: React.ReactNode;
+}> = ({ bg, hover, border, onClick, title, children }) => {
+  const [hov, setHov] = React.useState(false);
+  return (
+    <button
+      onClick={onClick}
+      title={title}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        flex: "1 1 0%",
+        minWidth: 0,
+        backgroundColor: hov ? hover : bg,
+        borderRight: `1px solid ${border}`,
+        transition: "background-color 0.18s ease, transform 0.18s ease",
+        transform: hov ? "translateY(-3px)" : "translateY(0)",
+        position: "relative",
+      }}
+      className="text-left cursor-pointer select-none group"
+    >
+      {children}
+    </button>
+  );
 };
 
 export const ServicesSection: React.FC<ServicesSectionProps> = ({
@@ -44,108 +104,107 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   onOpenServiceDetails,
 }) => {
   return (
-    <section
-      id="services"
-      className="w-full bg-[#121418] text-white"
-    >
+    <section id="services" style={{ backgroundColor: "#0E1014" }}>
       {/* ── Section Header ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-6">
-        <div className="flex items-center gap-3">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-7">
+        <div className="flex items-center gap-3 mb-2">
           <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
             Our Services
           </h2>
-          <span className="w-10 h-1.5 bg-[#FACC15] rounded-full inline-block" />
+          <span
+            className="w-10 h-1.5 rounded-full"
+            style={{ backgroundColor: "#FACC15", display: "inline-block" }}
+          />
         </div>
-        <p className="mt-1.5 text-sm text-[#A1A5B0]">
-          Tap any service to explore its full scope &amp; details.
+        <p className="text-sm" style={{ color: "#717682" }}>
+          Click any service to explore its full scope &amp; details.
         </p>
       </div>
 
-      {/* ── Full-width Horizontal Tile Band ── */}
-      <div className="border-t border-[#242831]">
+      {/* ── Horizontal Panel Row (Alternating Black / White) ── */}
+      <div
+        style={{ borderTop: "1px solid #242831", borderBottom: "1px solid #242831" }}
+        className="flex overflow-x-auto"
+      >
         {services.map((service, index) => {
           const isActive = index === selectedIndex;
+          // Strictly alternate Black (even index) and White (odd index)
+          const pal = isActive
+            ? {
+                bg: "#FACC15",
+                hover: "#EDB800",
+                text: "#111317",
+                icon: "#111317",
+                sub: "#5A4700",
+                border: "#EDB800",
+                iconBg: "rgba(0, 0, 0, 0.12)",
+              }
+            : PALETTE[index % 2];
 
           return (
-            <button
+            <Panel
               key={service.id}
+              bg={pal.bg}
+              hover={pal.hover}
+              border={pal.border}
               onClick={() => {
                 onSelectService(index);
                 onOpenServiceDetails(service);
               }}
-              title={`View ${service.title} details`}
-              className={`
-                group w-full flex items-center gap-5 px-4 sm:px-8 lg:px-12 py-5 sm:py-6
-                border-b border-[#242831] text-left cursor-pointer select-none
-                transition-all duration-200 ease-out
-                ${isActive
-                  ? "bg-[#FACC15]"
-                  : "bg-[#121418] hover:bg-[#1D2026]"
-                }
-              `}
+              title={`Open ${service.title}`}
             >
-              {/* ── Icon ── */}
               <div
-                className={`
-                  w-10 h-10 sm:w-11 sm:h-11 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-200
-                  ${isActive
-                    ? "bg-black/15"
-                    : "bg-[#FACC15]/10 group-hover:bg-[#FACC15]/20"
-                  }
-                `}
+                className="flex flex-col h-full px-4 py-6 sm:px-5 sm:py-7"
+                style={{ minWidth: 155 }}
               >
-                {getServiceIcon(
-                  service.iconName,
-                  isActive
-                    ? "text-[#121418]"
-                    : "text-[#FACC15] group-hover:text-[#FACC15]"
-                )}
-              </div>
-
-              {/* ── Title + Subtext ── */}
-              <div className="flex-1 min-w-0">
+                {/* Icon Container */}
                 <div
-                  className={`font-bold text-sm sm:text-base leading-tight transition-colors duration-200 ${
-                    isActive ? "text-[#121418]" : "text-white"
-                  }`}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-5 transition-transform duration-200 group-hover:scale-105"
+                  style={{ backgroundColor: pal.iconBg }}
+                >
+                  <ServiceIcon iconName={service.iconName} color={pal.icon} />
+                </div>
+
+                {/* Service Title */}
+                <div
+                  className="font-bold text-sm leading-snug mb-1 flex-1"
+                  style={{ color: pal.text }}
                 >
                   {service.title}
                 </div>
+
+                {/* Subtext */}
                 {service.subtext && (
                   <div
-                    className={`text-[11px] font-semibold tracking-widest uppercase mt-0.5 transition-colors duration-200 ${
-                      isActive ? "text-[#121418]/75" : "text-[#FACC15]/70"
-                    }`}
+                    className="text-[10px] font-semibold tracking-widest uppercase mb-3 line-clamp-1"
+                    style={{ color: pal.sub }}
                   >
                     {service.subtext}
                   </div>
                 )}
-              </div>
 
-              {/* ── Category Tag (desktop only) ── */}
-              <div
-                className={`hidden lg:block text-xs font-medium shrink-0 max-w-[200px] text-right transition-colors duration-200 ${
-                  isActive ? "text-[#121418]/60" : "text-[#525763] group-hover:text-[#A1A5B0]"
-                }`}
-              >
-                {service.category}
-              </div>
+                {/* Category (desktop only) */}
+                <div
+                  className="text-[10px] mb-4 hidden sm:block truncate"
+                  style={{ color: pal.sub }}
+                >
+                  {service.category}
+                </div>
 
-              {/* ── Arrow ── */}
-              <div
-                className={`shrink-0 transition-all duration-200 group-hover:translate-x-1 ${
-                  isActive ? "text-[#121418]" : "text-[#FACC15]"
-                }`}
-              >
-                <ArrowRight size={18} />
+                {/* Arrow */}
+                <div
+                  style={{ color: pal.icon }}
+                  className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                >
+                  <ArrowUpRight size={17} />
+                </div>
               </div>
-            </button>
+            </Panel>
           );
         })}
       </div>
 
-      {/* ── Bottom padding ── */}
-      <div className="h-6" />
+      <div style={{ height: 1, backgroundColor: "#242831" }} />
     </section>
   );
 };

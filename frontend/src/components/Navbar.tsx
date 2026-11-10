@@ -8,7 +8,9 @@ interface NavbarProps {
   onNavigateWork?: () => void;
   onNavigateBlog?: () => void;
   onNavigateContact?: () => void;
+  onNavigateFaq?: () => void;
   isServicePageActive?: boolean;
+  isFaqPageActive?: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -18,7 +20,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   onNavigateWork,
   onNavigateBlog,
   onNavigateContact,
+  onNavigateFaq,
   isServicePageActive = false,
+  isFaqPageActive = false,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -98,6 +102,13 @@ export const Navbar: React.FC<NavbarProps> = ({
         const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
         window.scrollTo({ top: y, behavior: "smooth" });
       }
+    }
+  };
+
+  const handleFaqClick = () => {
+    setMobileMenuOpen(false);
+    if (onNavigateFaq) {
+      onNavigateFaq();
     }
   };
 
@@ -181,6 +192,20 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           <button
+            onClick={handleFaqClick}
+            className={`relative py-1 transition-colors cursor-pointer border-0 bg-transparent ${
+              isFaqPageActive
+                ? "text-[#FACC15] font-semibold"
+                : "text-[#C4C7CC] hover:text-[#FACC15]"
+            }`}
+          >
+            FAQ
+            {isFaqPageActive && (
+              <span className="absolute bottom-0 left-0 w-full h-[2.5px] bg-[#FACC15] rounded-full" />
+            )}
+          </button>
+
+          <button
             onClick={handleContactClick}
             className="text-[#C4C7CC] hover:text-[#FACC15] transition-colors py-1 cursor-pointer border-0 bg-transparent"
           >
@@ -243,6 +268,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="text-left text-[#D1D5DB] hover:text-[#FACC15] py-1 border-b border-[#2B303C]/60 cursor-pointer bg-transparent"
             >
               Blog
+            </button>
+            <button
+              onClick={handleFaqClick}
+              className="text-left text-[#D1D5DB] hover:text-[#FACC15] py-1 border-b border-[#2B303C]/60 cursor-pointer bg-transparent"
+            >
+              FAQ
             </button>
             <button
               onClick={handleContactClick}

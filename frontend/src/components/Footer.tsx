@@ -50,7 +50,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
             <div className="flex flex-col gap-2 pt-1 text-xs text-[#C4C7CC]">
               <div className="flex items-center gap-2">
                 <MapPin size={14} className="text-[#FACC15] shrink-0" />
-                <span>Muscat, Sultanate of Oman &bull; CR: 1049281</span>
+                <span>Muscat, Sultanate of Oman</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone size={14} className="text-[#FACC15] shrink-0" />
@@ -64,10 +64,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
               <div className="flex items-center gap-2">
                 <Mail size={14} className="text-[#FACC15] shrink-0" />
                 <a
-                  href="mailto:contact@pixelbusiness.om"
+                  href="mailto:contact@pixelbusiness.si"
                   className="hover:text-[#FACC15] transition-colors"
                 >
-                  contact@pixelbusiness.om
+                  contact@pixelbusiness.si
                 </a>
               </div>
             </div>
@@ -100,7 +100,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
                   onClick={(e) => scrollTo("services", e)}
                   className="hover:text-[#FACC15] transition-colors cursor-pointer"
                 >
-                  Explore 9 Services
+                  Explore Services
                 </button>
               </li>
               <li>
@@ -109,6 +109,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
                   className="hover:text-[#FACC15] transition-colors cursor-pointer"
                 >
                   Our Work &amp; Case Studies
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={(e) => scrollTo("audit-request", e)}
+                  className="hover:text-[#FACC15] transition-colors cursor-pointer"
+                >
+                  Request An Audit
                 </button>
               </li>
               <li>
@@ -155,8 +163,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
           </span>
           <div className="flex items-center gap-4">
             <span>Muscat, Sultanate of Oman</span>
-            <span>&bull;</span>
-            <span>Commercial Registration: 1049281</span>
           </div>
         </div>
       </div>
