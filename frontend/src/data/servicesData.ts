@@ -37,6 +37,9 @@ export const SERVICES_DATA: ServiceItem[] = [
     iconName: "MapPin",
     category: "Local Search & Maps",
     illustrationType: "local-seo",
+    bannerImage: "https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1600&auto=format&fit=crop&q=80",
+    mediaType: "image",
+    showInBanner: true,
     features: [
       "Google Business Profile setup, claim & official video verification",
       "Oman local directory citations & 100% NAP consistency",
@@ -57,6 +60,9 @@ export const SERVICES_DATA: ServiceItem[] = [
     iconName: "Monitor",
     category: "Web & Digital Engineering",
     illustrationType: "website",
+    bannerImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&auto=format&fit=crop&q=80",
+    mediaType: "image",
+    showInBanner: true,
     features: [
       "Mobile-first responsive UX/UI crafted for Oman & GCC audiences",
       "Sub-1.5s mobile load speeds on Omantel, Ooredoo & Vodafone 5G",
@@ -77,6 +83,9 @@ export const SERVICES_DATA: ServiceItem[] = [
     iconName: "Cpu",
     category: "Search & Generative AI Discovery",
     illustrationType: "ai-search",
+    bannerImage: "https://images.unsplash.com/photo-1677442136019-21780efad99a?w=1600&auto=format&fit=crop&q=80",
+    mediaType: "image",
+    showInBanner: true,
     features: [
       "Comprehensive technical website crawl, speed & core web vitals audit",
       "Entity authority mapping for ChatGPT, Perplexity & Google AI Overviews",
@@ -97,6 +106,9 @@ export const SERVICES_DATA: ServiceItem[] = [
     iconName: "MessageSquare",
     category: "Social Media & Brand Growth",
     illustrationType: "social-media",
+    bannerImage: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=1600&auto=format&fit=crop&q=80",
+    mediaType: "image",
+    showInBanner: true,
     features: [
       "Monthly content calendar aligned with local Oman events & holidays",
       "Bilingual Arabic & English copywriting, captions & tone of voice",
@@ -117,6 +129,9 @@ export const SERVICES_DATA: ServiceItem[] = [
     iconName: "Megaphone",
     category: "Paid Media & Performance Funnels",
     illustrationType: "ads",
+    bannerImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600&auto=format&fit=crop&q=80",
+    mediaType: "image",
+    showInBanner: true,
     features: [
       "Hyper-local demographic and interest-based audience targeting in Oman",
       "Google Search, YouTube video ads & high-intent search campaign management",
@@ -137,6 +152,9 @@ export const SERVICES_DATA: ServiceItem[] = [
     iconName: "Film",
     category: "Brand Identity & Media Production",
     illustrationType: "graphic-video",
+    bannerImage: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=1600&auto=format&fit=crop&q=80",
+    mediaType: "image",
+    showInBanner: true,
     features: [
       "Brand identity kits, vector logos, color systems & typography guidelines",
       "Corporate presentation decks, company profiles, brochures & digital flyers",
@@ -148,21 +166,47 @@ export const SERVICES_DATA: ServiceItem[] = [
   {
     id: "business-tools",
     title: "Business Tools",
-    subtext: "Custom Web Apps & Digital QR",
-    introPlaceholder: "Bespoke internal portals, client dashboards, and touchless digital QR solutions.",
+    subtext: "Custom Web Apps & Digital Portals",
+    introPlaceholder: "Bespoke internal portals, client dashboards, and custom software systems.",
     shortDesc:
-      "Develop bespoke digital solutions, internal portals, client dashboards, and digital QR menus/catalogues tailored to solve operational bottlenecks for businesses in Oman.",
+      "Develop bespoke digital solutions, internal portals, client dashboards, and custom software tailored to solve operational bottlenecks for businesses in Oman.",
     fullDesc:
-      "Develop bespoke digital solutions, internal portals, client dashboards, and digital QR menus/catalogues tailored to solve operational bottlenecks for businesses in Oman.",
+      "Develop bespoke digital solutions, internal portals, client dashboards, and custom software tailored to solve operational bottlenecks for businesses in Oman.",
     iconName: "Layers",
     category: "Software & Operational Solutions",
     illustrationType: "custom-software",
+    bannerImage: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1600&auto=format&fit=crop&q=80",
+    mediaType: "image",
+    showInBanner: true,
     features: [
       "Modern fullstack web application engineering (React, Next.js, Python)",
-      "Touchless digital QR menus & bilingual interactive catalogues",
       "Secure authentication, permissions & multi-tenant architecture",
       "Bank Muscat & local Oman payment gateway integration with OMR invoicing",
+      "Custom API connections, webhook sync, and CRM dispatching",
       "Reliable cloud deployment with data backup and high uptime guarantees",
+    ],
+  },
+  {
+    id: "digital-menu-qr-solutions",
+    title: "Digital Menu & QR Solutions for Restaurants",
+    subtext: "Touchless Smart Menus & Hospitality QR",
+    introPlaceholder: "Interactive bilingual QR menus and digital catalogues for restaurants and cafes.",
+    shortDesc:
+      "Touchless interactive digital QR menus for restaurants, specialty cafés, and luxury hotels across Oman with instant updates, bilingual Arabic/English toggle, and OMR pricing.",
+    fullDesc:
+      "Touchless interactive digital QR menus for restaurants, specialty cafés, and luxury hotels across Oman with instant updates, bilingual Arabic/English toggle, and OMR pricing.",
+    iconName: "QrCode",
+    category: "Hospitality & Retail Systems",
+    illustrationType: "qr-menus",
+    bannerImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&auto=format&fit=crop&q=80",
+    mediaType: "image",
+    showInBanner: true,
+    features: [
+      "Sub-second camera scan with zero app installation required for guests",
+      "Interactive bilingual Arabic and English menu presentation",
+      "Instant price and availability updates via smartphone dashboard",
+      "High-definition culinary photography, allergen tags & dietary badges",
+      "Durable high-gloss table QR stands and counter displays",
     ],
   },
 ];
@@ -194,6 +238,8 @@ export function mapBackendServiceToItem(s: {
     illustrationType = "local-seo";
   } else if (titleLower.includes("ai") || titleLower.includes("aiso") || titleLower.includes("geo") || titleLower.includes("aeo") || titleLower.includes("seo")) {
     illustrationType = "ai-search";
+  } else if (titleLower.includes("qr") || titleLower.includes("menu") || titleLower.includes("restaurant") || titleLower.includes("catalogue")) {
+    illustrationType = "qr-menus";
   } else if (titleLower.includes("website") || titleLower.includes("web design") || titleLower.includes("development")) {
     illustrationType = "website";
   } else if (titleLower.includes("tool") || titleLower.includes("custom software") || titleLower.includes("web app") || titleLower.includes("app")) {
@@ -204,8 +250,6 @@ export function mapBackendServiceToItem(s: {
     illustrationType = "ads";
   } else if (titleLower.includes("creative") || titleLower.includes("graphic") || titleLower.includes("video") || titleLower.includes("content")) {
     illustrationType = "graphic-video";
-  } else if (titleLower.includes("qr") || titleLower.includes("menu") || titleLower.includes("catalogue")) {
-    illustrationType = "qr-menus";
   }
 
   // Find if pre-defined default item exists for baseline content
@@ -226,7 +270,7 @@ export function mapBackendServiceToItem(s: {
     illustrationType: matched?.illustrationType || illustrationType,
     bannerImage: s.bannerImage || matched?.bannerImage,
     bannerVideo: s.bannerVideo || matched?.bannerVideo,
-    mediaType: s.mediaType || matched?.mediaType || "illustration",
+    mediaType: (s.mediaType as any) || matched?.mediaType || (s.bannerImage || matched?.bannerImage ? "image" : "illustration"),
     showInBanner: s.showInBanner !== false,
   };
 }

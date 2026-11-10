@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 import type { ServiceItem } from "../data/servicesData";
 import { SERVICE_COMPANY_DETAILS } from "../data/serviceCompanyDetails";
-import { HeroIllustration } from "./HeroIllustration";
 import { api } from "../lib/api";
 
 interface ServicePageProps {
@@ -130,106 +129,65 @@ export const ServicePage: React.FC<ServicePageProps> = ({
       </div>
 
       {/* ── 2. Minimalist Hero Section ── */}
-      <section className="bg-[#121418] text-white pt-12 pb-16 sm:pt-16 sm:pb-24 border-b border-[#242831]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            {/* Left: Editorial Content */}
-            <div className="lg:col-span-7 space-y-6">
-              {/* Category Pill */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1A1D24] border border-[#2B303C] text-[11px] font-bold text-[#FACC15] tracking-wide uppercase">
-                <Sparkles size={12} />
-                <span>{detail.heroBadge || service.category}</span>
-              </div>
+      <section className="bg-[#121418] text-white pt-14 pb-16 sm:pt-20 sm:pb-24 border-b border-[#242831]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-7">
+          {/* Category Pill */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1A1D24] border border-[#2B303C] text-[11px] font-bold text-[#FACC15] tracking-wider uppercase">
+            <Sparkles size={12} />
+            <span>{detail.heroBadge || service.category}</span>
+          </div>
 
-              {/* Title & One-line Purpose */}
-              <div className="space-y-3">
-                <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-[1.1]">
-                  {service.title}
-                </h1>
-                <p className="text-base sm:text-lg text-[#FACC15] font-medium leading-relaxed">
-                  {detail.tagline}
-                </p>
-              </div>
+          {/* Title & Tagline */}
+          <div className="space-y-3">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1]">
+              {service.title}
+            </h1>
+            <p className="text-base sm:text-xl text-[#FACC15] font-semibold leading-relaxed">
+              {detail.tagline}
+            </p>
+          </div>
 
-              {/* Clean Summary */}
-              <p className="text-sm sm:text-base text-[#9CA3AF] leading-relaxed max-w-2xl font-normal">
-                {detail.executiveSummary}
-              </p>
+          {/* Clean Summary */}
+          <p className="text-sm sm:text-base text-[#9CA3AF] leading-relaxed max-w-3xl font-normal">
+            {detail.executiveSummary}
+          </p>
 
-              {/* Minimalist Stats Strip (Inline counters without bulky frames) */}
-              <div className="pt-4 border-t border-[#242831] grid grid-cols-2 sm:grid-cols-4 gap-6">
-                {detail.metrics.map((metric, i) => (
-                  <div key={i} className="space-y-0.5">
-                    <div className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                      {metric.value}
-                    </div>
-                    <div className="text-xs font-semibold text-[#FACC15]">
-                      {metric.label}
-                    </div>
-                    {metric.subtext && (
-                      <div className="text-[11px] text-[#717682]">
-                        {metric.subtext}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-4 pt-3">
-                <button
-                  onClick={scrollToAuditForm}
-                  className="px-6 py-3.5 rounded-full bg-[#FACC15] hover:bg-[#F59E0B] text-[#121418] font-black text-xs sm:text-sm transition-all shadow-md flex items-center gap-2 cursor-pointer"
-                >
-                  <span>Request Free Service Audit</span>
-                  <ArrowRight size={15} />
-                </button>
-
-                <a
-                  href="tel:+96896935606"
-                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#A1A5B0] hover:text-white transition-colors"
-                >
-                  <Phone size={14} className="text-[#FACC15]" />
-                  <span>Call Muscat (+968 9693 5606)</span>
-                </a>
-              </div>
-            </div>
-
-            {/* Right: Clean Visual Media (No heavy 4-layer box) */}
-            <div className="lg:col-span-5 flex justify-center">
-              <div className="w-full max-w-md rounded-2xl overflow-hidden bg-[#181B22] border border-[#2B303C] shadow-2xl p-4 sm:p-5">
-                {service.bannerVideo ? (
-                  <div className="w-full aspect-video rounded-xl overflow-hidden bg-black">
-                    <video
-                      src={service.bannerVideo}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ) : service.bannerImage ? (
-                  <div className="w-full aspect-video rounded-xl overflow-hidden bg-black">
-                    <img
-                      src={service.bannerImage}
-                      alt={service.title}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ) : (
-                  <HeroIllustration
-                    type={service.illustrationType}
-                    title={service.title}
-                  />
-                )}
-
-                <div className="mt-3 flex items-center justify-between text-[11px] text-[#717682]">
-                  <span>Active Deployment &bull; Oman</span>
-                  <span className="text-[#FACC15] font-semibold">Pixel Business Solutions</span>
+          {/* Minimalist Stats Strip */}
+          <div className="pt-6 border-t border-[#242831] grid grid-cols-2 sm:grid-cols-4 gap-6">
+            {detail.metrics.map((metric, i) => (
+              <div key={i} className="space-y-1">
+                <div className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                  {metric.value}
                 </div>
+                <div className="text-xs font-bold text-[#FACC15]">
+                  {metric.label}
+                </div>
+                {metric.subtext && (
+                  <div className="text-[11px] text-[#717682]">
+                    {metric.subtext}
+                  </div>
+                )}
               </div>
-            </div>
+            ))}
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap items-center gap-4 pt-4">
+            <button
+              onClick={scrollToAuditForm}
+              className="px-7 py-3.5 rounded-full bg-[#FACC15] hover:bg-[#F59E0B] text-[#121418] font-black text-xs sm:text-sm transition-all shadow-md flex items-center gap-2 cursor-pointer"
+            >
+              <span>Request Free Service Audit</span>
+              <ArrowRight size={15} />
+            </button>
+
+            <a
+              href="tel:+96896935606"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#A1A5B0] hover:text-white transition-colors"
+            >
+              <Phone size={14} className="text-[#FACC15]" />
+              <span>Call Muscat (+968 9693 5606)</span>
+            </a>
           </div>
         </div>
       </section>

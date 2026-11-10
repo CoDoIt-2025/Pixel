@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ServiceItem } from "../data/servicesData";
 
 export interface HeroSlideItem {
@@ -161,11 +162,11 @@ export const Hero: React.FC<HeroProps> = ({
         </div>
       )}
 
-      {/* 2. Gradient Overlays for High Contrast & Visual Depth */}
-      {/* Left-to-right gradient: dark on left for text legibility, transparent on right for full banner view */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#121418] via-[#121418]/85 md:via-[#121418]/70 to-[#121418]/25 z-0 pointer-events-none" />
-      {/* Top and bottom subtle vignettes */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#121418]/60 via-transparent to-[#121418]/80 z-0 pointer-events-none" />
+      {/* 2. Refined, Balanced Gradient Overlays (Bright, visible background image with crisp text contrast) */}
+      {/* Subtle left scrim for text readability, keeping the image bright and vibrant across center & right */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#121418]/75 via-[#121418]/40 md:via-[#121418]/20 to-transparent z-0 pointer-events-none" />
+      {/* Smooth bottom edge blend into the next section */}
+      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#121418] to-transparent z-0 pointer-events-none" />
 
       {/* 3. Foreground Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -177,7 +178,7 @@ export const Hero: React.FC<HeroProps> = ({
             <div className="min-h-[60px] sm:min-h-[75px] flex items-center">
               <h1
                 key={currentItem.id || currentItem.title}
-                className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1] drop-shadow-md animate-in fade-in duration-500"
+                className="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[1.1] drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)] animate-in fade-in duration-500"
               >
                 {currentItem.title}
               </h1>
@@ -186,7 +187,7 @@ export const Hero: React.FC<HeroProps> = ({
             {/* Subtitle */}
             <p
               key={`sub-${currentItem.id || currentItem.title}`}
-              className="text-sm sm:text-base lg:text-lg text-[#D1D5DB] font-medium tracking-wide max-w-lg leading-relaxed drop-shadow-sm animate-in fade-in duration-500"
+              className="text-sm sm:text-base lg:text-lg text-white/95 font-medium tracking-wide max-w-lg leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] animate-in fade-in duration-500"
             >
               {currentItem.introPlaceholder}
             </p>

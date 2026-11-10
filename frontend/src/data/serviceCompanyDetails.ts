@@ -1109,9 +1109,9 @@ SERVICE_COMPANY_DETAILS["business-tools"] = {
   ...SERVICE_COMPANY_DETAILS["custom-software-web-apps"],
   heroBadge: "Operational Software & Digital Tools • Oman",
   tagline:
-    "Business Tools: Custom Web Portals, Dashboards & Interactive Digital QR Solutions",
+    "Business Tools: Custom Web Portals, Dashboards & Interactive Digital Solutions",
   executiveSummary:
-    "Accelerate your day-to-day business efficiency and eliminate manual paperwork with bespoke web applications, interactive client portals, and touchless digital QR solutions designed specifically for businesses across Muscat and the Sultanate of Oman. We engineer tailored software solutions that automate customer onboarding, internal dispatching, digital catalogs, and local payment collections in OMR.",
+    "Accelerate your day-to-day business efficiency and eliminate manual paperwork with bespoke web applications, interactive client portals, and tailored management solutions designed specifically for businesses across Muscat and the Sultanate of Oman. We engineer tailored software solutions that automate customer onboarding, internal dispatching, digital catalogs, and local payment collections in OMR.",
   deliverables: [
     {
       title: "Custom Web Applications & Operational Portals",
@@ -1120,10 +1120,10 @@ SERVICE_COMPANY_DETAILS["business-tools"] = {
       tag: "Engineering",
     },
     {
-      title: "Interactive Digital QR Menus & Retail Catalogues",
+      title: "Internal Workflow Automation",
       description:
-        "Touchless, sub-second smartphone catalogues with bilingual Arabic/English layouts and real-time pricing updates.",
-      tag: "Digital Experience",
+        "Automated dispatching, digital paperwork, customer onboarding, and operational management systems.",
+      tag: "Productivity",
     },
     {
       title: "Oman Payment Gateway & Invoice Integration",
@@ -1139,5 +1139,15 @@ SERVICE_COMPANY_DETAILS["business-tools"] = {
     },
   ],
 };
+
+SERVICE_COMPANY_DETAILS["digital-menu-qr-solutions"] = {
+  ...SERVICE_COMPANY_DETAILS["qr-menus-catalogs"],
+  heroBadge: "Digital Menus & Hospitality QR • Oman",
+  tagline:
+    "Digital Menu & QR Solutions for Restaurants: Fast, Bilingual & Touchless",
+  executiveSummary:
+    "Delight your dining guests and eliminate reprinting costs with sub-second, interactive digital QR menus engineered specifically for restaurants, specialty cafés, and luxury hotels across Muscat and the Sultanate of Oman. Guests simply point their phone camera to instantly browse rich bilingual dishes with high-definition photography, allergen badges, and real-time pricing.",
+};
+
 
 
