@@ -133,11 +133,12 @@ export default function ServicesPage() {
       if (res.mediaType === "video") {
         setMediaVideoUrl(res.url);
         setMediaMode("video");
+        toast.success("Video uploaded successfully");
       } else {
         setMediaImageUrl(res.url);
         setMediaMode("image");
+        toast.success("Image uploaded to ImgBB Cloud CDN successfully!");
       }
-      toast.success("File uploaded successfully");
     } catch (err: any) {
       toast.error(err.message || "Upload failed");
     } finally {
@@ -612,8 +613,8 @@ export default function ServicesPage() {
                     ) : (
                       <div className="text-center">
                         <Upload className="h-6 w-6 text-amber-500 mx-auto mb-1" />
-                        <span className="text-xs font-semibold text-slate-700 block">Click to upload {mediaMode === "image" ? "image" : "video"}</span>
-                        <span className="text-[10px] text-slate-400">{mediaMode === "image" ? "PNG, JPG, WebP" : "MP4, WebM"}</span>
+                        <span className="text-xs font-semibold text-slate-700 block">Click to upload {mediaMode === "image" ? "image (ImgBB Cloud)" : "video"}</span>
+                        <span className="text-[10px] text-slate-400">{mediaMode === "image" ? "PNG, JPG, WebP hosted on ImgBB CDN" : "MP4, WebM"}</span>
                       </div>
                     )}
                   </label>

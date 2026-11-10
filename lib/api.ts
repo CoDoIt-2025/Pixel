@@ -339,7 +339,23 @@ export const api = {
 
   // Upload Media
   upload: {
-    file: (file: File) => {
+    file: async (file: File) => {
+      // For images, upload directly to ImgBB CDN
+      if (file.type.startsWith("image/") || /\.(png|jpe?g|webp|gif|svg)$/i.test(file.name)) {
+        try {
+          const { uploadToImgBB } = await import("./imgbb");
+          const imgbb = await uploadToImgBB(file);
+          return {
+            url: imgbb.url,
+            filename: imgbb.filename,
+            mediaType: "image" as const,
+            size: imgbb.size,
+          };
+        } catch (err) {
+          console.warn("Direct ImgBB upload fallback to backend:", err);
+        }
+      }
+
       const formData = new FormData();
       formData.append("file", file);
       return request<{ url: string; filename: string; mediaType: "image" | "video"; size: number }>("/upload", {

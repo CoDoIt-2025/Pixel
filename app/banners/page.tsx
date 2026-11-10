@@ -99,26 +99,34 @@ export default function BannersPage() {
     setUploadError("");
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
+      const isImg = file.type.startsWith("image/") || /\.(png|jpe?g|webp|gif|svg)$/i.test(file.name);
 
-      const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1";
-      const res = await fetch(`${API_BASE}/upload`, {
-        method: "POST",
-        body: formData,
-      });
+      if (isImg) {
+        const { uploadToImgBB } = await import("@/lib/imgbb");
+        const res = await uploadToImgBB(file);
+        setMediaUrl(res.url);
+        setMediaType("image");
+        toast.success("Photo uploaded to ImgBB Cloud CDN successfully!");
+      } else {
+        const formData = new FormData();
+        formData.append("file", file);
 
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.detail || "Upload failed");
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1";
+        const res = await fetch(`${API_BASE}/upload`, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.detail || "Upload failed");
+        }
+
+        const data = await res.json();
+        setMediaUrl(data.url);
+        setMediaType("video");
+        toast.success("Video uploaded successfully!");
       }
-
-      const data = await res.json();
-      setMediaUrl(data.url);
-      setMediaType(data.mediaType === "video" ? "video" : "image");
-      toast.success(
-        `${data.mediaType === "video" ? "Video" : "Photo"} uploaded successfully!`
-      );
     } catch (err: any) {
       setUploadError(err.message || "Failed to upload file");
       toast.error(err.message || "Upload failed");
@@ -408,7 +416,7 @@ export default function BannersPage() {
                         <Upload className="h-8 w-8 text-slate-400 mx-auto" />
                         <div>
                           <p className="text-xs font-bold text-indigo-600">Click to upload photo or video</p>
-                          <p className="text-[11px] text-slate-400">Supports MP4, WebM, PNG, JPG, WebP</p>
+                          <p className="text-[11px] text-slate-400">Images host directly on ImgBB CDN • Videos support MP4, WebM</p>
                         </div>
                       </label>
                     )}
