@@ -28,6 +28,10 @@ export interface Service {
   isVisible: boolean;
   deliveryTime: string;
   activeProjectsCount: number;
+  bannerImage?: string;
+  bannerVideo?: string;
+  mediaType?: "illustration" | "image" | "video";
+  showInBanner?: boolean;
 }
 
 export interface TeamMember {
@@ -96,6 +100,10 @@ export interface CompanySettings {
   currency: string;
   website: string;
   description?: string;
+  aboutTitle?: string;
+  aboutText?: string;
+  whyTitle?: string;
+  whyReasons?: Array<{ title: string; description: string }>;
 }
 
 export interface SEOSettings {
@@ -144,4 +152,17 @@ export interface Client {
   createdAt?: string;
 }
 
+export interface Banner {
+  id: string;
+  title: string;
+  subtitle: string;
+  mediaUrl: string;
+  mediaType: "image" | "video";
+  ctaText?: string;
+  ctaLink?: string;
+  badgeText?: string;
+  isActive: boolean;
+  sortOrder: number;
+  createdAt?: string;
+}
 

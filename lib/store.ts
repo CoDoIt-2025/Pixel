@@ -11,6 +11,7 @@ import {
   ActivityItem,
   UserSettings,
   FAQ,
+  Banner,
 } from "@/types";
 import { initialProjects } from "@/data/mockProjects";
 import { initialClients } from "@/data/mockClients";
@@ -34,7 +35,14 @@ interface AdminState {
   testimonials: Testimonial[];
   faqs: FAQ[];
   activities: ActivityItem[];
+  banners: Banner[];
   settings: UserSettings;
+
+  // Banner Actions
+  addBanner: (banner: Omit<Banner, "id" | "createdAt">) => Promise<Banner>;
+  updateBanner: (id: string, updates: Partial<Banner>) => Promise<Banner>;
+  deleteBanner: (id: string) => Promise<void>;
+  toggleBannerActive: (id: string) => Promise<void>;
   sidebarCollapsed: boolean;
   backendConnected: boolean;
 
@@ -59,10 +67,10 @@ interface AdminState {
   deleteTeamMember: (id: string) => void;
 
   // Service Actions
-  addService: (service: Omit<Service, "id">) => void;
-  updateService: (id: string, updates: Partial<Service>) => void;
-  deleteService: (id: string) => void;
-  toggleServiceVisibility: (id: string) => void;
+  addService: (service: Omit<Service, "id">) => Promise<Service>;
+  updateService: (id: string, updates: Partial<Service>) => Promise<Service>;
+  deleteService: (id: string) => Promise<void>;
+  toggleServiceVisibility: (id: string) => Promise<void>;
 
   // Blog Actions
   addBlogPost: (post: Omit<BlogPost, "id">) => void;
@@ -105,6 +113,7 @@ export const useAdminStore = create<AdminState>()(
       testimonials: initialTestimonials,
       faqs: initialFAQs,
       activities: initialActivities,
+      banners: [],
       settings: initialSettings,
       sidebarCollapsed: false,
       backendConnected: false,
@@ -127,6 +136,7 @@ export const useAdminStore = create<AdminState>()(
             faqs,
             activities,
             settings,
+            banners,
           ] = await Promise.all([
             api.projects.list().catch(() => null),
             api.clients.list().catch(() => null),
@@ -138,6 +148,7 @@ export const useAdminStore = create<AdminState>()(
             api.faqs.list().catch(() => null),
             api.dashboard.getActivities().catch(() => null),
             api.settings.get().catch(() => null),
+            api.banners.list().catch(() => null),
           ]);
 
           set((state) => ({
@@ -151,10 +162,76 @@ export const useAdminStore = create<AdminState>()(
             testimonials: testimonials && testimonials.length > 0 ? testimonials : state.testimonials,
             faqs: faqs && faqs.length > 0 ? faqs : state.faqs,
             activities: activities && activities.length > 0 ? activities : state.activities,
+            banners: banners && banners.length > 0 ? banners : state.banners,
             settings: settings ? settings : state.settings,
           }));
         } catch {
           set({ backendConnected: false });
+        }
+      },
+
+      // Banner Actions
+      addBanner: async (banner) => {
+        const tempId = `BNR-${Date.now()}`;
+        const newBanner: Banner = { ...banner, id: tempId, createdAt: new Date().toISOString() };
+        set((state) => ({
+          banners: [newBanner, ...state.banners],
+        }));
+        try {
+          const saved = await api.banners.create(banner);
+          set((state) => ({
+            banners: state.banners.map((b) => (b.id === tempId ? saved : b)),
+          }));
+          return saved;
+        } catch (error) {
+          set((state) => ({
+            banners: state.banners.filter((b) => b.id !== tempId),
+          }));
+          throw error;
+        }
+      },
+
+      updateBanner: async (id, updates) => {
+        const previous = get().banners;
+        set((state) => ({
+          banners: state.banners.map((b) => (b.id === id ? { ...b, ...updates } : b)),
+        }));
+        try {
+          const saved = await api.banners.update(id, updates);
+          set((state) => ({
+            banners: state.banners.map((b) => (b.id === id ? saved : b)),
+          }));
+          return saved;
+        } catch (error) {
+          set({ banners: previous });
+          throw error;
+        }
+      },
+
+      deleteBanner: async (id) => {
+        const previous = get().banners;
+        set((state) => ({
+          banners: state.banners.filter((b) => b.id !== id),
+        }));
+        try {
+          await api.banners.delete(id);
+        } catch (error) {
+          set({ banners: previous });
+          throw error;
+        }
+      },
+
+      toggleBannerActive: async (id) => {
+        set((state) => ({
+          banners: state.banners.map((b) => (b.id === id ? { ...b, isActive: !b.isActive } : b)),
+        }));
+        try {
+          await api.banners.toggle(id);
+        } catch (error) {
+          set((state) => ({
+            banners: state.banners.map((b) => (b.id === id ? { ...b, isActive: !b.isActive } : b)),
+          }));
+          throw error;
         }
       },
 
@@ -288,7 +365,7 @@ export const useAdminStore = create<AdminState>()(
       },
 
       // Service Actions
-      addService: (service) => {
+      addService: async (service) => {
         const tempId = `SRV-${Date.now()}`;
         const newService: Service = { ...service, id: tempId };
 
@@ -296,42 +373,71 @@ export const useAdminStore = create<AdminState>()(
           services: [...state.services, newService],
         }));
 
-        api.services
-          .create(service)
-          .then((saved) => {
-            set((state) => ({
-              services: state.services.map((s) => (s.id === tempId ? saved : s)),
-            }));
-          })
-          .catch(() => {});
+        try {
+          const saved = await api.services.create(service);
+          set((state) => ({
+            services: state.services.map((s) => (s.id === tempId ? saved : s)),
+          }));
+          return saved;
+        } catch (error) {
+          set((state) => ({
+            services: state.services.filter((s) => s.id !== tempId),
+          }));
+          throw error;
+        }
       },
 
-      updateService: (id, updates) => {
+      updateService: async (id, updates) => {
+        const previous = get().services;
         set((state) => ({
           services: state.services.map((s) =>
             s.id === id ? { ...s, ...updates } : s
           ),
         }));
 
-        api.services.update(id, updates).catch(() => {});
+        try {
+          const saved = await api.services.update(id, updates);
+          set((state) => ({
+            services: state.services.map((s) => (s.id === id ? saved : s)),
+          }));
+          return saved;
+        } catch (error) {
+          set({ services: previous });
+          throw error;
+        }
       },
 
-      deleteService: (id) => {
+      deleteService: async (id) => {
+        const previous = get().services;
         set((state) => ({
           services: state.services.filter((s) => s.id !== id),
         }));
 
-        api.services.delete(id).catch(() => {});
+        try {
+          await api.services.delete(id);
+        } catch (error) {
+          set({ services: previous });
+          throw error;
+        }
       },
 
-      toggleServiceVisibility: (id) => {
+      toggleServiceVisibility: async (id) => {
         set((state) => ({
           services: state.services.map((s) =>
             s.id === id ? { ...s, isVisible: !s.isVisible } : s
           ),
         }));
 
-        api.services.toggleVisibility(id).catch(() => {});
+        try {
+          await api.services.toggleVisibility(id);
+        } catch (error) {
+          set((state) => ({
+            services: state.services.map((s) =>
+              s.id === id ? { ...s, isVisible: !s.isVisible } : s
+            ),
+          }));
+          throw error;
+        }
       },
 
       // Blog Actions

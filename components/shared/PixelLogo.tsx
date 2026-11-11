@@ -16,14 +16,13 @@ export function PixelLogo({ collapsed = false, className }: PixelLogoProps) {
       href="/dashboard"
       className={cn("flex items-center gap-2.5 group select-none", className)}
     >
-      {/* Geometric Monochrome Pixel Mark */}
-      <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-black text-white shadow-xs transition-transform group-hover:scale-105 border border-zinc-800">
-        <div className="grid grid-cols-2 gap-1 p-1.5">
-          <div className="h-2 w-2 rounded-[2px] bg-white" />
-          <div className="h-2 w-2 rounded-[2px] bg-zinc-500" />
-          <div className="h-2 w-2 rounded-[2px] bg-zinc-400" />
-          <div className="h-2 w-2 rounded-[2px] bg-white" />
-        </div>
+      {/* Official 3D PX Brand Mark */}
+      <div className="relative flex h-9 w-9 items-center justify-center shrink-0 transition-transform group-hover:scale-105">
+        <img
+          src="/brand/pixel-logo-3d-tight.png"
+          alt="Pixel Logo"
+          className="h-8 w-auto object-contain filter drop-shadow-[0_2px_6px_rgba(250,204,21,0.3)]"
+        />
       </div>
 
       {!collapsed && (
@@ -37,7 +36,7 @@ export function PixelLogo({ collapsed = false, className }: PixelLogoProps) {
             </span>
           </div>
           <span className="text-[11px] font-medium text-zinc-500">
-            Oman &bull; Thrissur
+            Muscat, Sultanate of Oman
           </span>
         </div>
       )}

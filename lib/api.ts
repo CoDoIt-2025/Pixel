@@ -9,10 +9,32 @@ import {
   ActivityItem,
   UserSettings,
   FAQ,
+  Banner,
 } from "@/types";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1";
+export function getApiBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (host !== "localhost" && host !== "127.0.0.1") {
+      return "https://api.pixelbusiness.si/api/v1";
+    }
+  }
+  return "http://127.0.0.1:8000/api/v1";
+}
+
+export function normalizeMediaUrl(url?: string | null): string {
+  if (!url) return "";
+  if (url.startsWith("data:") || url.startsWith("blob:")) return url;
+  if (url.includes("/uploads/")) {
+    const filename = url.split("/uploads/")[1];
+    const baseUrl = getApiBaseUrl().replace(/\/api\/v1\/?$/, "");
+    return `${baseUrl}/uploads/${filename}`;
+  }
+  return url;
+}
 
 async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const token =
@@ -28,7 +50,8 @@ async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  const res = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const baseUrl = getApiBaseUrl();
+  const res = await fetch(`${baseUrl}${endpoint}`, {
     ...options,
     headers,
   });
@@ -153,6 +176,30 @@ export const api = {
       }),
   },
 
+  // Banners
+  banners: {
+    list: (activeOnly?: boolean) =>
+      request<Banner[]>(`/banners${activeOnly ? "?active_only=true" : ""}`),
+    create: (data: Omit<Banner, "id" | "createdAt">) =>
+      request<Banner>("/banners", {
+        method: "POST",
+        body: JSON.stringify(data),
+      }),
+    update: (id: string, updates: Partial<Banner>) =>
+      request<Banner>(`/banners/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(updates),
+      }),
+    toggle: (id: string) =>
+      request<Banner>(`/banners/${id}/toggle`, {
+        method: "PATCH",
+      }),
+    delete: (id: string) =>
+      request<void>(`/banners/${id}`, {
+        method: "DELETE",
+      }),
+  },
+
   // Services
   services: {
     list: () => request<Service[]>("/services"),
@@ -229,6 +276,36 @@ export const api = {
       }),
   },
 
+  // Audit Requests
+  auditRequests: {
+    list: () =>
+      request<
+        Array<{
+          id: string;
+          company_name: string;
+          phone_number: string;
+          google_maps_link?: string;
+          google_maps_na?: boolean;
+          website_link?: string;
+          website_na?: boolean;
+          social_media_links?: string;
+          social_media_na?: boolean;
+          email?: string;
+          status: string;
+          created_at: string;
+        }>
+      >("/audit-requests"),
+    updateStatus: (id: string, status: string) =>
+      request<any>(`/audit-requests/${id}/status`, {
+        method: "PATCH",
+        body: JSON.stringify({ status }),
+      }),
+    delete: (id: string) =>
+      request<void>(`/audit-requests/${id}`, {
+        method: "DELETE",
+      }),
+  },
+
   // Testimonials
   testimonials: {
     list: (status?: string) => {
@@ -280,6 +357,34 @@ export const api = {
       request<void>(`/faqs/${id}`, {
         method: "DELETE",
       }),
+  },
+
+  // Upload Media
+  upload: {
+    file: async (file: File) => {
+      // For images, upload directly to ImgBB CDN
+      if (file.type.startsWith("image/") || /\.(png|jpe?g|webp|gif|svg)$/i.test(file.name)) {
+        try {
+          const { uploadToImgBB } = await import("./imgbb");
+          const imgbb = await uploadToImgBB(file);
+          return {
+            url: imgbb.url,
+            filename: imgbb.filename,
+            mediaType: "image" as const,
+            size: imgbb.size,
+          };
+        } catch (err) {
+          console.warn("Direct ImgBB upload fallback to backend:", err);
+        }
+      }
+
+      const formData = new FormData();
+      formData.append("file", file);
+      return request<{ url: string; filename: string; mediaType: "image" | "video"; size: number }>("/upload", {
+        method: "POST",
+        body: formData,
+      });
+    },
   },
 
   // Settings

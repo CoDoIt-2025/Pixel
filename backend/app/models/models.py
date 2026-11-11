@@ -100,6 +100,10 @@ class Service(Base):
     is_visible = Column(Boolean, default=True)
     delivery_time = Column(String(100), default="4-6 weeks")
     active_projects_count = Column(Integer, default=0)
+    banner_image = Column(String(500), default="")
+    banner_video = Column(String(500), default="")
+    media_type = Column(String(50), default="illustration")
+    show_in_banner = Column(Boolean, default=True)
 
 class BlogPost(Base):
     __tablename__ = "blog_posts"
@@ -132,6 +136,22 @@ class Inquiry(Base):
     date = Column(String(50), default=lambda: datetime.utcnow().strftime("%Y-%m-%d"))
     status = Column(String(50), default="New")  # New, In Progress, Resolved, Spam
     replies = Column(JSON, default=list)  # list of {id, sender, message, timestamp}
+
+class AuditRequest(Base):
+    __tablename__ = "audit_requests"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    company_name = Column(String(255), nullable=False)
+    phone_number = Column(String(100), nullable=False)
+    google_maps_link = Column(String(500), default="")
+    google_maps_na = Column(Boolean, default=False)
+    website_link = Column(String(500), default="")
+    website_na = Column(Boolean, default=False)
+    social_media_links = Column(String(500), default="")
+    social_media_na = Column(Boolean, default=False)
+    email = Column(String(255), default="")
+    status = Column(String(50), default="New")  # New, In Review, Completed
+    created_at = Column(DateTime, default=datetime.utcnow)
 
 class Testimonial(Base):
     __tablename__ = "testimonials"
@@ -179,3 +199,19 @@ class FAQ(Base):
     order = Column(Integer, default=0)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+
+class Banner(Base):
+    __tablename__ = "banners"
+
+    id = Column(String(36), primary_key=True, default=generate_uuid)
+    title = Column(String(255), nullable=False)
+    subtitle = Column(Text, default="")
+    media_url = Column(String(500), nullable=False)
+    media_type = Column(String(50), default="image")  # "image" | "video"
+    cta_text = Column(String(100), default="Learn More")
+    cta_link = Column(String(255), default="#audit-request")
+    badge_text = Column(String(100), default="Commercial Showcase")
+    is_active = Column(Boolean, default=True)
+    sort_order = Column(Integer, default=0)
+    created_at = Column(DateTime, default=datetime.utcnow)
+

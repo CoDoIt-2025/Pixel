@@ -198,8 +198,12 @@ class ServiceCreate(BaseModel):
     startingPrice: float
     features: List[str] = []
     isVisible: bool = True
+    showInBanner: Optional[bool] = True
     deliveryTime: str = "4-6 weeks"
     activeProjectsCount: int = 0
+    bannerImage: Optional[str] = ""
+    bannerVideo: Optional[str] = ""
+    mediaType: Optional[str] = "illustration"
 
 class ServiceUpdate(BaseModel):
     title: Optional[str] = None
@@ -209,8 +213,12 @@ class ServiceUpdate(BaseModel):
     startingPrice: Optional[float] = None
     features: Optional[List[str]] = None
     isVisible: Optional[bool] = None
+    showInBanner: Optional[bool] = None
     deliveryTime: Optional[str] = None
     activeProjectsCount: Optional[int] = None
+    bannerImage: Optional[str] = None
+    bannerVideo: Optional[str] = None
+    mediaType: Optional[str] = None
 
 class ServiceResponse(BaseModel):
     id: str
@@ -221,8 +229,12 @@ class ServiceResponse(BaseModel):
     startingPrice: float
     features: List[str]
     isVisible: bool
+    showInBanner: Optional[bool] = True
     deliveryTime: str
     activeProjectsCount: int
+    bannerImage: Optional[str] = ""
+    bannerVideo: Optional[str] = ""
+    mediaType: Optional[str] = "illustration" 
 
     class Config:
         from_attributes = True
@@ -383,6 +395,70 @@ class FAQResponse(BaseModel):
     category: str
     order: int
     isActive: bool
+    createdAt: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+
+
+# Audit Request Schemas
+class AuditRequestCreate(BaseModel):
+    company_name: str
+    phone_number: str
+    google_maps_link: Optional[str] = ''
+    google_maps_na: Optional[bool] = False
+    website_link: Optional[str] = ''
+    website_na: Optional[bool] = False
+    social_media_links: Optional[str] = ''
+    social_media_na: Optional[bool] = False
+    email: Optional[str] = ''
+
+class AuditRequestResponse(BaseModel):
+    id: str
+    company_name: str
+    phone_number: str
+    google_maps_link: str
+    google_maps_na: bool
+    website_link: str
+    website_na: bool
+    social_media_links: str
+    social_media_na: bool
+    email: str
+    status: str
+    created_at: str
+
+    class Config:
+        from_attributes = True
+
+# Banner Schemas
+class BannerBase(BaseModel):
+    title: str
+    subtitle: Optional[str] = ""
+    mediaUrl: str
+    mediaType: Literal["image", "video"] = "image"
+    ctaText: Optional[str] = "Learn More"
+    ctaLink: Optional[str] = "#audit-request"
+    badgeText: Optional[str] = "Commercial Showcase"
+    isActive: bool = True
+    sortOrder: int = 0
+
+class BannerCreate(BannerBase):
+    pass
+
+class BannerUpdate(BaseModel):
+    title: Optional[str] = None
+    subtitle: Optional[str] = None
+    mediaUrl: Optional[str] = None
+    mediaType: Optional[Literal["image", "video"]] = None
+    ctaText: Optional[str] = None
+    ctaLink: Optional[str] = None
+    badgeText: Optional[str] = None
+    isActive: Optional[bool] = None
+    sortOrder: Optional[int] = None
+
+class BannerResponse(BannerBase):
+    id: str
     createdAt: Optional[str] = None
 
     class Config:

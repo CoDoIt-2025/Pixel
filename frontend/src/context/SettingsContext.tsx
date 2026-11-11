@@ -4,12 +4,12 @@ import { api } from "../lib/api";
 
 const DEFAULT_COMPANY: CompanySettings = {
   name: "Pixel Business Solutions LLC",
-  email: "contact@pixelbusiness.om",
-  phone: "+968 2400 0000",
-  address: "Muscat, Sultanate of Oman | Thrissur, Kerala",
-  taxId: "CR-1049281",
+  email: "contact@pixelbusiness.si",
+  phone: "+968 9693 5606",
+  address: "Muscat, Sultanate of Oman",
+  taxId: "",
   currency: "OMR (ر.ع.)",
-  website: "https://pixelbusiness.om",
+  website: "https://pixelbusiness.si",
   description:
     "Pixel Business Solutions LLC helps businesses build a clearer online presence through website design, SEO, Google Business Profile management, social media management and AI visibility. For restaurants and hotels, we also offer digital QR menus.",
 };

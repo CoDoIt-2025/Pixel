@@ -89,6 +89,10 @@ export interface Service {
   isVisible: boolean;
   deliveryTime: string;
   activeProjectsCount: number;
+  bannerImage?: string;
+  bannerVideo?: string;
+  mediaType?: "illustration" | "image" | "video";
+  showInBanner?: boolean;
 }
 
 export type PostStatus = "Draft" | "Published" | "Scheduled";
@@ -188,6 +192,10 @@ export interface UserSettings {
     currency: string;
     website: string;
     description?: string;
+    aboutTitle?: string;
+    aboutText?: string;
+    whyTitle?: string;
+    whyReasons?: Array<{ title: string; description: string }>;
   };
   seo: {
     metaTitle: string;
@@ -210,3 +218,18 @@ export interface UserSettings {
     highContrast: boolean;
   };
 }
+
+export interface Banner {
+  id: string;
+  title: string;
+  subtitle: string;
+  mediaUrl: string;
+  mediaType: "image" | "video";
+  ctaText?: string;
+  ctaLink?: string;
+  badgeText?: string;
+  isActive: boolean;
+  sortOrder: number;
+  createdAt?: string;
+}
+

@@ -1,294 +1,289 @@
-import React, { useState } from "react";
-import {
-  ArrowRight,
-  CheckCircle2,
-  Globe,
-  Search,
-  QrCode,
-  MapPin,
-  ChevronRight,
-  Clock,
-  Sparkles,
-} from "lucide-react";
-import { useSettings } from "../context/SettingsContext";
+import React, { useRef, useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import type { ServiceItem } from "../data/servicesData";
+import { normalizeMediaUrl } from "../lib/api";
 
-
-interface HeroPreview {
+export interface HeroSlideItem {
   id: string;
-  badge: string;
   title: string;
-  description: string;
-  deliverables: string[];
-  metrics: string;
-  tag: string;
+  introPlaceholder: string;
+  bannerImage?: string;
+  bannerVideo?: string;
+  mediaType?: "illustration" | "image" | "video";
+  badgeText?: string;
+  ctaText?: string;
+  ctaLink?: string;
+  isCustomBanner?: boolean;
+  service?: ServiceItem;
 }
 
-const HERO_PREVIEWS: HeroPreview[] = [
-  {
-    id: "web",
-    badge: "Website Design",
-    title: "Clear, High-Converting Websites for Oman",
-    description:
-      "Modern, responsive layouts engineered around your core services, click-to-call enquiry paths, fast Core Web Vitals, and search-ready information architecture.",
-    deliverables: [
-      "Mobile-first responsive architecture",
-      "Direct WhatsApp & click-to-call flows",
-      "Search-friendly metadata & page speed",
-    ],
-    metrics: "3 - 5 Weeks Delivery • From 150 OMR",
-    tag: "High Conversion",
-  },
-  {
-    id: "seo",
-    badge: "SEO Services",
-    title: "Truthful Search Visibility in Oman & Regional Markets",
-    description:
-      "Search Console baselines, keyword architecture for Oman & Thrissur, content enhancements, and transparent monthly performance reviews without false guarantees.",
-    deliverables: [
-      "Oman & Thrissur keyword targeting",
-      "Google Search Console audit baseline",
-      "Evidence-backed monthly reporting",
-    ],
-    metrics: "Ongoing Monthly • From 100 OMR",
-    tag: "Zero False Guarantees",
-  },
-  {
-    id: "qr",
-    badge: "Digital QR Menus",
-    title: "Interactive Mobile Browsing with OMR Prices",
-    description:
-      "Instant mobile browsing for restaurants, cafes and hotels in Oman. Clean dish categories, bilingual Arabic/English, and easy staff price updates.",
-    deliverables: [
-      "Bilingual Arabic/English menu display",
-      "Authentic OMR pricing & dietary tags",
-      "Instant mobile loading without apps",
-    ],
-    metrics: "1 - 2 Weeks Rollout • From 80 OMR",
-    tag: "Hospitality Focus",
-  },
-  {
-    id: "gbp",
-    badge: "Google Business Profile",
-    title: "Accurate Local Maps & Customer Discovery",
-    description:
-      "Organize verified business hours, addresses, approved photos, and professional review responses strictly aligned with Google guidelines.",
-    deliverables: [
-      "Verified address & business hours care",
-      "High-resolution approved photo publishing",
-      "Professional review response management",
-    ],
-    metrics: "Monthly Care • From 75 OMR",
-    tag: "Verified Local Presence",
-  },
-];
+interface HeroProps {
+  slides?: HeroSlideItem[];
+  services?: ServiceItem[];
+  selectedIndex: number;
+  onSelectService: (index: number) => void;
+  onOpenServiceDetails: (service: ServiceItem) => void;
+  onNavigateLink?: (link: string) => void;
+}
 
-export const Hero: React.FC = () => {
-  const { company } = useSettings();
-  const [activePreview, setActivePreview] = useState<string>("web");
+export const Hero: React.FC<HeroProps> = ({
+  slides,
+  services = [],
+  selectedIndex,
+  onSelectService,
+  onOpenServiceDetails,
+  onNavigateLink,
+}) => {
+  // Normalize items to HeroSlideItem array
+  const activeItems: HeroSlideItem[] =
+    slides && slides.length > 0
+      ? slides
+      : services.map((srv) => ({
+          id: srv.id,
+          title: srv.title,
+          introPlaceholder: srv.introPlaceholder,
+          bannerImage: srv.bannerImage,
+          bannerVideo: srv.bannerVideo,
+          mediaType: srv.mediaType,
+          badgeText: srv.mediaType === "video" ? "Video Banner" : "Commercial Banner Showcase",
+          ctaText: "Learn More",
+          service: srv,
+        }));
 
-  const currentPreview =
-    HERO_PREVIEWS.find((p) => p.id === activePreview) || HERO_PREVIEWS[0];
+  const currentItem = activeItems[selectedIndex] || activeItems[0] || {
+    id: "default",
+    title: "Pixel Business Solutions",
+    introPlaceholder: "Enterprise software and AI engineering studio.",
+  };
+
+  const touchStartXRef = useRef<number | null>(null);
+  const touchStartYRef = useRef<number | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const handlePrev = () => {
+    onSelectService((selectedIndex - 1 + activeItems.length) % activeItems.length);
+  };
+
+  const handleNext = () => {
+    onSelectService((selectedIndex + 1) % activeItems.length);
+  };
+
+  // Automatically advance to the next service/banner every 5 seconds (pauses when user hovers)
+  useEffect(() => {
+    if (!activeItems || activeItems.length <= 1 || isPaused) return;
+
+    const timer = setInterval(() => {
+      onSelectService((selectedIndex + 1) % activeItems.length);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [selectedIndex, activeItems, isPaused, onSelectService]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX;
+    touchStartYRef.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartXRef.current === null || touchStartYRef.current === null) return;
+    const diffX = touchStartXRef.current - e.changedTouches[0].clientX;
+    const diffY = touchStartYRef.current - e.changedTouches[0].clientY;
+    
+    // Only switch slide if horizontal swipe is intentional and stronger than vertical scroll
+    if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+      if (diffX > 0) {
+        handleNext();
+      } else {
+        handlePrev();
+      }
+    }
+    touchStartXRef.current = null;
+    touchStartYRef.current = null;
+  };
+
+  const hasVideo = Boolean(
+    currentItem.bannerVideo && (currentItem.mediaType === "video" || !currentItem.mediaType)
+  );
+  const hasImage = Boolean(
+    currentItem.bannerImage && (currentItem.mediaType === "image" || (!currentItem.mediaType && !hasVideo))
+  );
+  const hasMedia = hasVideo || hasImage;
+
+  const handleActionClick = () => {
+    if (currentItem.service) {
+      onOpenServiceDetails(currentItem.service);
+    } else if (currentItem.ctaLink) {
+      if (onNavigateLink) {
+        onNavigateLink(currentItem.ctaLink);
+      } else if (currentItem.ctaLink.startsWith("#")) {
+        const targetId = currentItem.ctaLink.replace("#", "");
+        const el = document.getElementById(targetId);
+        if (el) {
+          const yOffset = -105;
+          const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }
+      } else {
+        window.location.href = currentItem.ctaLink;
+      }
+    }
+  };
 
   return (
-    <section id="home" className="relative pt-24 pb-20 sm:pt-36 sm:pb-28 lg:pt-40 lg:pb-32 bg-[#202124] overflow-hidden select-none">
-      {/* Background Ambience: Radiant Golden Glow & Dot Grid */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[580px] bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(245,197,66,0.18),transparent)] pointer-events-none z-0"
-        aria-hidden="true"
-      />
-      <div
-        className="absolute inset-0 bg-grid-pattern opacity-35 pointer-events-none z-0"
-        aria-hidden="true"
-      />
+    <section
+      id="home"
+      className="relative w-full min-h-[500px] sm:min-h-[520px] lg:min-h-[560px] bg-[#121418] text-white pt-8 pb-10 sm:pt-14 sm:pb-16 overflow-hidden select-none border-b border-[#242831] flex flex-col justify-center"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      {/* 1. Full Hero Background Media (Image or Looping Video) */}
+      {/* On mobile screens, focus position is set to 78% where the 3D mockups sit */}
+      {hasVideo ? (
+        <video
+          key={currentItem.bannerVideo}
+          src={normalizeMediaUrl(currentItem.bannerVideo)}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover object-[78%_center] sm:object-center z-0 transition-opacity duration-700 animate-in fade-in-50"
+        />
+      ) : hasImage ? (
+        <img
+          key={currentItem.bannerImage}
+          src={normalizeMediaUrl(currentItem.bannerImage)}
+          alt={currentItem.title}
+          className="absolute inset-0 w-full h-full object-cover object-[78%_center] sm:object-center z-0 transition-opacity duration-700 animate-in fade-in-50"
+        />
+      ) : (
+        /* Fallback dark mesh pattern with golden radial accents when no custom media is uploaded */
+        <div className="absolute inset-0 z-0 bg-[#121418] overflow-hidden">
+          <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-[500px] h-[500px] bg-[#FACC15]/8 rounded-full blur-[120px] pointer-events-none" />
+          <div
+            className="absolute inset-0 opacity-15"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 2px 2px, rgba(250, 204, 21, 0.4) 1px, transparent 0)",
+              backgroundSize: "32px 32px",
+            }}
+          />
+        </div>
+      )}
 
-      {/* Subtle radial ambient orbs on sides */}
-      <div
-        className="absolute -top-24 -left-24 w-96 h-96 bg-[#F5C542]/6 rounded-full blur-3xl pointer-events-none"
-        aria-hidden="true"
-      />
-      <div
-        className="absolute top-1/3 -right-24 w-[420px] h-[420px] bg-[#F5C542]/8 rounded-full blur-3xl pointer-events-none"
-        aria-hidden="true"
-      />
+      {/* 2. Refined, Balanced Gradient Overlays */}
+      {/* Mobile: Bottom-up scrim so text is 100% readable while top/right 3D mockup stays crisp */}
+      {/* Desktop: Gentle left scrim so text is readable while wide right image is unobstructed */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#121418] via-[#121418]/85 to-[#121418]/30 sm:bg-gradient-to-r sm:from-[#121418]/90 sm:via-[#121418]/45 sm:to-transparent z-0 pointer-events-none" />
+      {/* Smooth bottom edge blend into the next section */}
+      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#121418] to-transparent z-0 pointer-events-none" />
 
-      <div className="max-w-6xl mx-auto px-5 sm:px-8 relative z-10">
+      {/* 3. Foreground Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+        {/* Main Content Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-12 items-center min-h-[300px] sm:min-h-[360px]">
+          {/* Left Column: Heading, Subtitle & CTA */}
+          <div className="md:col-span-7 lg:col-span-6 text-center md:text-left flex flex-col items-center md:items-start space-y-3 sm:space-y-5">
+            {/* Mobile Pill Badge */}
+            <div className="inline-flex items-center gap-1.5 bg-[#121418]/80 backdrop-blur-md border border-[#FACC15]/40 px-3 py-1 rounded-full text-[11px] font-bold text-[#FACC15] shadow-lg mb-1 select-none">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#FACC15] animate-pulse" />
+              <span>{currentItem.badgeText || (hasVideo ? "Video Banner" : "Commercial Showcase")}</span>
+            </div>
 
-        {/* Top Hero Stage: Mobile-Optimized Top Mascot + Desktop 2-Column */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center mb-12 sm:mb-16">
-
-          {/* Mobile-Only Mascot Stage: Welcoming hero on phones */}
-          <div className="lg:hidden flex flex-col items-center justify-center pt-2 pb-1 relative">
-            <div
-              className="absolute w-52 h-52 bg-[radial-gradient(circle,rgba(245,197,66,0.25)_0%,transparent_70%)] rounded-full blur-xl pointer-events-none"
-              aria-hidden="true"
-            />
-            <img
-              src="/bird.png"
-              alt="Pixel Robot Bird Mascot"
-              className="w-40 sm:w-48 h-auto object-contain animate-float drop-shadow-[0_15px_30px_rgba(245,197,66,0.3)] relative z-10 select-none"
-            />
-            <div
-              className="w-28 sm:w-36 h-3 bg-black/70 rounded-full blur-sm animate-shadow-pulse -mt-1.5"
-              aria-hidden="true"
-            />
-          </div>
-
-          {/* Headline, Description & CTAs Column */}
-          <div className="lg:col-span-7 text-center lg:text-left">
-            {/* Hero Headline with Golden Gradient Accent */}
-            <h1 className="font-display font-extrabold text-3xl sm:text-5xl md:text-6xl lg:text-7xl tracking-[-0.035em] text-[#F7F7F2] leading-[1.12]">
-              Websites and digital marketing for businesses in{" "}
-              <span className="text-gradient-gold">
-                Oman
-              </span>
+            {/* Title */}
+            <h1
+              key={currentItem.id || currentItem.title}
+              className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight sm:leading-[1.1] drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)] animate-in fade-in duration-500 max-w-xl"
+            >
+              {currentItem.title}
             </h1>
 
-            {/* Hero Introduction from Admin Settings */}
-            <p className="mt-4 sm:mt-6 text-sm sm:text-base md:text-lg text-[#C4C7CC] font-normal leading-relaxed max-w-2xl mx-auto lg:mx-0">
-              {company.description ||
-                "Pixel Business Solutions LLC helps businesses build a clearer online presence through website design, SEO, Google Business Profile management, social media management and AI visibility. For restaurants and hotels, we also offer digital QR menus."}
+            {/* Subtitle */}
+            <p
+              key={`sub-${currentItem.id || currentItem.title}`}
+              className="text-xs sm:text-base lg:text-lg text-white/90 font-medium tracking-wide max-w-lg leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] animate-in fade-in duration-500 line-clamp-3 sm:line-clamp-none"
+            >
+              {currentItem.introPlaceholder}
             </p>
 
-            {/* Responsive Action Buttons: Full width on small mobile, side-by-side on sm+ */}
-            <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3 sm:gap-4">
-              <a
-                href="#contact"
-                className="btn-primary text-sm sm:text-base py-3 sm:py-3.5 px-7 rounded-xl shadow-xl hover:shadow-2xl hover:shadow-[#F5C542]/30 w-full sm:w-auto"
+            {/* Action Yellow Button */}
+            <div className="pt-2 w-full sm:w-auto">
+              <button
+                onClick={handleActionClick}
+                className="w-full sm:w-auto bg-[#FACC15] hover:bg-[#E5B532] text-[#121418] font-black text-sm sm:text-base px-8 py-3.5 rounded-xl sm:rounded-2xl transition-all duration-200 shadow-[0_4px_20px_rgba(250,204,21,0.35)] hover:shadow-[0_6px_28px_rgba(250,204,21,0.5)] active:scale-95 cursor-pointer text-center"
               >
-                <span>Discuss your project</span>
-                <ArrowRight size={16} />
-              </a>
-
-              <a
-                href="#assessment"
-                className="btn-secondary text-sm sm:text-base py-3 sm:py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 w-full sm:w-auto"
-              >
-                <Sparkles size={15} className="text-[#F5C542]" />
-                <span>Guided Needs Assessment</span>
-              </a>
-            </div>
-
-            {/* Micro Confidence Metrics Chips */}
-            <div className="mt-7 pt-5 border-t border-[#45484E]/50 flex flex-wrap items-center justify-center lg:justify-start gap-2 sm:gap-3 text-xs">
-              <div className="px-3 py-1.5 rounded-full bg-[#2B2D31]/80 border border-[#45484E] text-[#F7F7F2] flex items-center gap-1.5 font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#F5C542]" />
-                <span>6 Core Services</span>
-              </div>
-              <div className="px-3 py-1.5 rounded-full bg-[#2B2D31]/80 border border-[#45484E] text-[#F7F7F2] flex items-center gap-1.5 font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                <span>Bilingual AR/EN</span>
-              </div>
-              <div className="px-3 py-1.5 rounded-full bg-[#2B2D31]/80 border border-[#45484E] text-[#F7F7F2] flex items-center gap-1.5 font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#F5C542]" />
-                <span>Oman Focus</span>
-              </div>
+                {currentItem.ctaText || "Learn More"}
+              </button>
             </div>
           </div>
 
-          {/* Desktop-Only Mascot Stage: Expansive on large screens */}
-          <div className="hidden lg:flex lg:col-span-5 flex-col items-center justify-center relative">
-            {/* Concentric Glow Backdrop */}
-            <div
-              className="absolute w-72 h-72 sm:w-88 sm:h-88 bg-[radial-gradient(circle,rgba(245,197,66,0.22)_0%,transparent_70%)] rounded-full blur-2xl pointer-events-none"
-              aria-hidden="true"
-            />
-            <div
-              className="absolute w-52 h-52 bg-[#F5C542]/10 rounded-full blur-xl pointer-events-none"
-              aria-hidden="true"
-            />
-
-            {/* Floating 3D Robot Bird Image Only */}
-            <div className="relative z-10 flex flex-col items-center">
-              <img
-                src="/bird.png"
-                alt="Pixel Robot Bird Mascot"
-                className="w-64 sm:w-80 md:w-92 lg:w-96 h-auto object-contain animate-float drop-shadow-[0_25px_35px_rgba(245,197,66,0.25)] select-none hover:scale-105 transition-transform"
-              />
-
-              {/* Dynamic Animated Ground Shadow */}
-              <div
-                className="w-40 sm:w-56 h-4 bg-black/60 rounded-full blur-md animate-shadow-pulse -mt-2"
-                aria-hidden="true"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Interactive Quick-Pill Service Previewer */}
-        <div className="mt-8 max-w-4xl mx-auto">
-          {/* Interactive Selector Tabs: Scrollable on mobile */}
-          <div className="flex items-center sm:justify-center gap-2 overflow-x-auto pb-3 mb-4 select-none">
-            {HERO_PREVIEWS.map((preview) => {
-              const isActive = activePreview === preview.id;
-              return (
-                <button
-                  key={preview.id}
-                  onClick={() => setActivePreview(preview.id)}
-                  className={`px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 cursor-pointer flex items-center gap-2 whitespace-nowrap flex-shrink-0 ${isActive
-                    ? "bg-[#F5C542] text-[#202124] shadow-lg shadow-[#F5C542]/25 scale-105 font-bold"
-                    : "bg-[#2B2D31]/80 text-[#C4C7CC] hover:text-[#F7F7F2] border border-[#45484E] hover:border-[#F5C542]/50 backdrop-blur-sm"
-                    }`}
-                >
-                  {preview.id === "web" && <Globe size={13} />}
-                  {preview.id === "seo" && <Search size={13} />}
-                  {preview.id === "qr" && <QrCode size={13} />}
-                  {preview.id === "gbp" && <MapPin size={13} />}
-                  <span>{preview.badge}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Spotlight Card */}
-          <div className="p-5 sm:p-8 rounded-2xl bg-[#2B2D31] border border-[#45484E] shadow-2xl text-left relative overflow-hidden transition-all duration-300 card-hover-gold">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[#F5C542]/10 blur-3xl pointer-events-none" />
-
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-4 border-b border-[#45484E]/70 mb-4">
-              <div>
-                <span className="text-[10px] sm:text-[11px] font-bold text-[#F5C542] uppercase tracking-wider block mb-1">
-                  Spotlight Capability &bull; {currentPreview.badge}
+          {/* Right Column: Intentionally open on desktop so background 3D banner is completely visible */}
+          <div className="hidden md:flex md:col-span-5 lg:col-span-6 justify-end items-end h-full">
+            {hasMedia && (
+              <div className="bg-[#121418]/65 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full text-xs text-white/90 flex items-center gap-2 shadow-xl mb-4 select-none">
+                <span className="w-2 h-2 rounded-full bg-[#FACC15] animate-pulse" />
+                <span className="font-bold tracking-wide">
+                  {currentItem.badgeText || (hasVideo ? "Video Banner" : "Commercial Banner Showcase")}
                 </span>
-                <h2 className="text-lg sm:text-2xl font-bold text-[#F7F7F2]">
-                  {currentPreview.title}
-                </h2>
               </div>
-              <span className="self-start sm:self-auto px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[11px] sm:text-xs font-bold bg-[#202124] text-[#F5C542] border border-[#45484E] whitespace-nowrap shadow-sm">
-                {currentPreview.tag}
-              </span>
-            </div>
-
-            <p className="text-xs sm:text-sm text-[#C4C7CC] leading-relaxed mb-5 max-w-2xl">
-              {currentPreview.description}
-            </p>
-
-            {/* Deliverables Checklist */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 mb-5 sm:mb-6 pt-3 border-t border-[#45484E]/50">
-              {currentPreview.deliverables.map((item, idx) => (
-                <div key={idx} className="flex items-center gap-2 text-xs text-[#F7F7F2]">
-                  <CheckCircle2 size={13} className="text-[#F5C542] flex-shrink-0" />
-                  <span className="text-[11px] sm:text-xs text-[#C4C7CC]">{item}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pt-3 border-t border-[#45484E]/70">
-              <span className="text-xs font-semibold text-[#F7F7F2] flex items-center gap-2">
-                <Clock size={13} className="text-[#F5C542]" />
-                <span>{currentPreview.metrics}</span>
-              </span>
-
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#F5C542] hover:text-[#FFE28A] group self-start sm:self-auto"
-              >
-                <span>Plan this scope for your business</span>
-                <ChevronRight size={13} className="transition-transform group-hover:translate-x-1" />
-              </a>
-            </div>
+            )}
           </div>
         </div>
 
+        {/* Bottom Pagination with Left & Right Navigation Arrows */}
+        <div className="mt-6 sm:mt-12 flex flex-col items-center justify-center gap-2 select-none">
+          <div className="inline-flex items-center gap-2 sm:gap-3.5 bg-[#121418]/80 backdrop-blur-md px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-white/10 shadow-xl">
+            {/* Left Navigation Arrow */}
+            <button
+              onClick={handlePrev}
+              aria-label="Previous slide"
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[#9CA3AF] hover:text-[#FACC15] hover:bg-white/10 active:scale-90 transition-all cursor-pointer"
+            >
+              <ChevronLeft size={18} strokeWidth={2.4} />
+            </button>
 
+            {/* Mobile Slide Counter (01 / 09) */}
+            <div className="flex sm:hidden items-center px-2 text-xs font-bold text-white/90 tracking-wider">
+              <span className="text-[#FACC15] font-black">{String(selectedIndex + 1).padStart(2, "0")}</span>
+              <span className="text-[#4B5563] mx-1.5">/</span>
+              <span className="text-[#9CA3AF]">{String(activeItems.length).padStart(2, "0")}</span>
+            </div>
+
+            {/* Pagination Dots (Tablet & Desktop) */}
+            <div className="hidden sm:flex items-center gap-2 sm:gap-2.5 px-1">
+              {activeItems.map((item, index) => {
+                const isActive = index === selectedIndex;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => onSelectService(index)}
+                    aria-label={`Select ${item.title}`}
+                    className={`transition-all duration-300 rounded-full cursor-pointer ${
+                      isActive
+                        ? "w-3 h-3 bg-[#FACC15] shadow-[0_0_10px_rgba(250,204,21,0.9)] scale-110"
+                        : "w-2 h-2 sm:w-2.5 sm:h-2.5 bg-[#4B5563] hover:bg-[#9CA3AF]"
+                    }`}
+                  />
+                );
+              })}
+            </div>
+
+            {/* Right Navigation Arrow */}
+            <button
+              onClick={handleNext}
+              aria-label="Next slide"
+              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[#9CA3AF] hover:text-[#FACC15] hover:bg-white/10 active:scale-90 transition-all cursor-pointer"
+            >
+              <ChevronRight size={18} strokeWidth={2.4} />
+            </button>
+          </div>
+
+          {/* Mobile Caption */}
+          <span className="sm:hidden text-[11px] text-[#9CA3AF] font-medium tracking-wide">
+            Swipe or tap arrows to explore
+          </span>
+        </div>
       </div>
     </section>
   );

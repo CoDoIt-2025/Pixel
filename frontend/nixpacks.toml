@@ -2,10 +2,14 @@
 nixPkgs = ["nodejs_22"]
 
 [phases.install]
-cmds = ["npm install --force", "node setup-bindings.js"]
+cmds = [
+  "npm install",
+  "node -e 'try { const rv = require(\"./node_modules/rolldown/package.json\").version; console.log(\"Ensuring rolldown linux binding:\", rv); require(\"child_process\").execSync(\"npm install --no-save @rolldown/binding-linux-x64-gnu@\" + rv, {stdio: \"inherit\"}); } catch(e){ console.warn(e); }'",
+  "node -e 'try { const tv = require(\"./node_modules/tailwindcss/package.json\").version; console.log(\"Ensuring tailwind oxide linux binding:\", tv); require(\"child_process\").execSync(\"npm install --no-save @tailwindcss/oxide-linux-x64-gnu@\" + tv, {stdio: \"inherit\"}); } catch(e){ console.warn(e); }'"
+]
 
 [phases.build]
-cmds = ["node setup-bindings.js", "npm run build"]
+cmds = ["npm run build"]
 
 [start]
 cmd = "npx --yes serve -s dist -l 80"
