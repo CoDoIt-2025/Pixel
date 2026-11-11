@@ -46,6 +46,7 @@ import {
 import { useAdminStore } from "@/lib/store";
 import { Service } from "@/types";
 import { formatCurrency } from "@/lib/utils";
+import { normalizeMediaUrl } from "@/lib/api";
 import { toast } from "sonner";
 
 const serviceSchema = z.object({
@@ -655,9 +656,9 @@ export default function ServicesPage() {
                     <span className="text-[10px] uppercase font-bold text-slate-400">Live Preview</span>
                     <div className="h-28 bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center">
                       {mediaMode === "image" && mediaImageUrl ? (
-                        <img src={mediaImageUrl} alt="Preview" className="w-full h-full object-cover" />
+                        <img src={normalizeMediaUrl(mediaImageUrl)} alt="Preview" className="w-full h-full object-cover" />
                       ) : mediaMode === "video" && mediaVideoUrl ? (
-                        <video src={mediaVideoUrl} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                        <video src={normalizeMediaUrl(mediaVideoUrl)} autoPlay loop muted playsInline className="w-full h-full object-cover" />
                       ) : (
                         <span className="text-xs text-slate-500">No media uploaded yet</span>
                       )}

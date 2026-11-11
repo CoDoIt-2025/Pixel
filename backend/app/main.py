@@ -46,6 +46,29 @@ async def lifespan(app: FastAPI):
                 conn.commit()
             except Exception:
                 pass
+
+        # Populate default 3D banners if empty
+        banner_defaults = [
+            ("https://i.ibb.co/VYCbZY9c/Google-Business-Profile-Management.jpg", ["%google%", "%gbp%", "%local seo%"]),
+            ("https://i.ibb.co/1HYpvQT/Whats-App-Image-2026-11-10-at-9-56-33-PM.jpg", ["%website%", "%web design%"]),
+            ("https://i.ibb.co/Q7rFf537/SEO-Services.jpg", ["%seo%"]),
+            ("https://i.ibb.co/JwKCL0V2/Whats-App-Image-2026-11-10-at-9-56-30-PM.jpg", ["%ai%"]),
+            ("https://i.ibb.co/Z1wNF9pn/Custom-Software-Web-Apps.jpg", ["%software%", "%web app%"]),
+            ("https://i.ibb.co/PsCVpKW6/Social-Media-Management.jpg", ["%social%"]),
+            ("https://i.ibb.co/G3Vy5PCw/Whats-App-Image-2026-11-10-at-9-56-29-PM.jpg", ["%ad%"]),
+            ("https://i.ibb.co/QFmZx0bc/Whats-App-Image-2026-11-10-at-9-56-30-PM-1.jpg", ["%graphic%", "%video%"]),
+            ("https://i.ibb.co/sp4TX1T0/Whats-App-Image-2026-11-10-at-9-56-32-PM-1.jpg", ["%qr%", "%menu%"]),
+        ]
+        for img_url, patterns in banner_defaults:
+            for pat in patterns:
+                try:
+                    conn.execute(
+                        text("UPDATE services SET banner_image = :img, media_type = 'image', show_in_banner = 1 WHERE (banner_image IS NULL OR banner_image = '') AND LOWER(title) LIKE :pat"),
+                        {"img": img_url, "pat": pat}
+                    )
+                    conn.commit()
+                except Exception:
+                    pass
                 
     yield
 

@@ -22,6 +22,7 @@ export interface ServiceItem {
   bannerVideo?: string;
   mediaType?: "illustration" | "image" | "video";
   showInBanner?: boolean;
+  startingPrice?: number;
 }
 
 export const SERVICES_DATA: ServiceItem[] = [
@@ -252,31 +253,70 @@ export function mapBackendServiceToItem(s: {
     illustrationType = "graphic-video";
   }
 
-  // Find if pre-defined default item exists for baseline content
-  const matched = SERVICES_DATA.find((item) => {
-    const itemTitle = item.title.toLowerCase();
-    if (itemTitle === titleLower || item.id === s.id) return true;
-    if (titleLower.includes(itemTitle) || itemTitle.includes(titleLower)) return true;
-    if (titleLower.includes("google") && item.id.includes("google")) return true;
-    if ((titleLower.includes("website") || titleLower.includes("web design")) && item.id.includes("website")) return true;
-    if (titleLower.includes("seo") && item.id.includes("seo")) return true;
-    if (titleLower.includes("social") && item.id.includes("social")) return true;
-    if ((titleLower.includes("ad") || titleLower.includes("advertising")) && item.id.includes("advertising")) return true;
-    if ((titleLower.includes("graphic") || titleLower.includes("creative")) && item.id.includes("creative")) return true;
-    if ((titleLower.includes("software") || titleLower.includes("tool")) && item.id.includes("business-tools")) return true;
-    if ((titleLower.includes("qr") || titleLower.includes("menu")) && item.id.includes("qr")) return true;
-    return false;
-  });
+  // 1. Direct ID or exact title match
+  let matched = SERVICES_DATA.find(
+    (item) => item.id === s.id || item.title.toLowerCase() === titleLower
+  );
 
-  const resolvedBannerImage = s.bannerImage || matched?.bannerImage;
+  // 2. High-precision keyword matching if not directly matched by id/title
+  if (!matched) {
+    if (
+      titleLower.includes("business profile") ||
+      titleLower.includes("gbp") ||
+      titleLower.includes("local seo") ||
+      (titleLower.includes("google") && !titleLower.includes("ad"))
+    ) {
+      matched = SERVICES_DATA.find((item) => item.id === "google-business-profile-local-seo");
+    } else if (
+      titleLower.includes("website") ||
+      titleLower.includes("web design") ||
+      titleLower.includes("development")
+    ) {
+      matched = SERVICES_DATA.find((item) => item.id === "website-design-development");
+    } else if (
+      titleLower.includes("seo") ||
+      titleLower.includes("ai visibility") ||
+      titleLower.includes("ai search") ||
+      titleLower.includes("aiso") ||
+      titleLower.includes("aeo") ||
+      titleLower.includes("geo")
+    ) {
+      matched = SERVICES_DATA.find((item) => item.id === "seo-ai-visibility");
+    } else if (titleLower.includes("social") || titleLower.includes("instagram")) {
+      matched = SERVICES_DATA.find((item) => item.id === "social-media-management");
+    } else if (titleLower.includes("ad") || titleLower.includes("advertising") || titleLower.includes("campaign")) {
+      matched = SERVICES_DATA.find((item) => item.id === "google-meta-ads");
+    } else if (titleLower.includes("graphic") || titleLower.includes("video") || titleLower.includes("creative")) {
+      matched = SERVICES_DATA.find((item) => item.id === "graphic-design-ai-video");
+    } else if (titleLower.includes("software") || titleLower.includes("web app") || titleLower.includes("apps")) {
+      matched = SERVICES_DATA.find((item) => item.id === "custom-software-web-apps");
+    } else if (
+      titleLower.includes("qr") ||
+      titleLower.includes("menu") ||
+      titleLower.includes("catalogue") ||
+      titleLower.includes("restaurant") ||
+      titleLower.includes("hospitality")
+    ) {
+      matched = SERVICES_DATA.find((item) => item.id === "restaurant-qr-digital-menus");
+    } else if (titleLower.includes("tool") || titleLower.includes("automation")) {
+      matched = SERVICES_DATA.find((item) => item.id === "business-tools-automation");
+    }
+  }
+
+  const resolvedBannerImage =
+    s.bannerImage && s.bannerImage.trim().length > 0 ? s.bannerImage : matched?.bannerImage;
   const resolvedMediaType = (s.mediaType as any) || (resolvedBannerImage ? "image" : "illustration");
 
   return {
     id: s.id,
     title: s.title,
     subtext: matched?.subtext || (titleLower.includes("ai") ? "AISO / AEO / GEO" : undefined),
-    introPlaceholder: matched?.introPlaceholder || "Service introduction placeholder.",
-    shortDesc: s.description || matched?.shortDesc || "Short service description placeholder.",
+    introPlaceholder:
+      matched?.introPlaceholder ||
+      (s.description && s.description.length > 15
+        ? s.description
+        : "Enterprise software and AI engineering studio."),
+    shortDesc: s.description || matched?.shortDesc || "Enterprise solutions & digital engineering studio.",
     fullDesc: s.description || matched?.fullDesc || s.title,
     iconName: s.iconName || matched?.iconName || "Monitor",
     category: s.category || matched?.category || "Service",
@@ -286,5 +326,6 @@ export function mapBackendServiceToItem(s: {
     bannerVideo: s.bannerVideo || matched?.bannerVideo,
     mediaType: resolvedMediaType,
     showInBanner: s.showInBanner !== false,
+    startingPrice: s.startingPrice,
   };
 }

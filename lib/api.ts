@@ -25,6 +25,17 @@ export function getApiBaseUrl(): string {
   return "http://127.0.0.1:8000/api/v1";
 }
 
+export function normalizeMediaUrl(url?: string | null): string {
+  if (!url) return "";
+  if (url.startsWith("data:") || url.startsWith("blob:")) return url;
+  if (url.includes("/uploads/")) {
+    const filename = url.split("/uploads/")[1];
+    const baseUrl = getApiBaseUrl().replace(/\/api\/v1\/?$/, "");
+    return `${baseUrl}/uploads/${filename}`;
+  }
+  return url;
+}
+
 async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const token =
     typeof window !== "undefined"

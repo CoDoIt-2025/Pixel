@@ -115,6 +115,9 @@ def run_seed():
                 description="Maximize your Google Business Profile and local search visibility for customers across Muscat and the Sultanate of Oman. Drive high-intent footfall and calls.",
                 icon_name="MapPin",
                 starting_price=95.0,
+                banner_image="https://i.ibb.co/VYCbZY9c/Google-Business-Profile-Management.jpg",
+                media_type="image",
+                show_in_banner=True,
                 features=[
                     "Google Business Profile setup, claim & verification",
                     "Oman local citation building & directory alignment",
@@ -133,6 +136,9 @@ def run_seed():
                 description="Improve your website structure, keyword relevance, and technical health around customer searches that drive conversions in Oman and the GCC.",
                 icon_name="Search",
                 starting_price=120.0,
+                banner_image="https://i.ibb.co/Q7rFf537/SEO-Services.jpg",
+                media_type="image",
+                show_in_banner=True,
                 features=[
                     "Comprehensive technical SEO & crawlability audit",
                     "High-intent Oman commercial keyword research",
@@ -151,6 +157,9 @@ def run_seed():
                 description="Optimize your brand entity for generative AI search engines including ChatGPT, Google AI Overviews, Perplexity, and Copilot.",
                 icon_name="Cpu",
                 starting_price=110.0,
+                banner_image="https://i.ibb.co/JwKCL0V2/Whats-App-Image-2026-11-10-at-9-56-30-PM.jpg",
+                media_type="image",
+                show_in_banner=True,
                 features=[
                     "Entity authority mapping for AI answer engines",
                     "Schema.org JSON-LD structured semantic markup",
@@ -169,6 +178,9 @@ def run_seed():
                 description="High-performance, modern, mobile-responsive websites built to establish strong brand credibility and turn visitors into paying customers.",
                 icon_name="Monitor",
                 starting_price=160.0,
+                banner_image="https://i.ibb.co/1HYpvQT/Whats-App-Image-2026-11-10-at-9-56-33-PM.jpg",
+                media_type="image",
+                show_in_banner=True,
                 features=[
                     "Bespoke mobile-first responsive web design",
                     "Fast loading speeds & modern accessibility standards",
@@ -187,6 +199,9 @@ def run_seed():
                 description="Scalable custom web applications, client dashboards, automated internal workflows, and portals built for business operational excellence.",
                 icon_name="Layers",
                 starting_price=350.0,
+                banner_image="https://i.ibb.co/Z1wNF9pn/Custom-Software-Web-Apps.jpg",
+                media_type="image",
+                show_in_banner=True,
                 features=[
                     "Fullstack web application architecture",
                     "Secure authentication & role-based user management",
@@ -205,6 +220,9 @@ def run_seed():
                 description="Show customers what makes your business unique with consistent social media creative, brand storytelling, and strategic engagement.",
                 icon_name="MessageSquare",
                 starting_price=130.0,
+                banner_image="https://i.ibb.co/PsCVpKW6/Social-Media-Management.jpg",
+                media_type="image",
+                show_in_banner=True,
                 features=[
                     "Strategic monthly content calendar & creative direction",
                     "Bilingual English & Arabic social post copywriting",
@@ -223,6 +241,9 @@ def run_seed():
                 description="Precision-targeted advertising campaigns on Google Search, YouTube, Instagram, and Facebook with measurable return on ad spend.",
                 icon_name="Megaphone",
                 starting_price=140.0,
+                banner_image="https://i.ibb.co/G3Vy5PCw/Whats-App-Image-2026-11-10-at-9-56-29-PM.jpg",
+                media_type="image",
+                show_in_banner=True,
                 features=[
                     "Oman & GCC hyper-local demographic targeting",
                     "Google Search & Display campaign management",
@@ -241,6 +262,9 @@ def run_seed():
                 description="Stand out with compelling visual brand identity, modern promotional graphics, company profiles, and AI-accelerated video marketing.",
                 icon_name="Film",
                 starting_price=90.0,
+                banner_image="https://i.ibb.co/QFmZx0bc/Whats-App-Image-2026-11-10-at-9-56-30-PM-1.jpg",
+                media_type="image",
+                show_in_banner=True,
                 features=[
                     "Brand guidelines, logo adaptations & color palettes",
                     "Social media templates & corporate brochure designs",
@@ -259,6 +283,9 @@ def run_seed():
                 description="Touchless, lightning-fast digital menus and interactive product catalogues accessed instantly via smartphone QR code scan.",
                 icon_name="QrCode",
                 starting_price=80.0,
+                banner_image="https://i.ibb.co/sp4TX1T0/Whats-App-Image-2026-11-10-at-9-56-32-PM-1.jpg",
+                media_type="image",
+                show_in_banner=True,
                 features=[
                     "Instant mobile access with no app download required",
                     "High-resolution item photography & OMR pricing",
