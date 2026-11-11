@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from sqlalchemy import text
 from app.core.config import settings
 from app.core.database import engine, Base
 import app.models.models  # ensure models are registered
@@ -31,6 +32,21 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 async def lifespan(app: FastAPI):
     # Auto-create tables in SQLite on startup if they do not exist
     Base.metadata.create_all(bind=engine)
+    
+    # Auto-migrate: Ensure columns exist in SQLite if table was created previously
+    with engine.connect() as conn:
+        for col_def in [
+            "ALTER TABLE services ADD COLUMN banner_image TEXT DEFAULT ''",
+            "ALTER TABLE services ADD COLUMN banner_video TEXT DEFAULT ''",
+            "ALTER TABLE services ADD COLUMN media_type TEXT DEFAULT 'illustration'",
+            "ALTER TABLE services ADD COLUMN show_in_banner BOOLEAN DEFAULT 1",
+        ]:
+            try:
+                conn.execute(text(col_def))
+                conn.commit()
+            except Exception:
+                pass
+                
     yield
 
 app = FastAPI(

@@ -37,7 +37,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     iconName: "MapPin",
     category: "Local Search & Maps",
     illustrationType: "local-seo",
-    bannerImage: "https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1600&auto=format&fit=crop&q=80",
+    bannerImage: "https://i.ibb.co/VYCbZY9c/Google-Business-Profile-Management.jpg",
     mediaType: "image",
     showInBanner: true,
     features: [
@@ -60,7 +60,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     iconName: "Monitor",
     category: "Web & Digital Engineering",
     illustrationType: "website",
-    bannerImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1600&auto=format&fit=crop&q=80",
+    bannerImage: "https://i.ibb.co/1HYpvQT/Whats-App-Image-2026-11-10-at-9-56-33-PM.jpg",
     mediaType: "image",
     showInBanner: true,
     features: [
@@ -83,7 +83,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     iconName: "Cpu",
     category: "Search & Generative AI Discovery",
     illustrationType: "ai-search",
-    bannerImage: "https://images.unsplash.com/photo-1677442136019-21780efad99a?w=1600&auto=format&fit=crop&q=80",
+    bannerImage: "https://i.ibb.co/Q7rFf537/SEO-Services.jpg",
     mediaType: "image",
     showInBanner: true,
     features: [
@@ -106,7 +106,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     iconName: "MessageSquare",
     category: "Social Media & Brand Growth",
     illustrationType: "social-media",
-    bannerImage: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=1600&auto=format&fit=crop&q=80",
+    bannerImage: "https://i.ibb.co/PsCVpKW6/Social-Media-Management.jpg",
     mediaType: "image",
     showInBanner: true,
     features: [
@@ -129,7 +129,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     iconName: "Megaphone",
     category: "Paid Media & Performance Funnels",
     illustrationType: "ads",
-    bannerImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600&auto=format&fit=crop&q=80",
+    bannerImage: "https://i.ibb.co/G3Vy5PCw/Whats-App-Image-2026-11-10-at-9-56-29-PM.jpg",
     mediaType: "image",
     showInBanner: true,
     features: [
@@ -152,7 +152,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     iconName: "Film",
     category: "Brand Identity & Media Production",
     illustrationType: "graphic-video",
-    bannerImage: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=1600&auto=format&fit=crop&q=80",
+    bannerImage: "https://i.ibb.co/QFmZx0bc/Whats-App-Image-2026-11-10-at-9-56-30-PM-1.jpg",
     mediaType: "image",
     showInBanner: true,
     features: [
@@ -175,7 +175,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     iconName: "Layers",
     category: "Software & Operational Solutions",
     illustrationType: "custom-software",
-    bannerImage: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1600&auto=format&fit=crop&q=80",
+    bannerImage: "https://i.ibb.co/Z1wNF9pn/Custom-Software-Web-Apps.jpg",
     mediaType: "image",
     showInBanner: true,
     features: [
@@ -198,7 +198,7 @@ export const SERVICES_DATA: ServiceItem[] = [
     iconName: "QrCode",
     category: "Hospitality & Retail Systems",
     illustrationType: "qr-menus",
-    bannerImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&auto=format&fit=crop&q=80",
+    bannerImage: "https://i.ibb.co/sp4TX1T0/Whats-App-Image-2026-11-10-at-9-56-32-PM-1.jpg",
     mediaType: "image",
     showInBanner: true,
     features: [
@@ -253,9 +253,23 @@ export function mapBackendServiceToItem(s: {
   }
 
   // Find if pre-defined default item exists for baseline content
-  const matched = SERVICES_DATA.find(
-    (item) => item.title.toLowerCase() === titleLower || item.id === s.id
-  );
+  const matched = SERVICES_DATA.find((item) => {
+    const itemTitle = item.title.toLowerCase();
+    if (itemTitle === titleLower || item.id === s.id) return true;
+    if (titleLower.includes(itemTitle) || itemTitle.includes(titleLower)) return true;
+    if (titleLower.includes("google") && item.id.includes("google")) return true;
+    if ((titleLower.includes("website") || titleLower.includes("web design")) && item.id.includes("website")) return true;
+    if (titleLower.includes("seo") && item.id.includes("seo")) return true;
+    if (titleLower.includes("social") && item.id.includes("social")) return true;
+    if ((titleLower.includes("ad") || titleLower.includes("advertising")) && item.id.includes("advertising")) return true;
+    if ((titleLower.includes("graphic") || titleLower.includes("creative")) && item.id.includes("creative")) return true;
+    if ((titleLower.includes("software") || titleLower.includes("tool")) && item.id.includes("business-tools")) return true;
+    if ((titleLower.includes("qr") || titleLower.includes("menu")) && item.id.includes("qr")) return true;
+    return false;
+  });
+
+  const resolvedBannerImage = s.bannerImage || matched?.bannerImage;
+  const resolvedMediaType = (s.mediaType as any) || (resolvedBannerImage ? "image" : "illustration");
 
   return {
     id: s.id,
@@ -268,9 +282,9 @@ export function mapBackendServiceToItem(s: {
     category: s.category || matched?.category || "Service",
     features: s.features && s.features.length > 0 ? s.features : (matched?.features || []),
     illustrationType: matched?.illustrationType || illustrationType,
-    bannerImage: s.bannerImage || matched?.bannerImage,
+    bannerImage: resolvedBannerImage,
     bannerVideo: s.bannerVideo || matched?.bannerVideo,
-    mediaType: (s.mediaType as any) || matched?.mediaType || (s.bannerImage || matched?.bannerImage ? "image" : "illustration"),
+    mediaType: resolvedMediaType,
     showInBanner: s.showInBanner !== false,
   };
 }
