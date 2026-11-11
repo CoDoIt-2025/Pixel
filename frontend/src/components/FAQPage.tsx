@@ -264,7 +264,7 @@ export const FAQPage: React.FC<FAQPageProps> = ({ onBack, onRequestAudit }) => {
 
             <div className="flex flex-wrap items-center gap-3 shrink-0">
               <a
-                href="https://wa.me/96896935606"
+                href="https://wa.me/96896967420"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#25D366] text-white text-xs font-bold hover:bg-[#1EBE5D] transition-colors shadow-sm"
@@ -274,11 +274,11 @@ export const FAQPage: React.FC<FAQPageProps> = ({ onBack, onRequestAudit }) => {
               </a>
 
               <a
-                href="tel:+96896935606"
+                href="tel:+96896967420"
                 className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#1E2128] border border-[#2B303C] text-white text-xs font-bold hover:border-[#FACC15] transition-colors"
               >
                 <Phone size={16} className="text-[#FACC15]" />
-                <span>+968 9693 5606</span>
+                <span>+968 9696 7420</span>
               </a>
 
               <button

@@ -5,8 +5,8 @@ import { api } from "../lib/api";
 const DEFAULT_COMPANY: CompanySettings = {
   name: "Pixel Business Solutions LLC",
   email: "contact@pixelbusiness.si",
-  phone: "+968 9693 5606",
-  address: "Muscat, Sultanate of Oman",
+  phone: "+968 9696 7420",
+  address: "H9MX+HMV, Souk Al Ghubrah St, Muscat, Oman",
   taxId: "",
   currency: "OMR (ر.ع.)",
   website: "https://pixelbusiness.si",

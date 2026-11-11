@@ -19,8 +19,10 @@ import { SERVICES_DATA, mapBackendServiceToItem } from "./data/servicesData";
 import type { ServiceItem } from "./data/servicesData";
 import type { Banner } from "./types";
 import { api, normalizeMediaUrl } from "./lib/api";
+import { useScrollReveal } from "./hooks/useScrollReveal";
 
 export function App() {
+  useScrollReveal();
   const [services, setServices] = useState<ServiceItem[]>(SERVICES_DATA);
   const [customBanners, setCustomBanners] = useState<Banner[]>([]);
   const [selectedServiceIndex, setSelectedServiceIndex] = useState(0);
@@ -103,7 +105,6 @@ export function App() {
       bannerImage: normalizeMediaUrl(srv.bannerImage),
       bannerVideo: normalizeMediaUrl(srv.bannerVideo),
       mediaType: srv.mediaType,
-      badgeText: srv.mediaType === "video" ? "Video Banner" : "Commercial Banner Showcase",
       ctaText: "Learn More",
       service: srv,
     }));

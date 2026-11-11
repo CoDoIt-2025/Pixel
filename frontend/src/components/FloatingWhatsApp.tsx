@@ -7,11 +7,11 @@ interface FloatingWhatsAppProps {
 }
 
 export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({
-  phone = "+968 9693 5606",
+  phone = "+968 9696 7420",
   defaultMessage = "Hello Pixel Business Solutions, I would like to inquire about your services.",
 }) => {
   // Clean phone number for WhatsApp wa.me link (digits only)
-  const cleanPhone = phone.replace(/[^0-9]/g, "") || "96896935606";
+  const cleanPhone = phone.replace(/[^0-9]/g, "") || "96896967420";
   const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(defaultMessage)}`;
 
   return (

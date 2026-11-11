@@ -74,7 +74,7 @@ export const AuditRequestSection: React.FC = () => {
     >
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="mb-8">
+        <div className="mb-8 reveal-on-scroll">
           <div className="flex items-center gap-3">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-[#121418]">
               {/* Desktop heading */}
@@ -84,7 +84,7 @@ export const AuditRequestSection: React.FC = () => {
             </h2>
             <span className="w-10 sm:w-14 h-1 sm:h-1.5 bg-[#FACC15] rounded-full inline-block" />
           </div>
-          <p className="mt-2 text-xs sm:text-sm text-[#525763]">
+          <p className="mt-2 text-xs sm:text-sm text-[#525763] reveal-on-scroll reveal-delay-1">
             Add the links you have. Our Muscat technical team will review your local visibility and provide actionable insights.
           </p>
         </div>
@@ -121,7 +121,7 @@ export const AuditRequestSection: React.FC = () => {
         )}
 
         {/* Form Container */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 reveal-scale reveal-delay-2">
           {/* Desktop 2-Column Grid */}
           <div className="hidden sm:grid grid-cols-2 gap-x-8 gap-y-6">
             {/* Row 1, Col 1: Company Name */}
@@ -155,7 +155,7 @@ export const AuditRequestSection: React.FC = () => {
                 type="tel"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
-                placeholder="+968 9693 5606"
+                placeholder="+968 9696 7420"
                 className="w-full bg-white border border-[#D5D8E0] rounded-xl px-4 py-3 text-sm text-[#121418] placeholder-[#9CA3AF] focus:outline-none focus:border-[#FACC15] focus:ring-2 focus:ring-[#FACC15]/20 transition-all shadow-xs"
               />
             </div>
@@ -306,7 +306,7 @@ export const AuditRequestSection: React.FC = () => {
                 type="tel"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
-                placeholder="+968 9693 5606"
+                placeholder="+968 9696 7420"
                 className="w-full bg-white border border-[#D5D8E0] rounded-xl px-3.5 py-2.5 text-xs text-[#121418] placeholder-[#9CA3AF] focus:outline-none focus:border-[#FACC15]"
               />
             </div>

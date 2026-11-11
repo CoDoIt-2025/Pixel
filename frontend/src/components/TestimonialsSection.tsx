@@ -52,7 +52,7 @@ export const TestimonialsSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10 border-b border-[#242831] mb-12">
-          <div>
+          <div className="reveal-on-scroll">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1E222B] border border-[#2B303C] text-[#FACC15] text-xs font-bold mb-3">
               <Sparkles size={13} className="text-[#FACC15] fill-[#FACC15]" />
               <span>Verified Client Endorsements</span>
@@ -62,17 +62,17 @@ export const TestimonialsSection: React.FC = () => {
             </h2>
           </div>
 
-          <p className="text-[#9CA3AF] text-sm sm:text-base max-w-md leading-relaxed">
+          <p className="text-[#9CA3AF] text-sm sm:text-base max-w-md leading-relaxed reveal-on-scroll reveal-delay-1">
             Real outcomes and feedback from founders, executives, and enterprise technology teams who build with Pixel.
           </p>
         </div>
 
         {/* Testimonials Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((item) => (
+          {testimonials.map((item, idx) => (
             <div
               key={item.id}
-              className="p-6 sm:p-7 rounded-2xl bg-[#1A1D24] border border-[#2B303C] hover:border-[#FACC15]/40 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1 relative group"
+              className={`p-6 sm:p-7 rounded-2xl bg-[#1A1D24] border border-[#2B303C] hover:border-[#FACC15]/40 flex flex-col justify-between transition-all duration-300 hover:shadow-xl hover:-translate-y-1 relative group reveal-scale reveal-delay-${(idx % 3) + 1}`}
             >
               <div>
                 {/* Header: Stars & Quote Icon */}

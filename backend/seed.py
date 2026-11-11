@@ -56,8 +56,8 @@ def run_seed():
         pixel_company_settings = {
             "name": "Pixel Business Solutions LLC",
             "email": "contact@pixelbusiness.om",
-            "phone": "+968 2400 0000",
-            "address": "Muscat, Sultanate of Oman | Thrissur, Kerala",
+            "phone": "+968 9696 7420",
+            "address": "H9MX+HMV, Souk Al Ghubrah St, Muscat, Oman",
             "taxId": "CR-1049281",
             "currency": "OMR (ر.ع.)",
             "website": "https://pixelbusiness.om",

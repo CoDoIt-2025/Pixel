@@ -93,14 +93,14 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenFullFaqPage }) => 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header with Direct "Browse Full FAQ Page" Action */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12 pb-6 border-b border-[#E5E5DF]">
-          <div>
+          <div className="reveal-on-scroll">
             <div className="flex items-center gap-3">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-[#121418]">
                 Frequently Asked Questions
               </h2>
               <span className="w-10 sm:w-14 h-1 sm:h-1.5 bg-[#FACC15] rounded-full inline-block" />
             </div>
-            <p className="mt-2 text-xs sm:text-sm text-[#525763]">
+            <p className="mt-2 text-xs sm:text-sm text-[#525763] reveal-on-scroll reveal-delay-1">
               Straightforward answers regarding our deliverables, timelines, pricing, and Oman market execution.
             </p>
           </div>
@@ -108,7 +108,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenFullFaqPage }) => 
           {onOpenFullFaqPage && (
             <button
               onClick={onOpenFullFaqPage}
-              className="px-5 py-2.5 rounded-xl bg-[#121418] hover:bg-[#FACC15] hover:text-[#121418] text-white text-xs font-bold transition-all shadow-sm flex items-center gap-2 cursor-pointer shrink-0"
+              className="px-5 py-2.5 rounded-xl bg-[#121418] hover:bg-[#FACC15] hover:text-[#121418] text-white text-xs font-bold transition-all shadow-sm flex items-center gap-2 cursor-pointer shrink-0 reveal-on-scroll reveal-delay-2"
             >
               <span>Browse Full FAQ Page</span>
               <ArrowRight size={14} />
@@ -124,7 +124,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenFullFaqPage }) => 
             return (
               <div
                 key={faq.id || idx}
-                className="border border-[#E2E4E9] rounded-2xl overflow-hidden transition-all bg-[#FAF9F5] shadow-xs hover:border-[#FACC15]"
+                className={`border border-[#E2E4E9] rounded-2xl overflow-hidden transition-all bg-[#FAF9F5] shadow-xs hover:border-[#FACC15] reveal-on-scroll reveal-delay-${(idx % 4) + 1}`}
               >
                 <button
                   onClick={() => toggle(idx)}
@@ -166,7 +166,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenFullFaqPage }) => 
         )}
 
         {/* Direct WhatsApp Consultation Card */}
-        <div className="mt-10 p-6 rounded-2xl bg-[#FAF9F5] border border-[#E5E5DF] flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+        <div className="mt-10 p-6 rounded-2xl bg-[#FAF9F5] border border-[#E5E5DF] flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left reveal-scale reveal-delay-2">
           <div>
             <h4 className="font-extrabold text-sm text-[#121418]">
               Have a specific question about your project?
@@ -177,7 +177,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenFullFaqPage }) => 
           </div>
           <div className="flex items-center gap-2.5">
             <a
-              href="https://wa.me/96896935606"
+              href="https://wa.me/96896967420"
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#25D366] text-white text-xs font-bold shadow-xs hover:bg-[#1EBE5D] transition-colors"
@@ -186,11 +186,11 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenFullFaqPage }) => 
               <span>WhatsApp Us</span>
             </a>
             <a
-              href="tel:+96896935606"
+              href="tel:+96896967420"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#121418] text-white text-xs font-bold hover:bg-[#2B2F3A] transition-colors"
             >
               <Phone size={14} className="text-[#FACC15]" />
-              <span>+968 9693 5606</span>
+              <span>+968 9696 7420</span>
             </a>
           </div>
         </div>

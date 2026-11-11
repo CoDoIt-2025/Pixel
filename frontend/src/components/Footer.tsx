@@ -26,7 +26,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
         {/* Main Footer Row */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-10 border-b border-[#242831]">
           {/* Company Brand Column */}
-          <div className="md:col-span-5 space-y-3.5">
+          <div className="md:col-span-5 space-y-3.5 reveal-on-scroll">
             <div className="flex items-center gap-3.5">
               <img
                 src="/brand/pixel-logo-3d-tight.png"
@@ -50,15 +50,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
             <div className="flex flex-col gap-2 pt-1 text-xs text-[#C4C7CC]">
               <div className="flex items-center gap-2">
                 <MapPin size={14} className="text-[#FACC15] shrink-0" />
-                <span>Muscat, Sultanate of Oman</span>
+                <span>H9MX+HMV, Souk Al Ghubrah St, Muscat, Oman</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone size={14} className="text-[#FACC15] shrink-0" />
                 <a
-                  href="tel:+96896935606"
+                  href="tel:+96896967420"
                   className="hover:text-[#FACC15] transition-colors"
                 >
-                  +968 9693 5606
+                  +968 9696 7420
                 </a>
               </div>
               <div className="flex items-center gap-2">
@@ -74,7 +74,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
           </div>
 
           {/* Quick Navigation Links */}
-          <div className="md:col-span-3 space-y-3">
+          <div className="md:col-span-3 space-y-3 reveal-on-scroll reveal-delay-1">
             <h5 className="font-black text-xs uppercase tracking-wider text-white">
               Navigation
             </h5>
@@ -139,7 +139,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
           </div>
 
           {/* Direct Consultation CTA */}
-          <div className="md:col-span-4 bg-[#181B22] border border-[#2B303C] rounded-2xl p-5 space-y-3">
+          <div className="md:col-span-4 bg-[#181B22] border border-[#2B303C] rounded-2xl p-5 space-y-3 reveal-scale reveal-delay-2">
             <h5 className="font-black text-xs uppercase tracking-wider text-[#FACC15]">
               Request An Audit
             </h5>

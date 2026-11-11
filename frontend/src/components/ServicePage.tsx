@@ -76,7 +76,7 @@ export const ServicePage: React.FC<ServicePageProps> = ({
       setNotes("");
     } catch (err: any) {
       setSubmitError(
-        err.message || "Failed to submit request. Please reach us at +968 9693 5606."
+        err.message || "Failed to submit request. Please reach us at +968 9696 7420."
       );
     } finally {
       setIsSubmitting(false);
@@ -109,7 +109,7 @@ export const ServicePage: React.FC<ServicePageProps> = ({
 
           <div className="flex items-center gap-3">
             <a
-              href="https://wa.me/96896935606"
+              href="https://wa.me/96896967420"
               target="_blank"
               rel="noreferrer"
               className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-[#22C55E] hover:text-[#4ADE80] transition-colors"
@@ -192,11 +192,11 @@ export const ServicePage: React.FC<ServicePageProps> = ({
             </button>
 
             <a
-              href="tel:+96896935606"
+              href="tel:+96896967420"
               className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#A1A5B0] hover:text-white transition-colors"
             >
               <Phone size={14} className="text-[#FACC15]" />
-              <span>Call Muscat (+968 9693 5606)</span>
+              <span>Call Muscat (+968 9696 7420)</span>
             </a>
           </div>
         </div>

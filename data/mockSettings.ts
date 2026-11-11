@@ -12,8 +12,8 @@ export const initialSettings: UserSettings = {
   company: {
     name: "Pixel Business Solutions LLC",
     email: "contact@pixelbusiness.om",
-    phone: "+968 9693 5606",
-    address: "Muscat, Sultanate of Oman",
+    phone: "+968 9696 7420",
+    address: "H9MX+HMV, Souk Al Ghubrah St, Muscat, Oman",
     taxId: "CR-1049281",
     currency: "OMR (ر.ع.)",
     website: "https://pixelbusiness.om",

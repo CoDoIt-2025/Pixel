@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import {
   MapPin,
   Search,
-  Cpu,
   Monitor,
   Layers,
   MessageSquare,
@@ -10,6 +9,9 @@ import {
   Film,
   QrCode,
   ArrowUpRight,
+  ChevronLeft,
+  ChevronRight,
+  Sparkles,
 } from "lucide-react";
 import type { ServiceItem } from "../data/servicesData";
 
@@ -20,81 +22,21 @@ interface ServicesSectionProps {
   onOpenServiceDetails: (service: ServiceItem) => void;
 }
 
-/** Icon renderer with inline color */
-const ServiceIcon: React.FC<{ iconName: string; color: string }> = ({ iconName, color }) => {
-  const props = { size: 24, strokeWidth: 1.7, style: { color } };
+/** Icon renderer */
+const ServiceIcon: React.FC<{ iconName: string; size?: number }> = ({ iconName, size = 18 }) => {
+  const props = { size, strokeWidth: 2 };
   switch (iconName) {
     case "MapPin": return <MapPin {...props} />;
     case "Search": return <Search {...props} />;
-    case "Cpu": return <Cpu {...props} />;
+    case "Cpu": return <Sparkles {...props} />;
     case "Monitor": return <Monitor {...props} />;
     case "Layers": return <Layers {...props} />;
     case "MessageSquare": return <MessageSquare {...props} />;
     case "Megaphone": return <Megaphone {...props} />;
     case "Film": return <Film {...props} />;
     case "QrCode": return <QrCode {...props} />;
-    default: return <MapPin {...props} />;
+    default: return <Sparkles {...props} />;
   }
-};
-
-/**
- * Clean 2-Tone Alternating Palette:
- * 0: Deep Black
- * 1: Crisp Pure White
- */
-const PALETTE = [
-  // 0: Black tile
-  {
-    bg: "#111317",
-    hover: "#1A1D24",
-    text: "#FFFFFF",
-    icon: "#FACC15",
-    sub: "#9CA3AF",
-    border: "#242831",
-    iconBg: "rgba(250, 204, 21, 0.14)",
-  },
-  // 1: White tile
-  {
-    bg: "#FFFFFF",
-    hover: "#F4F4EE",
-    text: "#111317",
-    icon: "#111317",
-    sub: "#525763",
-    border: "#E2E4E9",
-    iconBg: "rgba(17, 19, 23, 0.08)",
-  },
-];
-
-/** Panel with JS hover state */
-const Panel: React.FC<{
-  bg: string;
-  hover: string;
-  border: string;
-  onClick: () => void;
-  title: string;
-  children: React.ReactNode;
-}> = ({ bg, hover, border, onClick, title, children }) => {
-  const [hov, setHov] = React.useState(false);
-  return (
-    <button
-      onClick={onClick}
-      title={title}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        flex: "1 1 0%",
-        minWidth: 0,
-        backgroundColor: hov ? hover : bg,
-        borderRight: `1px solid ${border}`,
-        transition: "background-color 0.18s ease, transform 0.18s ease",
-        transform: hov ? "translateY(-3px)" : "translateY(0)",
-        position: "relative",
-      }}
-      className="text-left cursor-pointer select-none group"
-    >
-      {children}
-    </button>
-  );
 };
 
 export const ServicesSection: React.FC<ServicesSectionProps> = ({
@@ -103,108 +45,290 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   onSelectService,
   onOpenServiceDetails,
 }) => {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isUserInteractingRef = useRef<boolean>(false);
+  const resumeTimeoutRef = useRef<any>(null);
+  const animFrameIdRef = useRef<number | null>(null);
+
+  // Triple the array for seamless infinite looping
+  const loopedServices = services.length > 0 ? [...services, ...services, ...services] : [];
+
+  const pauseAutoLoop = (resumeDelayMs = 2500) => {
+    isUserInteractingRef.current = true;
+    if (resumeTimeoutRef.current) {
+      clearTimeout(resumeTimeoutRef.current);
+    }
+    resumeTimeoutRef.current = setTimeout(() => {
+      isUserInteractingRef.current = false;
+    }, resumeDelayMs);
+  };
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = direction === "left" ? -180 : 180;
+      scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      pauseAutoLoop(3000);
+    }
+  };
+
+  // Seamless infinite loop repositioning
+  const handleScroll = () => {
+    const el = scrollContainerRef.current;
+    if (!el || services.length === 0) return;
+    const third = el.scrollWidth / 3;
+    if (third <= 0) return;
+
+    if (el.scrollLeft >= third * 2) {
+      el.scrollLeft -= third;
+    } else if (el.scrollLeft <= 10) {
+      el.scrollLeft += third;
+    }
+  };
+
+  // Initialize scroll position in the middle set
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (el && services.length > 0) {
+      const third = el.scrollWidth / 3;
+      el.scrollLeft = third;
+    }
+  }, [services]);
+
+  // Continuous Auto-Scroll Loop (Pauses when user scrolls/interacts, resumes automatically)
+  useEffect(() => {
+    if (services.length === 0) return;
+
+    const speed = 0.75; // Smooth continuous moving speed
+
+    const autoScrollLoop = () => {
+      const el = scrollContainerRef.current;
+      if (el && !isUserInteractingRef.current) {
+        el.scrollLeft += speed;
+        const third = el.scrollWidth / 3;
+        if (third > 0) {
+          if (el.scrollLeft >= third * 2) {
+            el.scrollLeft -= third;
+          } else if (el.scrollLeft <= 5) {
+            el.scrollLeft += third;
+          }
+        }
+      }
+      animFrameIdRef.current = requestAnimationFrame(autoScrollLoop);
+    };
+
+    animFrameIdRef.current = requestAnimationFrame(autoScrollLoop);
+
+    return () => {
+      if (animFrameIdRef.current) {
+        cancelAnimationFrame(animFrameIdRef.current);
+      }
+      if (resumeTimeoutRef.current) {
+        clearTimeout(resumeTimeoutRef.current);
+      }
+    };
+  }, [services]);
+
+  // Touch and mouse drag functionality with instant pause on interaction
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+
+    const handleMouseDown = (e: MouseEvent) => {
+      isDown = true;
+      pauseAutoLoop(3000);
+      startX = e.pageX - container.offsetLeft;
+      scrollLeft = container.scrollLeft;
+    };
+    const handleMouseLeave = () => {
+      if (isDown) {
+        isDown = false;
+        pauseAutoLoop(1500);
+      }
+    };
+    const handleMouseUp = () => {
+      if (isDown) {
+        isDown = false;
+        pauseAutoLoop(2000);
+      }
+    };
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDown) return;
+      e.preventDefault();
+      pauseAutoLoop(3000);
+      const x = e.pageX - container.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      container.scrollLeft = scrollLeft - walk;
+    };
+
+    container.addEventListener("mousedown", handleMouseDown);
+    container.addEventListener("mouseleave", handleMouseLeave);
+    container.addEventListener("mouseup", handleMouseUp);
+    container.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      container.removeEventListener("mousedown", handleMouseDown);
+      container.removeEventListener("mouseleave", handleMouseLeave);
+      container.removeEventListener("mouseup", handleMouseUp);
+      container.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
   return (
-    <section id="services" style={{ backgroundColor: "#0E1014" }}>
-      {/* ── Section Header ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-7">
-        <div className="flex items-center gap-3 mb-2">
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-            Our Services
-          </h2>
-          <span
-            className="w-10 h-1.5 rounded-full"
-            style={{ backgroundColor: "#FACC15", display: "inline-block" }}
-          />
+    <section id="services" className="relative bg-[#0E1014] text-white pt-8 sm:pt-10 select-none overflow-hidden">
+      {/* ── Section Header with Navigation Controls ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4 flex items-end justify-between gap-4">
+        <div className="reveal-on-scroll">
+          <div className="flex items-center gap-3 mb-1.5">
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+              Our Services
+            </h2>
+            <span className="w-8 sm:w-10 h-1.5 rounded-full bg-[#FACC15] inline-block" />
+          </div>
+          <p className="text-xs sm:text-sm text-[#9CA3AF] reveal-on-scroll reveal-delay-1">
+            Click any service to explore its full scope &amp; details.
+          </p>
         </div>
-        <p className="text-sm" style={{ color: "#717682" }}>
-          Click any service to explore its full scope &amp; details.
-        </p>
+
+        {/* Left & Right Smooth Scroll Buttons */}
+        <div className="flex items-center gap-2 select-none shrink-0">
+          <button
+            onClick={() => scroll("left")}
+            aria-label="Scroll left"
+            className="w-8 h-8 rounded-full bg-[#1A1D24] border border-[#282C37] text-[#A1A5B0] hover:text-[#FACC15] active:scale-90 flex items-center justify-center transition-all cursor-pointer shadow-sm"
+          >
+            <ChevronLeft size={16} />
+          </button>
+          <button
+            onClick={() => scroll("right")}
+            aria-label="Scroll right"
+            className="w-8 h-8 rounded-full bg-[#1A1D24] border border-[#282C37] text-[#A1A5B0] hover:text-[#FACC15] active:scale-90 flex items-center justify-center transition-all cursor-pointer shadow-sm"
+          >
+            <ChevronRight size={16} />
+          </button>
+        </div>
       </div>
 
-      {/* ── Horizontal Panel Row (Alternating Black / White) ── */}
+      {/* ── Movable Infinite Loop Cards Row ── */}
       <div
-        style={{ borderTop: "1px solid #242831", borderBottom: "1px solid #242831" }}
-        className="flex overflow-x-auto"
+        ref={scrollContainerRef}
+        onScroll={handleScroll}
+        onTouchStart={() => pauseAutoLoop(3500)}
+        onTouchMove={() => pauseAutoLoop(3500)}
+        onTouchEnd={() => pauseAutoLoop(2000)}
+        onMouseEnter={() => { isUserInteractingRef.current = true; }}
+        onMouseLeave={() => pauseAutoLoop(1200)}
+        className="flex gap-3.5 sm:gap-4 overflow-x-auto scroll-smooth py-3 px-4 sm:px-6 lg:px-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden touch-pan-x cursor-grab active:cursor-grabbing"
       >
-        {services.map((service, index) => {
-          const isActive = index === selectedIndex;
-          // Strictly alternate Black (even index) and White (odd index)
-          const pal = isActive
-            ? {
-                bg: "#FACC15",
-                hover: "#EDB800",
-                text: "#111317",
-                icon: "#111317",
-                sub: "#5A4700",
-                border: "#EDB800",
-                iconBg: "rgba(0, 0, 0, 0.12)",
-              }
-            : PALETTE[index % 2];
+        {loopedServices.map((service, loopIdx) => {
+          const originalIndex = loopIdx % services.length;
+          const isActive = originalIndex === selectedIndex;
+
+          // Theme cycling:
+          // Active -> Yellow
+          // Even -> Dark Charcoal
+          // Odd -> White
+          let theme: "yellow" | "white" | "dark" = "dark";
+          if (isActive) {
+            theme = "yellow";
+          } else if (originalIndex % 2 === 1) {
+            theme = "white";
+          } else {
+            theme = "dark";
+          }
 
           return (
-            <Panel
-              key={service.id}
-              bg={pal.bg}
-              hover={pal.hover}
-              border={pal.border}
+            <div
+              key={`${service.id}-${loopIdx}`}
               onClick={() => {
-                onSelectService(index);
+                onSelectService(originalIndex);
                 onOpenServiceDetails(service);
               }}
-              title={`Open ${service.title}`}
+              className={`w-[145px] sm:w-[165px] md:w-[185px] h-[195px] sm:h-[215px] rounded-2xl p-4 sm:p-5 flex flex-col justify-between shrink-0 select-none cursor-pointer transition-all duration-300 transform hover:scale-[1.03] active:scale-95 group ${
+                theme === "yellow"
+                  ? "bg-[#FACC15] text-[#121418] shadow-[0_8px_20px_rgba(250,204,21,0.28)]"
+                  : theme === "white"
+                  ? "bg-white text-[#121418] shadow-md hover:shadow-lg"
+                  : "bg-[#181B22] border border-[#282C37] text-white shadow-md hover:border-[#FACC15]/40"
+              }`}
             >
+              {/* Top: Icon Container */}
               <div
-                className="flex flex-col h-full px-4 py-6 sm:px-5 sm:py-7"
-                style={{ minWidth: 155 }}
+                className={`w-9 h-9 rounded-xl flex items-center justify-center transition-transform duration-200 group-hover:scale-110 shrink-0 ${
+                  theme === "yellow"
+                    ? "bg-black/10 text-[#121418]"
+                    : theme === "white"
+                    ? "bg-slate-100 text-[#121418]"
+                    : "bg-[#FACC15]/15 border border-[#FACC15]/30 text-[#FACC15]"
+                }`}
               >
-                {/* Icon Container */}
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-5 transition-transform duration-200 group-hover:scale-105"
-                  style={{ backgroundColor: pal.iconBg }}
-                >
-                  <ServiceIcon iconName={service.iconName} color={pal.icon} />
-                </div>
+                <ServiceIcon iconName={service.iconName} size={18} />
+              </div>
 
-                {/* Service Title */}
-                <div
-                  className="font-bold text-sm leading-snug mb-1 flex-1"
-                  style={{ color: pal.text }}
+              {/* Middle: Title & Subtitle */}
+              <div className="flex-1 flex flex-col justify-center my-2">
+                <h3
+                  className={`text-xs sm:text-sm font-black leading-tight mb-1 line-clamp-2 ${
+                    theme === "dark" ? "text-white" : "text-[#121418]"
+                  }`}
                 >
                   {service.title}
-                </div>
-
-                {/* Subtext */}
-                {service.subtext && (
-                  <div
-                    className="text-[10px] font-semibold tracking-widest uppercase mb-3 line-clamp-1"
-                    style={{ color: pal.sub }}
-                  >
-                    {service.subtext}
-                  </div>
-                )}
-
-                {/* Category (desktop only) */}
-                <div
-                  className="text-[10px] mb-4 hidden sm:block truncate"
-                  style={{ color: pal.sub }}
+                </h3>
+                <p
+                  className={`text-[10px] sm:text-[11px] leading-snug line-clamp-2 ${
+                    theme === "yellow"
+                      ? "text-[#121418]/80 font-semibold"
+                      : theme === "white"
+                      ? "text-[#525763] font-medium"
+                      : "text-[#9CA3AF] font-medium"
+                  }`}
                 >
-                  {service.category}
-                </div>
+                  {service.shortDesc || service.subtext || service.category}
+                </p>
+              </div>
 
-                {/* Arrow */}
+              {/* Bottom: Arrow Button */}
+              <div className="flex justify-end pt-1">
                 <div
-                  style={{ color: pal.icon }}
-                  className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  className={`w-6 h-6 rounded-full flex items-center justify-center transition-all duration-200 group-hover:scale-110 ${
+                    theme === "yellow"
+                      ? "bg-black/10 text-[#121418]"
+                      : theme === "white"
+                      ? "bg-slate-100 text-[#121418]"
+                      : "bg-white/10 text-[#FACC15]"
+                  }`}
                 >
-                  <ArrowUpRight size={17} />
+                  <ArrowUpRight size={13} strokeWidth={2.5} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </div>
               </div>
-            </Panel>
+            </div>
           );
         })}
       </div>
 
-      <div style={{ height: 1, backgroundColor: "#242831" }} />
+      {/* ── Organic Dual-Layer Wave Curve Transition to "About Pixel" ── */}
+      <div className="relative w-full overflow-hidden leading-none z-10 pt-6 sm:pt-10 -mb-[1px] pointer-events-none">
+        <svg
+          className="w-full h-14 sm:h-20 md:h-24 block"
+          viewBox="0 0 1440 140"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {/* Layer 1: Golden yellow accent wave swooshing on the right side */}
+          <path
+            d="M0,140 L1440,140 L1440,45 C1260,10 1020,35 780,95 C620,135 340,138 0,140 Z"
+            fill="#FACC15"
+          />
+          {/* Layer 2: Crisp pure white organic wave flowing seamlessly into About Pixel */}
+          <path
+            d="M0,18 C380,18 720,82 1080,112 C1260,124 1360,134 1440,140 L1440,140 L0,140 Z"
+            fill="#FFFFFF"
+          />
+        </svg>
+      </div>
     </section>
   );
 };

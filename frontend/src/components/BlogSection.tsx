@@ -107,19 +107,19 @@ export const BlogSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-6 border-b border-[#242831]">
-          <div>
+          <div className="reveal-on-scroll">
             <div className="flex items-center gap-3">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white">
                 Blog & Industry Insights
               </h2>
               <span className="w-10 sm:w-14 h-1 sm:h-1.5 bg-[#FACC15] rounded-full inline-block" />
             </div>
-            <p className="mt-2 text-xs sm:text-sm text-[#A1A5B0] max-w-xl">
+            <p className="mt-2 text-xs sm:text-sm text-[#A1A5B0] max-w-xl reveal-on-scroll reveal-delay-1">
               Practical guides and strategic market analysis on search visibility, AI discovery, and web engineering in Oman.
             </p>
           </div>
 
-          <div className="text-xs font-semibold text-[#A1A5B0] flex items-center gap-1.5">
+          <div className="text-xs font-semibold text-[#A1A5B0] flex items-center gap-1.5 reveal-on-scroll reveal-delay-2">
             <BookOpen size={16} className="text-[#FACC15]" />
             <span>Authored by Pixel Agency Specialists</span>
           </div>
@@ -178,10 +178,10 @@ export const BlogSection: React.FC = () => {
 
         {/* 3 Articles Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((post) => (
+          {posts.map((post, idx) => (
             <article
               key={post.id}
-              className="bg-[#181B22] border border-[#2B303C] hover:border-[#FACC15] rounded-2xl overflow-hidden transition-all duration-200 flex flex-col justify-between hover:shadow-lg hover:shadow-[#FACC15]/5 cursor-pointer group"
+              className={`bg-[#181B22] border border-[#2B303C] hover:border-[#FACC15] rounded-2xl overflow-hidden transition-all duration-200 flex flex-col justify-between hover:shadow-lg hover:shadow-[#FACC15]/5 cursor-pointer group reveal-scale reveal-delay-${(idx % 3) + 1}`}
               onClick={() => {
                 setSelectedPost(post);
                 const el = document.getElementById("blog");

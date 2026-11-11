@@ -71,14 +71,14 @@ export const AboutWhySection: React.FC<AboutWhySectionProps> = ({
           ════════════════════════════════════════════ */}
       <section
         id="about"
-        className="w-full bg-[#FAF9F5] py-16 sm:py-24 text-[#121418] border-b border-[#E5E5DF] scroll-mt-20"
+        className="w-full bg-white pt-6 sm:pt-10 pb-16 sm:pb-24 text-[#121418] border-b border-[#E5E5DF] scroll-mt-20"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
             {/* Left Column: Rich Corporate Narrative */}
             <div className="lg:col-span-7 space-y-6">
               {/* Header */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 reveal-on-scroll">
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[#121418]">
                   {aboutTitle}
                 </h2>
@@ -86,19 +86,21 @@ export const AboutWhySection: React.FC<AboutWhySectionProps> = ({
               </div>
 
               {/* Sub-headline */}
-              <p className="text-base sm:text-lg font-bold text-[#121418] leading-snug">
-                Engineering Dominant Search Visibility &amp; Modern Digital Platforms in the Sultanate of Oman.
+              <p className="text-base sm:text-lg font-bold text-[#121418] leading-snug reveal-on-scroll reveal-delay-1">
+                A Business Growth Partner for Local Brands in Oman.
               </p>
 
               {/* Story Paragraphs */}
               <div className="space-y-4 text-sm sm:text-base text-[#525763] leading-relaxed">
                 {paragraphs.map((p, i) => (
-                  <p key={i}>{p}</p>
+                  <p key={i} className={`reveal-on-scroll reveal-delay-${Math.min(i + 2, 4)}`}>
+                    {p}
+                  </p>
                 ))}
               </div>
 
               {/* 3 Core Agency Pillars */}
-              <div className="pt-4 border-t border-[#E5E5DF] grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="pt-4 border-t border-[#E5E5DF] grid grid-cols-1 sm:grid-cols-3 gap-4 reveal-on-scroll reveal-delay-3">
                 <div className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-lg bg-[#FACC15]/20 flex items-center justify-center shrink-0 mt-0.5">
                     <ShieldCheck size={17} className="text-[#B45309]" />
@@ -132,7 +134,7 @@ export const AboutWhySection: React.FC<AboutWhySectionProps> = ({
             </div>
 
             {/* Right Column: Corporate Profile & Verified Credentials Card */}
-            <div className="lg:col-span-5">
+            <div className="lg:col-span-5 reveal-right reveal-delay-2">
               <div className="bg-white border border-[#E2E4E9] rounded-3xl p-7 sm:p-8 shadow-sm space-y-6">
                 <div className="flex items-center gap-3 pb-5 border-b border-[#F0F0EB]">
                   <div className="w-11 h-11 rounded-2xl bg-[#121418] text-[#FACC15] flex items-center justify-center font-black text-lg">
@@ -153,7 +155,7 @@ export const AboutWhySection: React.FC<AboutWhySectionProps> = ({
                     <MapPin size={15} className="text-[#D97706] shrink-0 mt-0.5" />
                     <div>
                       <strong className="text-[#121418] block font-bold">Headquarters:</strong>
-                      <span>Muscat, Sultanate of Oman &bull; Serving Seeb, Bawshar, Sohar, Salalah &amp; GCC</span>
+                      <span>H9MX+HMV, Souk Al Ghubrah St, Muscat, Oman</span>
                     </div>
                   </div>
 
@@ -169,8 +171,8 @@ export const AboutWhySection: React.FC<AboutWhySectionProps> = ({
                     <Phone size={15} className="text-[#D97706] shrink-0 mt-0.5" />
                     <div>
                       <strong className="text-[#121418] block font-bold">Direct Line:</strong>
-                      <a href="tel:+96896935606" className="text-[#121418] hover:text-[#D97706] font-semibold">
-                        +968 9693 5606
+                      <a href="tel:+96896967420" className="text-[#121418] hover:text-[#D97706] font-semibold">
+                        +968 9696 7420
                       </a>
                     </div>
                   </div>
@@ -215,7 +217,7 @@ export const AboutWhySection: React.FC<AboutWhySectionProps> = ({
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Heading */}
-          <div className="flex items-center gap-3 mb-12">
+          <div className="flex items-center gap-3 mb-12 reveal-on-scroll">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-[#121418]">
               {whyTitle}
             </h2>
@@ -227,7 +229,7 @@ export const AboutWhySection: React.FC<AboutWhySectionProps> = ({
             {reasons.map((reason, index) => (
               <div
                 key={index}
-                className="flex items-start gap-4 bg-[#FAF9F5] border border-[#E2E4E9] rounded-2xl p-6 sm:p-7 hover:border-[#FACC15] hover:shadow-md transition-all duration-200 group"
+                className={`flex items-start gap-4 bg-[#FAF9F5] border border-[#E2E4E9] rounded-2xl p-6 sm:p-7 hover:border-[#FACC15] hover:shadow-md transition-all duration-200 group reveal-scale reveal-delay-${(index % 4) + 1}`}
               >
                 {/* Number badge */}
                 <div className="shrink-0 w-11 h-11 rounded-xl bg-[#FACC15] text-[#121418] flex items-center justify-center font-black text-sm shadow-xs group-hover:scale-105 transition-transform">
