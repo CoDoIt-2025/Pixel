@@ -35,6 +35,7 @@ import { EmptyState } from "@/components/shared/EmptyState";
 import { useAdminStore } from "@/lib/store";
 import { Banner } from "@/types";
 import { toast } from "sonner";
+import { getApiBaseUrl } from "@/lib/api";
 
 export default function BannersPage() {
   const banners = useAdminStore((state) => state.banners);
@@ -102,16 +103,35 @@ export default function BannersPage() {
       const isImg = file.type.startsWith("image/") || /\.(png|jpe?g|webp|gif|svg)$/i.test(file.name);
 
       if (isImg) {
-        const { uploadToImgBB } = await import("@/lib/imgbb");
-        const res = await uploadToImgBB(file);
-        setMediaUrl(res.url);
-        setMediaType("image");
-        toast.success("Photo uploaded to ImgBB Cloud CDN successfully!");
+        try {
+          const { uploadToImgBB } = await import("@/lib/imgbb");
+          const res = await uploadToImgBB(file);
+          setMediaUrl(res.url);
+          setMediaType("image");
+          toast.success("Photo uploaded to ImgBB Cloud CDN successfully!");
+        } catch (imgbbErr) {
+          console.warn("Direct ImgBB failed, using backend upload:", imgbbErr);
+          const formData = new FormData();
+          formData.append("file", file);
+          const API_BASE = getApiBaseUrl();
+          const res = await fetch(`${API_BASE}/upload`, {
+            method: "POST",
+            body: formData,
+          });
+          if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || "Upload failed");
+          }
+          const data = await res.json();
+          setMediaUrl(data.url);
+          setMediaType("image");
+          toast.success("Photo uploaded successfully!");
+        }
       } else {
         const formData = new FormData();
         formData.append("file", file);
 
-        const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1";
+        const API_BASE = getApiBaseUrl();
         const res = await fetch(`${API_BASE}/upload`, {
           method: "POST",
           body: formData,

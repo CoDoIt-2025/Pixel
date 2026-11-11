@@ -110,14 +110,15 @@ export default function ServicesPage() {
     try {
       const updates = {
         mediaType: mediaMode,
-        bannerImage: mediaMode === "image" ? mediaImageUrl : "",
-        bannerVideo: mediaMode === "video" ? mediaVideoUrl : "",
+        bannerImage: mediaMode === "image" ? mediaImageUrl.trim() : "",
+        bannerVideo: mediaMode === "video" ? mediaVideoUrl.trim() : "",
       };
       await updateService(mediaTarget.id, updates);
       toast.success(`Banner media updated for ${mediaTarget.title}`);
       setMediaTarget(null);
     } catch (err: any) {
-      toast.error(err.message || "Failed to save banner media");
+      console.error("Save media error:", err);
+      toast.error(err.message || "Failed to save banner media to database");
     } finally {
       setMediaSaving(false);
     }
@@ -128,21 +129,39 @@ export default function ServicesPage() {
     if (!file) return;
     setMediaUploading(true);
     try {
-      const { api } = await import("@/lib/api");
-      const res = await api.upload.file(file);
-      if (res.mediaType === "video") {
+      const isImg = file.type.startsWith("image/") || /\.(png|jpe?g|webp|gif|svg)$/i.test(file.name);
+
+      if (isImg) {
+        let uploadedUrl = "";
+        try {
+          const { uploadToImgBB } = await import("@/lib/imgbb");
+          const imgbb = await uploadToImgBB(file);
+          uploadedUrl = imgbb.url;
+        } catch (imgbbErr) {
+          console.warn("Direct ImgBB upload failed, falling back to backend upload:", imgbbErr);
+          const { api } = await import("@/lib/api");
+          const res = await api.upload.file(file);
+          uploadedUrl = res.url;
+        }
+
+        setMediaImageUrl(uploadedUrl);
+        setMediaMode("image");
+        toast.success("Image uploaded to ImgBB Cloud CDN successfully!");
+      } else {
+        const { api } = await import("@/lib/api");
+        const res = await api.upload.file(file);
         setMediaVideoUrl(res.url);
         setMediaMode("video");
         toast.success("Video uploaded successfully");
-      } else {
-        setMediaImageUrl(res.url);
-        setMediaMode("image");
-        toast.success("Image uploaded to ImgBB Cloud CDN successfully!");
       }
     } catch (err: any) {
+      console.error("Media upload error:", err);
       toast.error(err.message || "Upload failed");
     } finally {
       setMediaUploading(false);
+      if (e.target) {
+        e.target.value = "";
+      }
     }
   };
 

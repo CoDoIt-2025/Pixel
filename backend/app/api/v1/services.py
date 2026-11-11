@@ -66,6 +66,28 @@ def create_service(data: ServiceCreate, db: Session = Depends(get_db)):
         showInBanner=getattr(service, "show_in_banner", True) if getattr(service, "show_in_banner", True) is not None else True
     )
 
+@router.get("/{service_id}", response_model=ServiceResponse)
+def get_service(service_id: str, db: Session = Depends(get_db)):
+    service = db.query(Service).filter(Service.id == service_id).first()
+    if not service:
+        raise HTTPException(status_code=404, detail="Service not found")
+    return ServiceResponse(
+        id=service.id,
+        title=service.title,
+        category=service.category,
+        description=service.description or "",
+        iconName=service.icon_name or "Code",
+        startingPrice=service.starting_price,
+        features=service.features or [],
+        isVisible=service.is_visible,
+        deliveryTime=service.delivery_time or "4-6 weeks",
+        activeProjectsCount=service.active_projects_count or 0,
+        bannerImage=service.banner_image or "",
+        bannerVideo=service.banner_video or "",
+        mediaType=service.media_type or "illustration",
+        showInBanner=getattr(service, "show_in_banner", True) if getattr(service, "show_in_banner", True) is not None else True
+    )
+
 @router.put("/{service_id}", response_model=ServiceResponse)
 def update_service(service_id: str, data: ServiceUpdate, db: Session = Depends(get_db)):
     service = db.query(Service).filter(Service.id == service_id).first()

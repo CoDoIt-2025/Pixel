@@ -43,3 +43,4 @@ export async function uploadToImgBB(file: File): Promise<ImgBBUploadResponse> {
     size: json.data.size || file.size,
   };
 }
+

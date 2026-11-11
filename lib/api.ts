@@ -12,8 +12,18 @@ import {
   Banner,
 } from "@/types";
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1";
+export function getApiBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (host !== "localhost" && host !== "127.0.0.1") {
+      return "https://api.pixelbusiness.si/api/v1";
+    }
+  }
+  return "http://127.0.0.1:8000/api/v1";
+}
 
 async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
   const token =
@@ -29,7 +39,8 @@ async function request<T>(endpoint: string, options?: RequestInit): Promise<T> {
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  const res = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const baseUrl = getApiBaseUrl();
+  const res = await fetch(`${baseUrl}${endpoint}`, {
     ...options,
     headers,
   });

@@ -27,7 +27,13 @@ def upload_to_imgbb(file_bytes: bytes, filename: str) -> Optional[dict]:
             'image': b64,
             'name': filename
         }).encode('utf-8')
-        req = urllib.request.Request(url, data=data)
+        req = urllib.request.Request(
+            url,
+            data=data,
+            headers={
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            }
+        )
         with urllib.request.urlopen(req, timeout=30) as resp:
             result = json.loads(resp.read().decode('utf-8'))
             if result.get("success"):
