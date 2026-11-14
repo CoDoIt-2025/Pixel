@@ -1,11 +1,17 @@
 import React from "react";
 import { MapPin, Phone, Mail, ArrowUpRight } from "lucide-react";
+import { useSettings } from "../context/SettingsContext";
 
 interface FooterProps {
   onNavigateSection?: (id: string) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
+  const { company } = useSettings();
+  const phone = company.phone || "+968 9696 7420";
+  const email = company.email || "contact@pixelbusiness.si";
+  const address = company.address || "H9MX+HMV, Souk Al Ghubrah St, Muscat, Oman";
+  const cleanPhone = phone.replace(/[^0-9+]/g, "");
   const scrollTo = (id: string, e: React.MouseEvent) => {
     e.preventDefault();
     if (onNavigateSection) {
@@ -50,24 +56,24 @@ export const Footer: React.FC<FooterProps> = ({ onNavigateSection }) => {
             <div className="flex flex-col gap-2 pt-1 text-xs text-[#C4C7CC]">
               <div className="flex items-center gap-2">
                 <MapPin size={14} className="text-[#FACC15] shrink-0" />
-                <span>H9MX+HMV, Souk Al Ghubrah St, Muscat, Oman</span>
+                <span>{address}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone size={14} className="text-[#FACC15] shrink-0" />
                 <a
-                  href="tel:+96896967420"
+                  href={`tel:${cleanPhone}`}
                   className="hover:text-[#FACC15] transition-colors"
                 >
-                  +968 9696 7420
+                  {phone}
                 </a>
               </div>
               <div className="flex items-center gap-2">
                 <Mail size={14} className="text-[#FACC15] shrink-0" />
                 <a
-                  href="mailto:contact@pixelbusiness.si"
+                  href={`mailto:${email}`}
                   className="hover:text-[#FACC15] transition-colors"
                 >
-                  contact@pixelbusiness.si
+                  {email}
                 </a>
               </div>
             </div>

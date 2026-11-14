@@ -11,12 +11,12 @@ export const initialSettings: UserSettings = {
   },
   company: {
     name: "Pixel Business Solutions LLC",
-    email: "contact@pixelbusiness.om",
+    email: "contact@pixelbusiness.si",
     phone: "+968 9696 7420",
     address: "H9MX+HMV, Souk Al Ghubrah St, Muscat, Oman",
     taxId: "CR-1049281",
     currency: "OMR (ر.ع.)",
-    website: "https://pixelbusiness.om",
+    website: "https://pixelbusiness.si",
     description:
       "Pixel Business Solutions LLC helps businesses build a dominant online presence through website design, local SEO, Google Business Profile management, social media management, Google & Meta ads, and AI visibility.",
     aboutTitle: "About Pixel",

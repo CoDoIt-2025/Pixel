@@ -197,7 +197,12 @@ export const RFPInquiryForm: React.FC<InquiryFormProps> = ({ prefillData }) => {
                   <Phone size={16} className="text-[#F5C542] flex-shrink-0 mt-0.5" />
                   <div>
                     <strong className="text-[#F7F7F2] block">Telephone:</strong>
-                    <span>{company.phone || "+968 2400 0000"}</span>
+                    <a
+                      href={`tel:${(company.phone || "+968 9696 7420").replace(/[^0-9+]/g, "")}`}
+                      className="hover:text-[#F5C542] transition-colors"
+                    >
+                      {company.phone || "+968 9696 7420"}
+                    </a>
                   </div>
                 </div>
 
@@ -213,7 +218,7 @@ export const RFPInquiryForm: React.FC<InquiryFormProps> = ({ prefillData }) => {
               {/* Direct WhatsApp Quick Chat */}
               <div className="pt-4 border-t border-[#45484E]">
                 <a
-                  href="https://wa.me/96824000000"
+                  href={`https://wa.me/${(company.phone || "96896967420").replace(/[^0-9]/g, "")}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full py-2.5 px-4 rounded-xl bg-[#202124] border border-[#45484E] hover:border-[#F5C542] text-xs font-semibold text-[#F7F7F2] flex items-center justify-center gap-2 transition-all group"

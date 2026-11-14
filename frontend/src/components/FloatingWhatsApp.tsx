@@ -1,5 +1,6 @@
 import React from "react";
 import { sound } from "../lib/sound";
+import { useSettings } from "../context/SettingsContext";
 
 interface FloatingWhatsAppProps {
   phone?: string;
@@ -7,9 +8,11 @@ interface FloatingWhatsAppProps {
 }
 
 export const FloatingWhatsApp: React.FC<FloatingWhatsAppProps> = ({
-  phone = "+968 9696 7420",
+  phone: propPhone,
   defaultMessage = "Hello Pixel Business Solutions, I would like to inquire about your services.",
 }) => {
+  const { company } = useSettings();
+  const phone = propPhone || company.phone || "+968 9696 7420";
   // Clean phone number for WhatsApp wa.me link (digits only)
   const cleanPhone = phone.replace(/[^0-9]/g, "") || "96896967420";
   const whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(defaultMessage)}`;

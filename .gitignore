@@ -54,3 +54,11 @@ ENV/
 
 backend/uploads/*
 !backend/uploads/.gitkeep
+
+# SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+backend/data/*.db
+data/*.db
+

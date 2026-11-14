@@ -20,9 +20,11 @@ import type { ServiceItem } from "./data/servicesData";
 import type { Banner } from "./types";
 import { api, normalizeMediaUrl } from "./lib/api";
 import { useScrollReveal } from "./hooks/useScrollReveal";
+import { useSettings } from "./context/SettingsContext";
 
 export function App() {
   useScrollReveal();
+  const { company: companySettings } = useSettings();
   const [services, setServices] = useState<ServiceItem[]>(SERVICES_DATA);
   const [customBanners, setCustomBanners] = useState<Banner[]>([]);
   const [selectedServiceIndex, setSelectedServiceIndex] = useState(0);
@@ -36,9 +38,6 @@ export function App() {
   // Optional quick preview modal
   const [activeModalService, setActiveModalService] =
     useState<ServiceItem | null>(null);
-
-  // About & Why Pixel settings from SQLite backend
-  const [companySettings, setCompanySettings] = useState<any>({});
 
   // Hydrate all services directly from backend database
   const reloadServicesFromBackend = () => {
@@ -74,24 +73,9 @@ export function App() {
       });
   };
 
-  // Hydrate About Pixel & Why Pixel content from SQLite settings
-  const reloadCompanySettings = () => {
-    api
-      .getSettings()
-      .then((res) => {
-        if (res && res.company) {
-          setCompanySettings(res.company);
-        }
-      })
-      .catch((err) => {
-        console.warn("Could not fetch company settings:", err);
-      });
-  };
-
   useEffect(() => {
     reloadServicesFromBackend();
     reloadBannersFromBackend();
-    reloadCompanySettings();
   }, []);
 
   // Combined Hero Slides: Services with showInBanner + Custom Admin Banners

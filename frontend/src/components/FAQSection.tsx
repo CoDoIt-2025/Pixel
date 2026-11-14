@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ChevronDown, HelpCircle, Phone, MessageCircle, ArrowRight } from "lucide-react";
 import type { FAQItem } from "../types";
 import { api } from "../lib/api";
+import { useSettings } from "../context/SettingsContext";
 
 const FAQS_LIST: FAQItem[] = [
   {
@@ -67,6 +68,10 @@ interface FAQSectionProps {
 }
 
 export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenFullFaqPage }) => {
+  const { company } = useSettings();
+  const phone = company.phone || "+968 9696 7420";
+  const cleanPhone = phone.replace(/[^0-9+]/g, "");
+  const waDigits = phone.replace(/[^0-9]/g, "") || "96896967420";
   const [faqs, setFaqs] = useState<FAQItem[]>(FAQS_LIST);
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
@@ -177,7 +182,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenFullFaqPage }) => 
           </div>
           <div className="flex items-center gap-2.5">
             <a
-              href="https://wa.me/96896967420"
+              href={`https://wa.me/${waDigits}`}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#25D366] text-white text-xs font-bold shadow-xs hover:bg-[#1EBE5D] transition-colors"
@@ -186,11 +191,11 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ onOpenFullFaqPage }) => 
               <span>WhatsApp Us</span>
             </a>
             <a
-              href="tel:+96896967420"
+              href={`tel:${cleanPhone}`}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#121418] text-white text-xs font-bold hover:bg-[#2B2F3A] transition-colors"
             >
               <Phone size={14} className="text-[#FACC15]" />
-              <span>+968 9696 7420</span>
+              <span>{phone}</span>
             </a>
           </div>
         </div>

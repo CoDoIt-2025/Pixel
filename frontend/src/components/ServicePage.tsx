@@ -10,6 +10,7 @@ import {
 import type { ServiceItem } from "../data/servicesData";
 import { SERVICE_COMPANY_DETAILS } from "../data/serviceCompanyDetails";
 import { api, normalizeMediaUrl } from "../lib/api";
+import { useSettings } from "../context/SettingsContext";
 
 interface ServicePageProps {
   service: ServiceItem;
@@ -29,6 +30,11 @@ export const ServicePage: React.FC<ServicePageProps> = ({
     SERVICE_COMPANY_DETAILS[service.id] ||
     SERVICE_COMPANY_DETAILS["website-design-development"] ||
     SERVICE_COMPANY_DETAILS["local-seo-gbp"];
+
+  const { company } = useSettings();
+  const phone = company.phone || "+968 9696 7420";
+  const cleanPhone = phone.replace(/[^0-9+]/g, "");
+  const waDigits = phone.replace(/[^0-9]/g, "") || "96896967420";
 
   // Audit form state for this service
   const [companyName, setCompanyName] = useState("");
@@ -76,7 +82,7 @@ export const ServicePage: React.FC<ServicePageProps> = ({
       setNotes("");
     } catch (err: any) {
       setSubmitError(
-        err.message || "Failed to submit request. Please reach us at +968 9696 7420."
+        err.message || `Failed to submit request. Please reach us at ${phone}.`
       );
     } finally {
       setIsSubmitting(false);
@@ -109,7 +115,7 @@ export const ServicePage: React.FC<ServicePageProps> = ({
 
           <div className="flex items-center gap-3">
             <a
-              href="https://wa.me/96896967420"
+              href={`https://wa.me/${waDigits}`}
               target="_blank"
               rel="noreferrer"
               className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-[#22C55E] hover:text-[#4ADE80] transition-colors"
@@ -192,11 +198,11 @@ export const ServicePage: React.FC<ServicePageProps> = ({
             </button>
 
             <a
-              href="tel:+96896967420"
+              href={`tel:${cleanPhone}`}
               className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-[#A1A5B0] hover:text-white transition-colors"
             >
               <Phone size={14} className="text-[#FACC15]" />
-              <span>Call Muscat (+968 9696 7420)</span>
+              <span>Call Muscat ({phone})</span>
             </a>
           </div>
         </div>

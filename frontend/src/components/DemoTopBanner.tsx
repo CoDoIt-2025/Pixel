@@ -1,7 +1,14 @@
 import React from "react";
 import { MapPin, Phone, Mail } from "lucide-react";
+import { useSettings } from "../context/SettingsContext";
 
 export const DemoTopBanner: React.FC = () => {
+  const { company } = useSettings();
+  const phone = company.phone || "+968 9696 7420";
+  const email = company.email || "contact@pixelbusiness.si";
+  const address = company.address || "H9MX+HMV, Souk Al Ghubrah St, Muscat, Oman";
+  const cleanPhone = phone.replace(/[^0-9+]/g, "");
+
   return (
     <div className="w-full bg-[#FACC15] text-[#111317] select-none shadow-xs relative z-10 py-1.5 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
@@ -10,8 +17,8 @@ export const DemoTopBanner: React.FC = () => {
           <MapPin size={13} className="text-[#111317] shrink-0" />
           <span className="font-extrabold text-[11px] text-[#111317] tracking-tight">
             Muscat, Oman &bull;{" "}
-            <a href="tel:+96896967420" className="hover:underline">
-              +968 9696 7420
+            <a href={`tel:${cleanPhone}`} className="hover:underline">
+              {phone}
             </a>
           </span>
         </div>
@@ -21,30 +28,30 @@ export const DemoTopBanner: React.FC = () => {
           {/* Left: Location */}
           <div className="flex items-center gap-1.5 text-left shrink-0">
             <MapPin size={13} className="text-[#111317] shrink-0" />
-            <span>H9MX+HMV, Souk Al Ghubrah St, Muscat, Oman</span>
+            <span>{address}</span>
           </div>
 
           {/* Center: Brand Tagline */}
           <div className="text-center font-black tracking-wide px-4 truncate">
-            <span>Pixel Business Solutions LLC &bull; Premier Digital Solutions &amp; Engineering Agency</span>
+            <span>{company.name || "Pixel Business Solutions LLC"} &bull; Premier Digital Solutions &amp; Engineering Agency</span>
           </div>
 
           {/* Right: Direct Contact Links */}
           <div className="flex items-center gap-3.5 text-[11px] shrink-0">
             <a
-              href="tel:+96896967420"
+              href={`tel:${cleanPhone}`}
               className="flex items-center gap-1 hover:underline transition-all font-black"
             >
               <Phone size={12} className="text-[#111317]" />
-              <span>+968 9696 7420</span>
+              <span>{phone}</span>
             </a>
             <span className="text-[#111317]/60">&bull;</span>
             <a
-              href="mailto:contact@pixelbusiness.si"
+              href={`mailto:${email}`}
               className="flex items-center gap-1 hover:underline transition-all font-semibold"
             >
               <Mail size={12} className="text-[#111317]" />
-              <span>contact@pixelbusiness.si</span>
+              <span>{email}</span>
             </a>
           </div>
         </div>

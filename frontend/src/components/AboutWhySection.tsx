@@ -9,6 +9,7 @@ import {
   MapPin,
   CheckCircle2,
 } from "lucide-react";
+import { useSettings } from "../context/SettingsContext";
 
 interface WhyReason {
   title: string;
@@ -28,6 +29,11 @@ export const AboutWhySection: React.FC<AboutWhySectionProps> = ({
   whyTitle = "Why Pixel",
   whyReasons,
 }) => {
+  const { company } = useSettings();
+  const phone = company.phone || "+968 9696 7420";
+  const email = company.email || "contact@pixelbusiness.si";
+  const address = company.address || "H9MX+HMV, Souk Al Ghubrah St, Muscat, Oman";
+  const cleanPhone = phone.replace(/[^0-9+]/g, "");
   const defaultReasons: WhyReason[] = [
     {
       title: "Oman-First Local Search & Map Dominance",
@@ -155,7 +161,7 @@ export const AboutWhySection: React.FC<AboutWhySectionProps> = ({
                     <MapPin size={15} className="text-[#D97706] shrink-0 mt-0.5" />
                     <div>
                       <strong className="text-[#121418] block font-bold">Headquarters:</strong>
-                      <span>H9MX+HMV, Souk Al Ghubrah St, Muscat, Oman</span>
+                      <span>{address}</span>
                     </div>
                   </div>
 
@@ -171,8 +177,8 @@ export const AboutWhySection: React.FC<AboutWhySectionProps> = ({
                     <Phone size={15} className="text-[#D97706] shrink-0 mt-0.5" />
                     <div>
                       <strong className="text-[#121418] block font-bold">Direct Line:</strong>
-                      <a href="tel:+96896967420" className="text-[#121418] hover:text-[#D97706] font-semibold">
-                        +968 9696 7420
+                      <a href={`tel:${cleanPhone}`} className="text-[#121418] hover:text-[#D97706] font-semibold">
+                        {phone}
                       </a>
                     </div>
                   </div>
@@ -181,8 +187,8 @@ export const AboutWhySection: React.FC<AboutWhySectionProps> = ({
                     <Mail size={15} className="text-[#D97706] shrink-0 mt-0.5" />
                     <div>
                       <strong className="text-[#121418] block font-bold">Official Inquiries:</strong>
-                      <a href="mailto:contact@pixelbusiness.si" className="text-[#121418] hover:text-[#D97706] font-semibold">
-                        contact@pixelbusiness.si
+                      <a href={`mailto:${email}`} className="text-[#121418] hover:text-[#D97706] font-semibold">
+                        {email}
                       </a>
                     </div>
                   </div>
